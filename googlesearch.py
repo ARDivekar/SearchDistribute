@@ -1,16 +1,87 @@
-import twill
-import twill.commands
-from bs4 import BeautifulSoup
-import re
-import extraction_text_manip
+'''
+DISCLAIMER: This code document is for personal use only. Any violation of the Google Terms of Service is not the responsibility of the authors of the document and is performed at your own risk. 
+	...Just so you know, this sort of thing does violate the Google ToS. We (the authors) personally did not use it in production code, only as an experiment in twill commands. We hope that you do the same.
+'''
+
+
+
 import math
 import time
 import random
+import re
 
-'''
-DISCLAIMER: This code document is for personal use only. Any violation of the Google Terms of Service is not the responsibility of the authors of the document. 
-	...Just so you know, this sort of thing does violate the Google ToS. We (the authors) personally did not use it in production code, only as an experiment in twill commands. We hope that you do the same.
-'''
+
+can_compile=True
+try:
+	import twill
+	import twill.commands
+except Exception:
+	print "\n\tERROR: twill version 0.9 not found, please install to Python [e.g. with the command 'pip install -Iv http://darcs.idyll.org/~t/projects/twill-0.9.tar.gz'].\n\tPlease note that as of now, only version 0.9 of twill is supported by googlesearch."
+	can_compile = False
+
+if twill.__version__ != "0.9":
+	print "\n\tERROR: twill version 0.9 not found, please install to Python [e.g. with the command 'pip install -Iv http://darcs.idyll.org/~t/projects/twill-0.9.tar.gz'].\n\tPlease note that as of now, only version 0.9 of twill is supported by googlesearch."
+	can_compile = False
+
+
+try:
+	from bs4 import BeautifulSoup
+except Exception:
+	print "\n\tERROR: module BeautifulSoup not found, please install to Python [e.g. with the command 'pip install beautifulsoup4']."
+	can_compile = False
+
+if can_compile == False:
+	exit()
+
+
+
+
+##-------------------------MISC FUNCTIONS------------------------##
+
+
+def write_to_file(text, filepath, make_if_not_exists=True, encoding='utf-8'):
+	text=text.encode(encoding)
+	if make_if_not_exists:
+		with open(filepath, 'w+') as some_file:
+			some_file.write(text)
+	else: 
+		with open(filepath) as some_file:
+			some_file.write(text)
+
+
+
+
+def make_google_search_query(necessary_topic_list=None, topic_list=None, site_list=None, daterange_from=None, daterange_to=None):
+	if necessary_topic_list==None and topic_list==None: 
+		return None 
+
+	query=""
+	if necessary_topic_list!=None:
+		for topic in necessary_topic_list:
+			query+='"%s" '%topic
+
+	if topic_list!=None:
+		for topic in topic_list:
+			query+='%s '%topic
+	
+	if site_list!=None:
+		query += " site:"+site_list[0]
+		for i in range(1,len(site_list)):
+			query+=" | site:"+site_list[i]
+			
+	if daterange_from!=None and daterange_to!=None and daterange_from<=daterange_to:
+		query+=" daterange:%s-%s"%(daterange_from, daterange_to)
+	
+	return query	
+	# '"Infosys" site:financialexpress.com/article/ | site:business-standard.com/article | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ '
+
+
+
+
+##------------------------EXTACTION CODE FOR SINGLE QUERY------------------##
+
+
+
 
 def twill_clear_browser_data():
 	t_com=twill.commands
@@ -134,11 +205,7 @@ def extract_next_google_search_results_link(bs, google_domain, printing_debug=Fa
 	
 	## This function, given a BeautifulSoup object with the HTML of a Google Search results page, will get a single link, of the next results page.
 	## This function is an easier version of extract_next_google_search_results_page_links(), which allows us to just keep clicking 'Next' to get more results.
-	'''next_link_html=(bs.findAll(attrs={"id":"pnnext"}))
 	
-	#extraction_text_manip.write_to_file(bs.prettify(), "./testGSResult.html")
-	next_link_html=next_link_html[0]	## since we're searching by id, there should be only one.
-	'''
 	if printing_debug:
 		print "\n\nextract_next_google_search_results_link:"
 
@@ -291,7 +358,8 @@ def get_google_search_results(query, num_results=10, google_domain="https://www.
 
 
 	bs = BeautifulSoup(first_results_page_html)
-	# extraction_text_manip.write_to_file(bs.prettify(), "./Googletest2.html")
+	if printing_debug:
+		write_to_file(bs.prettify(), "./Googletest1.html")
 
 	total_num_results = total_number_of_results(bs, printing_debug)
 	if total_num_results!=None:
@@ -303,7 +371,7 @@ def get_google_search_results(query, num_results=10, google_domain="https://www.
 	if first_page_result_urls== None:
 		print("\n\n\tget_google_search_results(): your query,\n\t%s\n\t...returned no results."%(query))
 		if printing_debug:
-			extraction_text_manip.write_to_file(bs.prettify(), "./Googletest3.html")
+			write_to_file(bs.prettify(), "./Googletest2.html")
 		return None
 
 
@@ -316,8 +384,6 @@ def get_google_search_results(query, num_results=10, google_domain="https://www.
 	if num_results <= search_result_count:	## We WANTED < 10 results, i.e. the first 'X' results, where X <= 10
 		results_link_dict[1] = results_link_dict[1][0:num_results]
 		return results_link_dict
-
-	# extraction_text_manip.Linux_change_all_IPs()
 	
 
 
@@ -342,7 +408,7 @@ def get_google_search_results(query, num_results=10, google_domain="https://www.
 				do_some_waiting(wait=20, printing=printing)
 
 			if printing_debug:
-				extraction_text_manip.write_to_file(bs.prettify(), "./Googletest2.html")
+				write_to_file(bs.prettify(), "./Googletest3.html")
 
 
 
@@ -370,7 +436,6 @@ def get_google_search_results(query, num_results=10, google_domain="https://www.
 				search_result_count = search_result_count + len(page_result_urls);
 				results_link_dict[page_count] = page_result_urls
 
-			# extraction_text_manip.Linux_change_all_IPs()
 			twill_clear_browser_data()
 
 
@@ -400,7 +465,6 @@ def get_google_search_results(query, num_results=10, google_domain="https://www.
 					do_some_waiting(wait=20, printing=printing)
 
 				twill_clear_browser_data()
-				# extraction_text_manip.Linux_change_all_IPs()
 
 
 				t_brw = twill.commands.get_browser()	## get the default browser
@@ -492,3 +556,4 @@ t_brw.save_html(filepath)	<- to save the file directly
 
 
 print("\n\n")
+
