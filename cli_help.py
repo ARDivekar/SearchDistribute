@@ -2,21 +2,24 @@ import os
 
 def print_cli_help_message():
 	x = os.system("clear; clear;")
-	print "\n\n\n<<<<<-------------------------COMMAND-LINE INTERFACE TO THIS MODULE------------------------->>>>>\n\n\tARGUMENTS LIST:\n"
-	print "\t-d = database file path"
-	print "\t-d_t = table name in database"
-	print "\t-g = google domain [make sure its's http:// and not https://]"
-	print "\t-t = topic of query"
-	print "\t-p = length of time_period (in days)"
-	print "\t-n = number of time periods"
-	print "\t-r = results per time period"
-	print "\t-m = max number of results per page"
-	print "\t-w_p = wait time between pages"
-	print "\t-w_s = wait time between searches"
-	print "\t-f = 'resume_from' date (in julian)"
+	print "\n\n\n<<<<<-------------------------COMMAND-LINE INTERFACE TO THIS MODULE------------------------->>>>>\n\n\tARGUMENTS LIST:"
 
-	print "\n\n\tEXAMPLE:"
-	print '\t$ python article_url_extract.py -d "GoogleSearchResults.db" -d_t "NetworkingCompaniesResearch" -g www.google.com -t "Cisco" -p 60 -n 2 -r 20 -w_p 180 -w_s 900'
+	args_note="""
+    -d = database file path
+    -d_t = table name in database
+    -g = google domain [make sure its's http:// and not https://]
+    -t = topic of query\n\t-i = single keyword in url
+    -p = length of time_period (in days)
+    -n = number of time periods
+    -r = results per time period
+    -m = max number of results per page
+    -w_p = wait time between pages
+    -w_s = wait time between searches
+    -f = 'resume_from' date (in julian)
+    """
+
+	print args_note+"\n\n\tEXAMPLE:"
+	print '    $ python article_url_extract.py -d "GoogleSearchResults.db" -d_t "NetworkingCompaniesResearch" -g www.google.com -t "Cisco" -p 60 -n 2 -r 20 -w_p 180 -w_s 900'
 
 	print "\n\n\n\n    ###---------------------------------------------NOTES---------------------------------------------###\n\n"
 	tp_note= """Increasing -p and decreasing -n to get more results:
@@ -188,9 +191,46 @@ def print_cli_help_message():
 
 
 
+        [4] Use Virtual machines:
+            I personally found virtual machines a big help. 
+            
+            Concretely, I used VirtualBox on which I initially created a single virtual machine, based on 
+            Lubuntu 15.10 (Lubuntu is Ubuntu but with a very light GUI) and about 600 MB of RAM. My host 
+            system was running Ubuntu 15.04.
+            
+            I set up the required Python modules (splinter+phantomjs or twill v0.9, jdcal and 
+            BeautifulSoup), and VPNOneClick. 
+            
+            I then installed guest additions to VirtualBox [this was very annoying, took me almost a full 
+            day to get right], so that I could enable shared folders. I placed the entire code for 
+            googlesearch inside that single shared folder. 
+            
+            Then, I turned on VPNOneClick, connected to a new IP, and ran the code. The results started 
+            getting saved in a database file inside the shared directory. 
+            
+            Once I was sure that my Virtual machine was extracting Google Search results, I cloned the 
+            Virtual machine (I created linked clones, which meant that all the software is the same, and
+            only the changes were saved separately; this meant incredible savings in disk space as compared 
+            to full clones). Each linked clone was about 5 MB, whereas the base Virtual machine was ~4 GB.
+            All in all, I made 8 linked clones, which consumed 4.8 GB of RAM when they ran together.
+
+            Each linked clone had access to the same shared directory and the same database file where all
+            the results were stored, but I opened VPNOneClick on each VM and connected to a different IP.
+            Then, I ran the same code files (in the shared folder) on each and every VM. I used two terminal
+            windows per VM, all running queries on different topics (I could have run them on the same 
+            topic and used "-f" to start at particular locations, but I this would be difficult to keep
+            track of).
+            The result was that I was running 16 processes in parallel, on 8 different IP addresses, which was
+            an 8-fold increase over what I had with no VMs. And none of my IPs got blocked by Google, because
+            I was extracting respectfully, i.e. using arguments "-w_p 180 -w_s 900".
+
+            This is the great thing about parallelism; if you plan it correctly, the performance increase
+            is spectacular. 
 
 
-        [4] ***Use different IP addresses****:
+
+
+        [5] ***Use different IP addresses****:
                 Any website you visit has access to your IP address; that's just how the IP 
                 networking protocol works. Google is no different; every query you send is 
                 tagged with your IP address, and if you start sending too many queries too fast,
