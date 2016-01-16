@@ -1,6 +1,3 @@
-
-
-##-------CODE FOR GETTING A RESULTS FOR DATE-STAGGERED QUERIES AS AN SQLITE DATABASE-------#
 import re
 import os
 import traceback
@@ -281,7 +278,15 @@ results_per_page = min(max(results_per_page,10), 100)
 
 print "\n\n\n\n"
 
-##-----------------------CODE----------------------##
+
+
+
+
+
+
+
+##-------CODE FOR GETTING A RESULTS FOR DATE-STAGGERED QUERIES AS AN SQLITE DATABASE-------#
+
 
 
 signal.signal(signal.SIGINT, ctrl_c_signal_handler)		## assign ctrl_c_signal_handler to Ctrl+C, i.e. SIGINT

@@ -4,6 +4,7 @@ DISCLAIMER: This code document is for personal use only. Any violation of the Go
 '''
 
 
+##-------------------------ENSURE MODULE DEPENDENCIES ARE MET------------------------##
 
 import math
 import time
@@ -11,17 +12,30 @@ import random
 import re
 
 
-can_compile=True
-try:
-	import twill
-	import twill.commands
-except Exception:
-	print "\n\tERROR: twill version 0.9 not found, please install to Python [e.g. with the command 'pip install -Iv http://darcs.idyll.org/~t/projects/twill-0.9.tar.gz'].\n\tPlease note that as of now, only version 0.9 of twill is supported by googlesearch."
-	can_compile = False
 
-if twill.__version__ != "0.9":
-	print "\n\tERROR: twill version 0.9 not found, please install to Python [e.g. with the command 'pip install -Iv http://darcs.idyll.org/~t/projects/twill-0.9.tar.gz'].\n\tPlease note that as of now, only version 0.9 of twill is supported by googlesearch."
-	can_compile = False
+browser_handler=""
+can_compile=True
+
+
+try:					## First, try to import splinter
+	import splintera
+	import zope.testbrowser
+	browser_handler = "splinter"
+
+except Exception:
+
+	try:				## If importing splinter fails, try to import twill 0.9
+		import twill
+		import twill.commands
+		if twill.__version__ != "0.9":
+			print "\n\tERROR: twill version 0.9 not found, please install to Python [e.g. with the command 'pip install -Iv http://darcs.idyll.org/~t/projects/twill-0.9.tar.gz'].\n\tPlease note that as of now, only version 0.9 of twill is supported by googlesearch."
+			can_compile = False
+		browser_handler = "twill"
+
+	except Exception:
+		print "\n\tERROR: twill version 0.9 not found, please install to Python [e.g. with the command 'pip install -Iv http://darcs.idyll.org/~t/projects/twill-0.9.tar.gz'].\n\tPlease note that as of now, only version 0.9 of twill is supported by googlesearch."
+		can_compile = False
+
 
 
 try:
@@ -30,7 +44,9 @@ except Exception:
 	print "\n\tERROR: module BeautifulSoup not found, please install to Python [e.g. with the command 'pip install beautifulsoup4']."
 	can_compile = False
 
-if can_compile == False:
+
+
+if can_compile == False or browser_handler=="":
 	exit()
 
 
@@ -49,21 +65,87 @@ def write_to_file(text, filepath, make_if_not_exists=True, encoding='utf-8'):
 			some_file.write(text)
 
 
+def do_some_waiting(wait, printing=True):
+	wait_time=random.uniform(0.3*wait, 1.5*wait)
+	if printing:
+		print "\n\n\t\tWAITING %s seconds between searches.\n"%(wait_time)
+	time.sleep(wait_time)
+
+
+
+
+def clear_browser_data():
+	if browser_handler=="splinter":
+		browser = splinter.Browser()
+		browser.cookies.delete()  # deletes all cookies
+
+	elif browser_handler=="twill":
+		t_com=twill.commands
+		t_com.reset_browser; 
+		t_com.reset_output; 	
+		t_com.clear_cookies
+
+
+
+
 ##------------------------EXTACTION CODE FOR SINGLE QUERY------------------##
 
 
 
+def perform_initial_google_search(query, google_domain):	## return the HTML of the first result page
 
-def twill_clear_browser_data():
-	t_com=twill.commands
-	t_com.reset_browser; 
-	t_com.reset_output; 	
-	t_com.clear_cookies
+	if browser_handler == "twill":	## This uses the twill library
+		## Source for code: http://pymantra.pythonblogs.com/90_pymantra/archive/407_form_submit_using_twill.html
+		## Note: code from above link has been tweaked slightly.
+
+		## Side note: you can get your browser user agent at http://whatsmyuseragent.com/
+
+		t_com = twill.commands
+		t_brw = t_com.get_browser()			## get the default browser
+		url = google_domain					## e.g. "http://www.google.com"
+		t_brw.go(url)						## open the url 
+		all_forms = t_brw.get_all_forms()	## returns list of all form objects (corresp. to HTML <form>) on that URL 
+		 
+		## now, you have to choose only that form, which has the POST or GET method
+		 
+		for each_frm in all_forms:
+		    attr = each_frm.attrs			## all attributes of form
+		    if each_frm.method == 'GET':	## The button to search is a GET button. Sometimes this may be POST
+		        ctrl = each_frm.controls    ## return all control objects within that form (all html tags as control inside form)
+		        for ct in ctrl:
+		                if ct.type == 'text':     	## i did it as per my use, you can put your condition here
+								ct._value = query 	## The Google query we want to fire.
+								t_brw.clicked(each_frm, ct.attrs['name'])	## clicked() takes two parameter: a form object and button name to be clicked.
+								t_brw.submit()		## Clicks the submit button on that form
+		return t_brw.get_html()
+
+
+
+	elif browser_handler == "splinter":
+		## Source: http://splinter.readthedocs.org/en/latest/tutorial.html
+
+		# browser = splinter.Browser('zope.testbrowser', ignore_robots=True)
+		browser = splinter.Browser()
+		browser.visit(google_domain)
+		browser.fill('q', query)
+		button = browser.find_by_name('btnG')	## btnG was found by looking at google.com's HTML code.6
+		button.click()
+		url = browser.url
+		browser.quit()
+		browser = splinter.Browser()
+		browser.visit(url)
+		print "SPLINTER URL:%s"%browser.url
+		print browser.title
+		return browser.html
+
+
+
+
+
 
 
 
 def extract_results_from_google_search_results_page(bs, printing_debug=False):	## bs is a BeautifulSoup object.
-
 	## This function, given a BeautifulSoup object with the HTML of a Google Search results page, extracts the urls of the Search Results.
 	if printing_debug:
 		print "\n\nextract_results_from_google_search_results_page:"
@@ -91,13 +173,19 @@ def extract_results_from_google_search_results_page(bs, printing_debug=False):	#
 	for temp_url in temp_results_urls:
 		# print type(temp_url) 		#<-is a BeautifulSoup object
 		# print "\n\n\nCHICKEN",str(temp_url)	#<-yeah this is how i debug stuff.
-		result_page_url=re.findall('(?<=/url\?q=)(.*?)(?=")', str(temp_url))
-		if result_page_url!=[]:
-			result_page_url=result_page_url[0]
-			result_page_url=re.findall('(.*?)(?=&amp)', result_page_url)
-			if result_page_url != []:
-					result_page_url=result_page_url[0]
-					results_page_urls.append(result_page_url)
+		if browser_handler == "twill":
+			result_page_url=re.findall('(?<=/url\?q=)(.*?)(?=")', str(temp_url))
+			if result_page_url!=[]:
+				result_page_url=result_page_url[0]
+				result_page_url=re.findall('(.*?)(?=&amp)', result_page_url)
+				if result_page_url != []:
+						result_page_url=result_page_url[0]
+						results_page_urls.append(result_page_url)
+		elif browser_handler == "splinter":
+			result_page_url=re.findall('(?<=href=")(.*?)(?=")', str(temp_url))
+			if result_page_url!=[]:
+				result_page_url=result_page_url[0]
+			results_page_urls.append(result_page_url)
 
 	if results_page_urls==[]:
 		if printing_debug:
@@ -134,7 +222,7 @@ def extract_next_google_search_results_page_links(bs, google_domain, current_pag
 	temp_next_pages=(BeautifulSoup(nav_html)).findAll(attrs={"class":"fl"})	## This extracts links for further result pages. The 'Next' link is not included in this.
 	
 	if printing_debug:
-		print "\n\temp_next_pages:"
+		print "\n\ttemp_next_pages:"
 
 	if temp_next_pages==[]:		## No 'next' results on this page
 		if printing_debug:
@@ -234,41 +322,6 @@ def extract_next_google_search_results_link(bs, google_domain, printing_debug=Fa
 
 
 
-
-
-def perform_initial_google_search(query, google_domain):	## This uses the twill library
-	## Source for code: http://pymantra.pythonblogs.com/90_pymantra/archive/407_form_submit_using_twill.html
-	## Note: code from above link has been tweaked slightly.
-
-	## Side note: you can get your browser user agent at http://whatsmyuseragent.com/
-
-	t_com = twill.commands
-	t_brw = t_com.get_browser()			## get the default browser
-	url = google_domain					## e.g. "http://www.google.com"
-	t_brw.go(url)						## open the url 
-	all_forms = t_brw.get_all_forms()	## returns list of all form objects (corresp. to HTML <form>) on that URL 
-	 
-	## now, you have to choose only that form, which has the POST or GET method
-	 
-	for each_frm in all_forms:
-	    attr = each_frm.attrs			## all attributes of form
-	    if each_frm.method == 'GET':	## The button to search is a GET button. Sometimes this may be POST
-	        ctrl = each_frm.controls    ## return all control objects within that form (all html tags as control inside form)
-	        for ct in ctrl:
-	                if ct.type == 'text':     	## i did it as per my use, you can put your condition here
-							ct._value = query 	## The Google query we want to fire.
-							t_brw.clicked(each_frm, ct.attrs['name'])	## clicked() takes two parameter: a form object and button name to be clicked.
-							t_brw.submit()		## Clicks the submit button on that form
-
-	return t_brw.get_html()
-
-
-
-def do_some_waiting(wait, printing=True):
-	wait_time=random.uniform(0.3*wait, 1.5*wait)
-	if printing:
-		print "\n\n\t\tWAITING %s seconds between searches.\n"%(wait_time)
-	time.sleep(wait_time)
 
 
 
@@ -386,11 +439,16 @@ def get_google_search_results(query, num_results=10, results_per_page=10, google
 				write_to_file(bs.prettify(), "./Googletest3.html")
 
 
+			if browser_handler == "twill":
+				##Now, we must 'click' on the link, via the browser. Twill does this for us.
+				t_brw = twill.commands.get_browser()	## get the default browser
+				t_brw.go(next_page_url)					## open the url 
+				results_page_html=t_brw.get_html()
 
-			##Now, we must 'click' on the link, via the browser. Twill does this for us.
-			t_brw = twill.commands.get_browser()	## get the default browser
-			t_brw.go(next_page_url)					## open the url 
-			results_page_html=t_brw.get_html()
+			elif browser_handler == "splinter":
+				browser = splinter.Browser()
+				browser.visit(next_page_url)
+				results_page_html = browser.html
 
 			bs = BeautifulSoup(results_page_html)
 			page_result_urls = extract_results_from_google_search_results_page(bs, printing_debug)
@@ -411,7 +469,7 @@ def get_google_search_results(query, num_results=10, results_per_page=10, google
 				search_result_count = search_result_count + len(page_result_urls);
 				results_link_dict[page_count] = page_result_urls
 
-			twill_clear_browser_data()
+			clear_browser_data()
 
 
 
@@ -439,7 +497,7 @@ def get_google_search_results(query, num_results=10, results_per_page=10, google
 				else:
 					do_some_waiting(wait=20, printing=printing)
 
-				twill_clear_browser_data()
+				clear_browser_data()
 
 
 				t_brw = twill.commands.get_browser()	## get the default browser
@@ -461,7 +519,7 @@ def get_google_search_results(query, num_results=10, results_per_page=10, google
 					search_result_count = search_result_count + len(page_result_urls);
 					results_link_dict[page_count] = page_result_urls
 
-				twill_clear_browser_data()
+				clear_browser_data()
 
 
 			## We have now exhausted our list of next_page_urls, but we have still not got enough results.
@@ -473,7 +531,7 @@ def get_google_search_results(query, num_results=10, results_per_page=10, google
 
 			
 	## dont forget to reset the browser and outputs.
-	twill_clear_browser_data()
+	clear_browser_data()
 
 	return results_link_dict
 
