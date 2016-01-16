@@ -1,8 +1,7 @@
 
-import re
 
 ##-------CODE FOR GETTING A RESULTS FOR DATE-STAGGERED QUERIES AS AN SQLITE DATABASE-------#
-
+import re
 import os
 import traceback
 import signal
@@ -119,11 +118,19 @@ google_domain = "http://www.google.co.in"
 topic = "HDFC"
 
 
+# site_list=[	'financialexpress.com/article/', 
+# 			'business-standard.com/article/', 
+# 			'livemint.com/companies', 
+# 			'timesofindia.indiatimes.com/business/india-business/', 
+# 			'articles.economictimes.indiatimes.com/', 'economictimes.indiatimes.com/markets/stocks/news/',
+# 			'thehindubusinessline.com/markets/stock-markets/', 'thehindubusinessline.com/companies/']
+
+
 site_list=[	'financialexpress.com/article/', 
-			'business-standard.com/article/', 
+			 
 			'livemint.com/companies', 
 			'timesofindia.indiatimes.com/business/india-business/', 
-			'articles.economictimes.indiatimes.com/', 'economictimes.indiatimes.com/markets/stocks/news/',
+			
 			'thehindubusinessline.com/markets/stock-markets/', 'thehindubusinessline.com/companies/']
 
 
@@ -182,6 +189,7 @@ from sys import argv
 ## -p = length of time_period (in days)
 ## -n = number of time periods
 ## -r = results per time period
+## -m = max number of results per page (between 10 and 100)
 ## -w_p = wait time between pages
 ## -w_s = wait time between searches
 ## -f = 'resume_from' date (in julian)
@@ -219,7 +227,7 @@ elif len(argv)%2==1 and len(argv)>2:	## if we have an odd number of arguments >2
 		elif argv[i]=='-n':
 			num_time_periods_remaining = int(argv[i+1])
 		elif argv[i]=='-r':
-			results_per_time_period = int(argv[i+1])
+				results_per_time_period = int(argv[i+1])
 		elif argv[i]=='-m':
 			results_per_page = int(argv[i+1])
 		elif argv[i]=='-w_p':
@@ -227,7 +235,10 @@ elif len(argv)%2==1 and len(argv)>2:	## if we have an odd number of arguments >2
 		elif argv[i]=='-w_s':
 			wait_between_searches = int(argv[i+1])
 		elif argv[i]=='-f':
-			resume_from = int(argv[i+1])
+			if argv[i+1].lower() == 'now':
+				resume_from = to_julian_date_datetime(datetime.now().date())
+			else:
+				resume_from = int(argv[i+1])
 		elif argv[i]=='-d':
 			db_file_path = argv[i+1]
 		elif argv[i]=='-d_t':

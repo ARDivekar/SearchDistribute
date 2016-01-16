@@ -363,16 +363,17 @@ def get_google_search_results(query, num_results=10, results_per_page=10, google
 
 			## We first see if the next page exists, then we do_some_waiting()
 			next_page_url = extract_next_google_search_results_link(bs, google_domain, printing_debug)	## 'next_page_url' stores the url of the next page
-			if results_per_page != 10:
-				results_per_page = min(max(results_per_page,10), 100)	## You cannot get more than 100 results per page.
-				next_page_url+="&num=%s"%results_per_page
-
 
 			if printing_debug:
 				print "\n\n\nnext_page_url=",next_page_url
 			if next_page_url==None:
 				print("\n\n\tget_google_search_results(): your query,\n\t%s\n\t..only had %s results, not %s as you requested."%(query, search_result_count, num_results))
 				return results_link_dict
+
+
+			if results_per_page != 10:
+				results_per_page = min(max(results_per_page,10), 100)	## You cannot get more than 100 results per page.
+				next_page_url+="&num=%s"%results_per_page
 
 
 			## Wait period between searches
