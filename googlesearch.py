@@ -49,35 +49,6 @@ def write_to_file(text, filepath, make_if_not_exists=True, encoding='utf-8'):
 			some_file.write(text)
 
 
-
-
-def make_google_search_query(necessary_topic_list=None, topic_list=None, site_list=None, daterange_from=None, daterange_to=None):
-	if necessary_topic_list==None and topic_list==None: 
-		return None 
-
-	query=""
-	if necessary_topic_list!=None:
-		for topic in necessary_topic_list:
-			query+='"%s" '%topic
-
-	if topic_list!=None:
-		for topic in topic_list:
-			query+='%s '%topic
-	
-	if site_list!=None:
-		query += " site:"+site_list[0]
-		for i in range(1,len(site_list)):
-			query+=" | site:"+site_list[i]
-			
-	if daterange_from!=None and daterange_to!=None and daterange_from<=daterange_to:
-		query+=" daterange:%s-%s"%(daterange_from, daterange_to)
-	
-	return query	
-	# '"Infosys" site:financialexpress.com/article/ | site:business-standard.com/article | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ '
-
-
-
-
 ##------------------------EXTACTION CODE FOR SINGLE QUERY------------------##
 
 
