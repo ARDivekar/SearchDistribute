@@ -301,7 +301,7 @@ def total_number_of_results(bs, printing_debug=False):
 
 
 
-def get_google_search_results(query, num_results=10, results_per_page=10, google_domain="https://www.google.com", func_type=1, waiting=True, wait=450, printing=True, printing_debug=False):
+def get_google_search_results(query, num_results=10, results_per_page=10, google_domain="http://www.google.com", func_type=1, waiting=True, wait=450, printing=True, printing_debug=False):
 	## Returns a dictionary, results_link_dict which contains all the links in an organized manner.
 
 
@@ -480,7 +480,7 @@ def get_google_search_results(query, num_results=10, results_per_page=10, google
 
 
 
-def google_search_results_list(query, num_results=10, google_domain="https://www.google.com", func_type=1, waiting=True, wait=180, printing=False, printing_debug=False):
+def google_search_results_list(query, num_results=10, google_domain="http://www.google.com", func_type=1, waiting=True, wait=180, printing=False, printing_debug=False):
 	## converts get_google_search_results(), but returns a list instead of a dict. 
 
 	results_link_dict=get_google_search_results(query=query, num_results=num_results, google_domain=google_domain, func_type=func_type, waiting=waiting, wait=wait, printing=printing, printing_debug=printing_debug)
