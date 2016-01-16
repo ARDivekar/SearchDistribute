@@ -26,7 +26,7 @@ try:					## First, try to import splinter
 except Exception:
 	print """\n\tERROR: One of the following softwares is not installed:
 	> splinter		[install to Python with the command 'sudo pip install splinter'].
-	> phantomjs  	[refer to http://phantomjs.org as to how to install it to your machine ]
+	> phantomjs  	[refer to http://phantomjs.org as to how to install it to your machine (on Linux, 'sudo apt-get install phantomjs' worked for me in Jan 2016)]
 	> selenium 		[usually packaged with splinter, you might need to update with 'sudo pip install selenium --upgrade']
 	"""
 

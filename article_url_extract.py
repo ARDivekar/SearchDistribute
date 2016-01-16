@@ -23,7 +23,7 @@ except Exception:
 try: 
 	import cli_help
 except Exception:
-	print "\n\tERROR: module cli_help not found, please add to project to continue.\n\cli_help may be found at https://github.com/ARDivekar/googlesearch_article_url/blob/master/cli_help.py"
+	print "\n\tERROR: module cli_help not found, please add to project to continue.\n\tcli_help may be found at https://github.com/ARDivekar/googlesearch_article_url/blob/master/cli_help.py"
 	can_compile=False
 
 try:
@@ -46,7 +46,7 @@ def to_julian_date_datetime(date_time):		## takes as input a datetime object
 
 
 
-def make_google_search_query(necessary_topic_list=None, topic_list=None, site_list=None, daterange_from=None, daterange_to=None):
+def make_google_search_query(necessary_topic_list=None, topic_list=None, site_list=None, daterange_from=None, daterange_to=None, inurl=None):
 	if necessary_topic_list==None and topic_list==None: 
 		return None 
 
@@ -66,6 +66,9 @@ def make_google_search_query(necessary_topic_list=None, topic_list=None, site_li
 			
 	if daterange_from!=None and daterange_to!=None and daterange_from<=daterange_to:
 		query+=" daterange:%s-%s"%(daterange_from, daterange_to)
+
+	if inurl != None and inurl!="":
+		query+=" inurl:%s"%inurl
 	
 	return query	
 
@@ -112,8 +115,9 @@ def ctrl_c_signal_handler(signal_number, frame):
 google_domain = "http://www.google.co.in"
 
 
-topic = "HDFC"
+topic = ""
 
+inurl=""
 
 # site_list=[	'financialexpress.com/article/', 
 # 			'business-standard.com/article/', 
@@ -148,7 +152,7 @@ results_per_page = 10
 ## 		Now, you have found that you are only getting 8 out of 20 results per time_period. By making time_period=60 and num_time_periods_remaining=24, you can get more results per time period, which is less 'suspicious' to Google. But the product of time_period and num_time_periods_remaining should stay the same, or else the total time over which you are collecting URLs will not be the same.
 
 
-resume_from = -1		## maintains the number of time periods, but allows you to skip periods where zero UNIQUE urls were extracted. resume_from should be set to the start date of the latest period in which no urls were extracted. E.g. last period = 250103-250133 <<<< [ if no urls extracted: stop process, change time period and number of time periods appropriately, pass: "____ -r 250103" in command line ]
+resume_from = -1		## maintains the number of time periods, but allows you to skip periods where zero UNIQUE urls were extracted. resume_from should be set to the start date of the latest period in which no urls were extracted. E.g. last period = 250103-250133 <<<< [ if no urls extracted: stop process, change time period and number of time periods appropriately, pass: "____ -f 250103" in command line ]
 						## NOTE: once you find a time period in which you DO get some UNIQUE urls, you should not use resume_from in subsequent runs.
 						## resume_from is also useful if you think a particular period's urls were not captured correctly and you'd like to make another pass over the period.
 
@@ -183,6 +187,7 @@ from sys import argv
 ## -d_t = table name in database
 ## -g = google domain
 ## -t = topic
+## -i = single keyword in url
 ## -p = length of time_period (in days)
 ## -n = number of time periods
 ## -r = results per time period
@@ -194,18 +199,18 @@ from sys import argv
 ## Example of command line: 
 ## user@blahblah:/blah/blah/user$ python google_extract.py -t "ajanta pharma" -p 180 -n 6 -a 80
 
-if len(argv)==1 or topic=="":
+
+if "--help" in argv:
+	cli_help.print_cli_help_message()
+	exit()
+
+
+elif len(argv)==1:
 	print "\n\tERROR: no topic entered."
 	yorn = raw_input("\t\tWould you like a tutorial on how to use the command line? (Y/n)\n\t\t>")
 	if yorn.lower() =='y':
 		cli_help.print_cli_help_message()
 	exit()
-
-
-elif "--help" in argv:
-	cli_help.print_cli_help_message()
-	exit()
-
 
 
 elif len(argv)%2==1 and len(argv)>2:	## if we have an odd number of arguments >2, it means we might have these arguments.
@@ -219,6 +224,8 @@ elif len(argv)%2==1 and len(argv)>2:	## if we have an odd number of arguments >2
 				google_domain = "http://"+google_domain		##https does not work
 		elif argv[i]=='-t':
 			topic = argv[i+1]
+		elif argv[i]=='-i':
+			inurl = argv[i+1]
 		elif argv[i]=='-p':
 			time_period = int(argv[i+1])
 		elif argv[i]=='-n':
@@ -255,12 +262,20 @@ else:
 	exit()
 
 
+if topic=="":
+	print "\n\tERROR: no topic entered."
+	yorn = raw_input("\t\tWould you like a tutorial on how to use the command line? (Y/n)\n\t\t>")
+	if yorn.lower() =='y':
+		cli_help.print_cli_help_message()
+	exit()
 
 
 print "db_file_path = %s"%(db_file_path)
 print "db_table_name = %s"%(db_table_name)
 print "google_domain = %s"%(google_domain)
 print "topic = %s"%(topic)
+if inurl!="":
+	print "inurl = %s"%inurl
 print "time_period = %s"%(time_period)
 print "num_time_periods_remaining = %s"%(num_time_periods_remaining)
 print "results_per_time_period = %s"%(results_per_time_period)
@@ -350,6 +365,7 @@ results_link_dict=None
 for i in range(0,num_time_periods_remaining):	##  This is the reason you should not change 'num_time_periods_remaining'
 	query = make_google_search_query(
 						necessary_topic_list=[topic], 
+						inurl=inurl,
 						site_list=site_list,
 						daterange_from=start_date, 
 						daterange_to=end_date)	
