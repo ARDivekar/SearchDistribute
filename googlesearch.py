@@ -301,7 +301,7 @@ def total_number_of_results(bs, printing_debug=False):
 
 
 
-def get_google_search_results(query, num_results=10, google_domain="https://www.google.com", func_type=1, waiting=True, wait=450, printing=True, printing_debug=False):
+def get_google_search_results(query, num_results=10, results_per_page=10, google_domain="https://www.google.com", func_type=1, waiting=True, wait=450, printing=True, printing_debug=False):
 	## Returns a dictionary, results_link_dict which contains all the links in an organized manner.
 
 
@@ -363,6 +363,9 @@ def get_google_search_results(query, num_results=10, google_domain="https://www.
 
 			## We first see if the next page exists, then we do_some_waiting()
 			next_page_url = extract_next_google_search_results_link(bs, google_domain, printing_debug)	## 'next_page_url' stores the url of the next page
+			if results_per_page != 10:
+				results_per_page = min(max(results_per_page,10), 100)	## You cannot get more than 100 results per page.
+				next_page_url+="&num=%s"%results_per_page
 
 
 			if printing_debug:

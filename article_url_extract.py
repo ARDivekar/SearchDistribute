@@ -197,9 +197,10 @@ if len(argv)==1 or topic=="":
 	exit()
 
 
-elif len(argv)==2 and argv[1]=='--help':
+elif "--help" in argv:
 	cli_help.print_cli_help_message()
 	exit()
+
 
 
 elif len(argv)%2==1 and len(argv)>2:	## if we have an odd number of arguments >2, it means we might have these arguments.
