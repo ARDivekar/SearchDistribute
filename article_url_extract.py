@@ -1,11 +1,74 @@
-import googlesearch
-import sqliteDefaults
-import extraction_text_manip
-from datetime import datetime
+
 import re
+
+##-------CODE FOR GETTING A RESULTS FOR DATE-STAGGERED QUERIES AS AN SQLITE DATABASE-------#
+
 import os
 import traceback
 import signal
+from datetime import datetime
+
+
+
+can_compile=True
+try:
+	import sqliteDefaults
+except Exception:
+	print "\n\tERROR: module sqliteDefaults not found, please add to project to continue.\n\tsqliteDefaults may be found at https://github.com/ARDivekar/googlesearch_article_url/blob/master/sqliteDefaults.py"
+	can_compile=False
+
+try: 
+	import googlesearch
+except Exception:
+	print "\n\tERROR: module googlesearch not found, please add to project to continue.\n\tsqliteDefaults may be found at https://github.com/ARDivekar/googlesearch_article_url/blob/master/sqliteDefaults.py"
+	can_compile=False
+
+try:
+	from jdcal import gcal2jd
+except Exception:
+	can_compile=False
+	print "\n\tERROR: module jdcal not found, please install to Python [e.g. with the command 'pip install jdcal']."
+
+if can_compile == False:
+	exit()
+
+
+
+
+##----------------------MISC FUNCTIONS-----------------------------##
+def to_julian_date_datetime(date_time):		## takes as input a datetime object
+	jd_tuple = gcal2jd(date_time.year, date_time.month, date_time.day)
+	julian_day = jd_tuple[0] + jd_tuple[1] + 0.5
+	return int(julian_day)
+
+
+
+def make_google_search_query(necessary_topic_list=None, topic_list=None, site_list=None, daterange_from=None, daterange_to=None):
+	if necessary_topic_list==None and topic_list==None: 
+		return None 
+
+	query=""
+	if necessary_topic_list!=None:
+		for topic in necessary_topic_list:
+			query+='"%s" '%topic
+
+	if topic_list!=None:
+		for topic in topic_list:
+			query+='%s '%topic
+	
+	if site_list!=None and site_list!=[]:
+		query += " site:"+site_list[0]
+		for i in range(1,len(site_list)):
+			query+=" | site:"+site_list[i]
+			
+	if daterange_from!=None and daterange_to!=None and daterange_from<=daterange_to:
+		query+=" daterange:%s-%s"%(daterange_from, daterange_to)
+	
+	return query	
+
+
+
+
 
 def ctrl_c_signal_handler(signal_number, frame):
     print "\n\n"
@@ -33,25 +96,20 @@ def ctrl_c_signal_handler(signal_number, frame):
 	  		if option==2:	## Continue
 	  			break
 	  		
-signal.signal(signal.SIGINT, ctrl_c_signal_handler)		## assign ctrl_c_signal_handler to Ctrl+C, i.e. SIGINT
 
 
 
-conn=sqliteDefaults.get_conn("extracted_search_urls.db")
-conn.execute('''Create table if not exists ArticleUrls(
-		ArticleTopic 		TEXT,
-		StartDate 			INTEGER,
-		EndDate 			INTEGER,
-		ResultPageNumber 	INTEGER,
-		URL 				TEXT,
-		ResultNumber		INTEGER,
-		PRIMARY KEY(URL)
-	);
-	''')
-conn.commit()
+
+
+
+
+
 
 
 ##--------------------PARAMETERS-------------------##
+
+google_domain = "http://www.google.co.in"
+
 
 topic = "HCL"
 
@@ -64,20 +122,20 @@ site_list=[	'financialexpress.com/article/',
 			'thehindubusinessline.com/markets/stock-markets/', 'thehindubusinessline.com/companies/']
 
 
-initial_start_date = extraction_text_manip.to_julian_date_datetime(datetime.now().date())
+initial_start_date = to_julian_date_datetime(datetime.now().date())
 
 
 
 time_period = 30					## time period = 30, is 30 days i.e. roughly 1 month. 
 num_time_periods_remaining = 60		## we search over = time_period*num_time_periods_remaining
-articles_per_time_period = 40
+results_per_time_period = 10
 
 ## IMPORTANT NOTE: 
-## 'time_period' and 'num_time_periods_remaining' should not be changed after you have started extracting for a particular ArticleTopic. 
+## 'time_period' and 'num_time_periods_remaining' should not be changed after you have started extracting for a particular Topic. 
 ## Specifically, their product should not be changed. 
 
-## 	e.g. suppose time_period = 30, num_time_periods_remaining=48, and articles_per_time_period=20. 
-## 		Now, you have found that you are only getting 8 out of 20 articles per time_period. By making time_period=60 and num_time_periods_remaining=24, you can get more articles per time period, which is less 'suspicious' to Google. But the product of time_period and num_time_periods_remaining should stay the same, or else the total time over which you are collecting URLs will not be the same.
+## 	e.g. suppose time_period = 30, num_time_periods_remaining=48, and results_per_time_period=20. 
+## 		Now, you have found that you are only getting 8 out of 20 results per time_period. By making time_period=60 and num_time_periods_remaining=24, you can get more results per time period, which is less 'suspicious' to Google. But the product of time_period and num_time_periods_remaining should stay the same, or else the total time over which you are collecting URLs will not be the same.
 
 
 resume_from = -1		## maintains the number of time periods, but allows you to skip periods where zero UNIQUE urls were extracted. resume_from should be set to the start date of the latest period in which no urls were extracted. E.g. last period = 250103-250133 <<<< [ if no urls extracted: stop process, change time period and number of time periods appropriately, pass: "____ -r 250103" in command line ]
@@ -96,6 +154,10 @@ sound_command="rhythmbox piano_beep.mp3 &"		## Will be different for Windows and
 												## e.g.: for Windows, "start piano_beep.mp3 &" works as intended.
 
 
+db_file_path = "extracted_search_urls.db"
+db_table_name = "ArticleUrls"
+
+
 
 
 		##---- We can set these parameters from the command line ----##
@@ -104,37 +166,115 @@ from sys import argv
 # print argv
 
 
-## I've used a syntax similar to that of Linux for allowing the api user to set the topic, time_period, num_time_periods_remaining, articles_per_time_period, wait_between_pages and wait_between_searches.
+## I've used a syntax similar to that of Linux for allowing the api user to set the topic, time_period, num_time_periods_remaining, results_per_time_period, wait_between_pages and wait_between_searches.
+
+## -d = database file path
+## -d_t = table name in database
+## -g = google domain
 ## -t = topic
 ## -p = length of time_period (in days)
 ## -n = number of time periods
-## -a = articles per time period
+## -r = results per time period
 ## -w_p = wait time between pages
 ## -w_s = wait time between searches
+## -f = 'resume_from' date (in julian)
 
 ## Example of command line: 
 ## user@blahblah:/blah/blah/user$ python google_extract.py -t "ajanta pharma" -p 180 -n 6 -a 80
 
 
 
+if len(argv)==2 and argv[1]=='--help':
+	print "\tCommand-line interface to this module:\n"
+	print "\t-d = database file path"
+	print "\t-d_t = table name in database"
+	print "\t-g = google domain [make sure its's http:// and not https://]"
+	print "\t-t = topic of query"
+	print "\t-p = length of time_period (in days)"
+	print "\t-n = number of time periods"
+	print "\t-r = results per time period"
+	print "\t-w_p = wait time between pages"
+	print "\t-w_s = wait time between searches"
+	print "\t-f = 'resume_from' date (in julian)"
+	print "\n\tExample:"
+	print '\t$ python article_url_extract.py -d "GoogleSearchResults.db" -d_t "NetworkingCompaniesResearch" -g www.google.com -t "Cisco" -p 60 -n 2 -r 20 -w_p 180 -w_s 900'
+
+	print "\n\n\n\n\n\n\t###--------------------------------NOTES--------------------------------###\n\n"
+	tp_note= """1) Increasing -p to get more results:
+	'time_period' and 'num_time_periods_remaining' (-p and -n respectively) ideally should not be changed 
+	after you have started extracting for a particular Topic. 
+	Concretely, their product should remain unchanged. 
+
+	e.g. suppose you've used: 
+		$ python article_url_extract.py -t "Cisco" -p 30 -n 48 -r 20
+	i.e.
+		topic = Cisco
+		time_period = 30
+		num_time_periods_remaining = 48
+		results_per_time_period = 70 
+
+	Initially, this is well and good, and you should not have to run anything else (you may need to change 
+	your IP occasionally if you find that Google is blocking it). 
+
+
+	Possible problems:
+	    > Your query is rather obscure, and is only returning 8 results out of the 70 you had requested per 
+	      time_period.  
+	    > Your query is returning a lot of results, but they are mostly repeats.
+
+	You can solve these problems by: 
+		[1] doubling your time period (-p)
+		and
+		[2] halving the number of time periods (-n).
+
+
+	Make the following change to your command line arguments:
+		-p 60 -n 24
+	i.e. 
+		time_period = 60 
+		num_time_periods_remaining = 24
+
+	This will cause you to get more results per time_period, and the results will usually be ones you 
+	have not seen before.
+
+	However, this trick only works if the product 
+		(time_period * num_time_periods_remaining) 
+	i.e. 
+		(-p * -n) 
+	stays the same across runs, as changing the product will change the total time over which you 
+	are collecting URLs.
+	"""
+	print tp_note
+	exit()
+
+
 if len(argv)%2==1 and len(argv)>2:	## if we have an odd number of arguments >2, it means we might have these arguments.
 	for i in range(1,len(argv), 2):   
 		## Start from 1 because we skip the first element of argv which is the script name.
 		## We skip every second element because adjacent elements will be a pair.
-		if argv[i]=='-t':
+
+		if argv[i]=='-g':
+			google_domain = argv[i+1]
+			if 'http' not in google_domain:
+				google_domain = "http://"+google_domain		##https does not work
+		elif argv[i]=='-t':
 			topic = argv[i+1]
 		elif argv[i]=='-p':
 			time_period = int(argv[i+1])
 		elif argv[i]=='-n':
 			num_time_periods_remaining = int(argv[i+1])
-		elif argv[i]=='-a':
-			articles_per_time_period = int(argv[i+1])
+		elif argv[i]=='-r':
+			results_per_time_period = int(argv[i+1])
 		elif argv[i]=='-w_p':
 			wait_between_pages = int(argv[i+1])
 		elif argv[i]=='-w_s':
 			wait_between_searches = int(argv[i+1])
-		elif argv[i]=='-r':
+		elif argv[i]=='-f':
 			resume_from = int(argv[i+1])
+		elif argv[i]=='-d':
+			db_file_path = int(argv[i+1])
+		elif argv[i]=='-d_t':
+			db_table_name = int(argv[i+1])
 		else : 
 			print "\n\n\tINVALID ARGUMENT PAIR ENTERED, EXITING...\n"
 			exit()
@@ -144,10 +284,13 @@ elif len(argv)!=1:
 	exit()
 
 
+print "db_file_path = %s"%(db_file_path)
+print "db_table_name = %s"%(db_table_name)
+print "google_domain = %s"%(google_domain)
 print "topic = %s"%(topic)
 print "time_period = %s"%(time_period)
 print "num_time_periods_remaining = %s"%(num_time_periods_remaining)
-print "articles_per_time_period = %s"%(articles_per_time_period)
+print "results_per_time_period = %s"%(results_per_time_period)
 print "wait_between_pages = %s"%(wait_between_pages)
 print "wait_between_searches = %s"%(wait_between_searches)
 print "\n\n"
@@ -160,21 +303,40 @@ print "\n\n"
 
 ##-----------------------CODE----------------------##
 
+
+signal.signal(signal.SIGINT, ctrl_c_signal_handler)		## assign ctrl_c_signal_handler to Ctrl+C, i.e. SIGINT
+
+
+conn=sqliteDefaults.get_conn(db_file_path)
+conn.execute('''Create table if not exists %s(
+		Topic 				TEXT,
+		StartDate 			INTEGER,
+		EndDate 			INTEGER,
+		ResultPageNumber 	INTEGER,
+		URL 				TEXT,
+		ResultNumber		INTEGER,
+		PRIMARY KEY(Topic, URL)
+	);
+	'''%db_table_name)
+conn.commit()
+
+
+
+
 start_date=0
 end_date=0
 
-article_sorted_by_date_query = "Select StartDate, EndDate from ArticleUrls WHERE ArticleTopic='%s' ORDER BY StartDate ASC"%(topic)
+results_sorted_by_date_query = "Select StartDate, EndDate from %s WHERE Topic='%s' ORDER BY StartDate ASC"%(db_table_name, topic)
 
 
 
+Urls_sorted_by_date = sqliteDefaults.verified_select_sqlite(conn, results_sorted_by_date_query, printing=False)
 
-ArticleUrls_sorted_by_date = sqliteDefaults.verified_select_sqlite(conn, article_sorted_by_date_query, printing=False)
-
-if len(ArticleUrls_sorted_by_date) == 0:
+if len(Urls_sorted_by_date) == 0:
 	end_date = initial_start_date
-	print "\n\tNo article urls in database on the topic %s\n"%(topic)
+	print "\n\tNo results in database on the topic %s\n"%(topic)
 else: 	
-	last_extracted_date = ArticleUrls_sorted_by_date[0][0]	## Gets the StartDate of the last extracted article URL
+	last_extracted_date = Urls_sorted_by_date[0][0]	## Gets the StartDate of the last extracted URL
 	end_date = last_extracted_date	## We must resume googlesearching from this date
 
 	if resume_from != -1:
@@ -188,7 +350,7 @@ else:
 		print "\n\n\n\tDONE GETTING RESULTS FOR TOPIC '%s'\n\n"%(topic)
 		exit()
 	else:
-		print "\tResuming from date=%s, will get further %s time_period of articles."%(end_date, num_time_periods_remaining)
+		print "\tResuming from date=%s, will get further %s time_period of results."%(end_date, num_time_periods_remaining)
 
 
 
@@ -201,20 +363,20 @@ results_link_dict=None
 ## We now start getting more search results.
 
 for i in range(0,num_time_periods_remaining):	##  This is the reason you should not change 'num_time_periods_remaining'
-	article_query = extraction_text_manip.make_google_search_query(
-											topic_list=[topic], 
-											site_list=site_list,
-											daterange_from=start_date, 
-											daterange_to=end_date)	
+	query = make_google_search_query(
+						necessary_topic_list=[topic], 
+						site_list=site_list,
+						daterange_from=start_date, 
+						daterange_to=end_date)	
 
 	results_link_dict=None
-	print "\n\n\nRUNNING QUERY:\n\t%s\n"%(article_query)
+	print "\n\n\nRUNNING QUERY:\n\t%s\n"%(query)
 
 	try:
 		results_link_dict = googlesearch.get_google_search_results(
-							query = article_query, 
-							num_results = articles_per_time_period, 
-							google_domain = "http://www.google.co.in",
+							query = query, 
+							num_results = results_per_time_period, 
+							google_domain = google_domain,
 							waiting=waiting, wait=wait_between_pages)
 	except Exception, e:
 		print "\n\n\n\tAN ERROR OCCURED WHILE EXTRACTING URLS:\n"
@@ -228,21 +390,25 @@ for i in range(0,num_time_periods_remaining):	##  This is the reason you should 
 
 			repeat_count=0
 			result_number=1		## gives priority of results. ResultNumber = 1 means the top result
+			unique_result_number=1
 			for page_num in results_link_dict:
 				for res_url in results_link_dict[page_num]: 
 						## Insert the url into the database.
+
 						try :
 							sqliteDefaults.insert_table_sqlite(conn, 
-								'ArticleUrls', 
-								('URL',	 	'ArticleTopic',	'StartDate',	'EndDate', 	'ResultPageNumber', 'ResultNumber'), 
+								db_table_name, 
+								('URL',	 	'Topic',	'StartDate',	'EndDate', 	'ResultPageNumber', 'ResultNumber'), 
 								[(res_url,	 topic, 		start_date, 	end_date, 	page_num, result_number)]
 							)
-							result_number=result_number+1
+							unique_result_number+=1
 						except Exception:
 							print "\t\tCould not insert topic-url pair ( %s  ,  %s ), possible duplicate"%(topic, res_url)
 							repeat_count=repeat_count+1
+
+						result_number=result_number+1	## We always increment te result number to show where it would be on the page, even in case of duplicates
 			print "\n\n\tNumber of URLs repeated in this search = %s"%(repeat_count)
-			print "\tNumber of URLs extracted in this search = %s"%(result_number-1)
+			print "\tNumber of URLs extracted in this search = %s"%(unique_result_number-1)
 
 		except Exception:
 			print "\n\t\tERROR: Cannot insert results extracted so far into database.\n"
@@ -252,7 +418,7 @@ for i in range(0,num_time_periods_remaining):	##  This is the reason you should 
 
 	if results_link_dict != None:
 		## Print the search results for this time period.
-		googlesearch.print_result_link_dict(results_link_dict=results_link_dict, query=article_query)
+		googlesearch.print_result_link_dict(results_link_dict=results_link_dict, query=query)
 
 
 		## Insert the search results for this time period into the database.
@@ -260,26 +426,29 @@ for i in range(0,num_time_periods_remaining):	##  This is the reason you should 
 
 		repeat_count=0
 		result_number=1		## gives priority of results. ResultNumber = 1 means the top result
+		unique_result_number=1
 		for page_num in results_link_dict:
 			for res_url in results_link_dict[page_num]: 
 
 					## Insert the url into the database.
 					try :
 						sqliteDefaults.insert_table_sqlite(conn, 
-							'ArticleUrls', 
-							('URL',	 	'ArticleTopic',	'StartDate',	'EndDate', 	'ResultPageNumber', 'ResultNumber'), 
+							db_table_name, 
+							('URL',	 	'Topic',	'StartDate',	'EndDate', 	'ResultPageNumber', 'ResultNumber'), 
 							[(res_url,	 topic, 		start_date, 	end_date, 	page_num, result_number)]
 						)
-						result_number=result_number+1
+						unique_result_number+=1
 					except Exception:
 						print "\t\tCould not insert topic-url pair ( %s  ,  %s ), possible duplicate"%(topic, res_url)
 						repeat_count=repeat_count+1
 
+					result_number=result_number+1
+
 		print "\n\n\tNumber of URLs repeated in this search = %s"%(repeat_count)
-		print "\tNumber of URLs extracted in this search = %s"%(result_number-1)
+		print "\tNumber of URLs extracted in this search = %s"%(unique_result_number-1)
 
 	else: 
-		# print "\nERROR: No results obtained for query \n\t%s\n"%article_query
+		# print "\nERROR: No results obtained for query \n\t%s\n"%query
 		print "\n\n...please try again later, possibly with a different IP.\n"
 		os.system(sound_command)		## Plays a paino beep when the module exits
 		exit()
@@ -287,7 +456,7 @@ for i in range(0,num_time_periods_remaining):	##  This is the reason you should 
 	end_date = start_date
 	start_date = start_date - time_period
 
-	print "\n\tREMAINING: %s time_period of articles."%(num_time_periods_remaining-i-1)
+	print "\n\tREMAINING: %s time_period of results."%(num_time_periods_remaining-i-1)
 	if (num_time_periods_remaining-i-1) == 0:
 		print "\n\n\n\tDONE GETTING RESULTS FOR TOPIC '%s'\n\n"%(topic)
 		os.system(sound_command)		## Plays a paino beep when the module exits
