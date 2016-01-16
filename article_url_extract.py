@@ -23,6 +23,13 @@ except Exception:
 	print "\n\tERROR: module googlesearch not found, please add to project to continue.\n\tsqliteDefaults may be found at https://github.com/ARDivekar/googlesearch_article_url/blob/master/sqliteDefaults.py"
 	can_compile=False
 
+
+try: 
+	import cli_help
+except Exception:
+	print "\n\tERROR: module cli_help not found, please add to project to continue.\n\cli_help may be found at https://github.com/ARDivekar/googlesearch_article_url/blob/master/cli_help.py"
+	can_compile=False
+
 try:
 	from jdcal import gcal2jd
 except Exception:
@@ -104,14 +111,12 @@ def ctrl_c_signal_handler(signal_number, frame):
 
 
 
-
-
 ##--------------------PARAMETERS-------------------##
 
 google_domain = "http://www.google.co.in"
 
 
-topic = "HCL"
+topic = "HDFC"
 
 
 site_list=[	'financialexpress.com/article/', 
@@ -128,7 +133,8 @@ initial_start_date = to_julian_date_datetime(datetime.now().date())
 
 time_period = 30					## time period = 30, is 30 days i.e. roughly 1 month. 
 num_time_periods_remaining = 60		## we search over = time_period*num_time_periods_remaining
-results_per_time_period = 10
+results_per_time_period = 30
+results_per_page = 10
 
 ## IMPORTANT NOTE: 
 ## 'time_period' and 'num_time_periods_remaining' should not be changed after you have started extracting for a particular Topic. 
@@ -160,6 +166,7 @@ db_table_name = "ArticleUrls"
 
 
 
+
 		##---- We can set these parameters from the command line ----##
 
 from sys import argv
@@ -182,73 +189,20 @@ from sys import argv
 ## Example of command line: 
 ## user@blahblah:/blah/blah/user$ python google_extract.py -t "ajanta pharma" -p 180 -n 6 -a 80
 
-
-
-if len(argv)==2 and argv[1]=='--help':
-	print "\tCommand-line interface to this module:\n"
-	print "\t-d = database file path"
-	print "\t-d_t = table name in database"
-	print "\t-g = google domain [make sure its's http:// and not https://]"
-	print "\t-t = topic of query"
-	print "\t-p = length of time_period (in days)"
-	print "\t-n = number of time periods"
-	print "\t-r = results per time period"
-	print "\t-w_p = wait time between pages"
-	print "\t-w_s = wait time between searches"
-	print "\t-f = 'resume_from' date (in julian)"
-	print "\n\tExample:"
-	print '\t$ python article_url_extract.py -d "GoogleSearchResults.db" -d_t "NetworkingCompaniesResearch" -g www.google.com -t "Cisco" -p 60 -n 2 -r 20 -w_p 180 -w_s 900'
-
-	print "\n\n\n\n\n\n\t###--------------------------------NOTES--------------------------------###\n\n"
-	tp_note= """1) Increasing -p to get more results:
-	'time_period' and 'num_time_periods_remaining' (-p and -n respectively) ideally should not be changed 
-	after you have started extracting for a particular Topic. 
-	Concretely, their product should remain unchanged. 
-
-	e.g. suppose you've used: 
-		$ python article_url_extract.py -t "Cisco" -p 30 -n 48 -r 20
-	i.e.
-		topic = Cisco
-		time_period = 30
-		num_time_periods_remaining = 48
-		results_per_time_period = 70 
-
-	Initially, this is well and good, and you should not have to run anything else (you may need to change 
-	your IP occasionally if you find that Google is blocking it). 
-
-
-	Possible problems:
-	    > Your query is rather obscure, and is only returning 8 results out of the 70 you had requested per 
-	      time_period.  
-	    > Your query is returning a lot of results, but they are mostly repeats.
-
-	You can solve these problems by: 
-		[1] doubling your time period (-p)
-		and
-		[2] halving the number of time periods (-n).
-
-
-	Make the following change to your command line arguments:
-		-p 60 -n 24
-	i.e. 
-		time_period = 60 
-		num_time_periods_remaining = 24
-
-	This will cause you to get more results per time_period, and the results will usually be ones you 
-	have not seen before.
-
-	However, this trick only works if the product 
-		(time_period * num_time_periods_remaining) 
-	i.e. 
-		(-p * -n) 
-	stays the same across runs, as changing the product will change the total time over which you 
-	are collecting URLs.
-	"""
-	print tp_note
+if len(argv)==1 or topic=="":
+	print "\n\tERROR: no topic entered."
+	yorn = raw_input("\t\tWould you like a tutorial on how to use the command line? (Y/n)\n\t\t>")
+	if yorn.lower() =='y':
+		cli_help.print_cli_help_message()
 	exit()
 
 
-if len(argv)%2==1 and len(argv)>2:	## if we have an odd number of arguments >2, it means we might have these arguments.
+elif len(argv)==2 and argv[1]=='--help':
+	cli_help.print_cli_help_message()
+	exit()
+
+
+elif len(argv)%2==1 and len(argv)>2:	## if we have an odd number of arguments >2, it means we might have these arguments.
 	for i in range(1,len(argv), 2):   
 		## Start from 1 because we skip the first element of argv which is the script name.
 		## We skip every second element because adjacent elements will be a pair.
@@ -265,6 +219,8 @@ if len(argv)%2==1 and len(argv)>2:	## if we have an odd number of arguments >2, 
 			num_time_periods_remaining = int(argv[i+1])
 		elif argv[i]=='-r':
 			results_per_time_period = int(argv[i+1])
+		elif argv[i]=='-m':
+			results_per_page = int(argv[i+1])
 		elif argv[i]=='-w_p':
 			wait_between_pages = int(argv[i+1])
 		elif argv[i]=='-w_s':
@@ -272,16 +228,24 @@ if len(argv)%2==1 and len(argv)>2:	## if we have an odd number of arguments >2, 
 		elif argv[i]=='-f':
 			resume_from = int(argv[i+1])
 		elif argv[i]=='-d':
-			db_file_path = int(argv[i+1])
+			db_file_path = argv[i+1]
 		elif argv[i]=='-d_t':
-			db_table_name = int(argv[i+1])
+			db_table_name = argv[i+1]
 		else : 
-			print "\n\n\tINVALID ARGUMENT PAIR ENTERED, EXITING...\n"
+			print "\n\n\tERROR: INVALID ARGUMENT PAIR ENTERED.\n"
+			yorn = raw_input("\t\tWould you like a tutorial on how to use the command line? (Y/n)\n\t\t>")
+			if yorn.lower() =='y':
+				cli_help.print_cli_help_message()
 			exit()
 
-elif len(argv)!=1:
-	print "\n\n\tINVALID NUMBER OF ARGUMENTS ENTERED, EXITING...\n"
+else:
+	print "\n\n\tERROR: INVALID ARGUMENT PAIR ENTERED.\n"
+	yorn = raw_input("\t\tWould you like a tutorial on how to use the command line? (Y/n)\n\t\t>")
+	if yorn.lower() =='y':
+		cli_help.print_cli_help_message()
 	exit()
+
+
 
 
 print "db_file_path = %s"%(db_file_path)
@@ -291,15 +255,19 @@ print "topic = %s"%(topic)
 print "time_period = %s"%(time_period)
 print "num_time_periods_remaining = %s"%(num_time_periods_remaining)
 print "results_per_time_period = %s"%(results_per_time_period)
+print "results_per_page = %s"%(min(max(results_per_page,10), 100))
 print "wait_between_pages = %s"%(wait_between_pages)
 print "wait_between_searches = %s"%(wait_between_searches)
 print "\n\n"
 
 
+if results_per_page > 100:
+	print "\n\t\tERROR: Cannot get %s results per page, getting the maximum allowed (i.e. 100)."%results_per_page
+elif results_per_page < 10:
+	print "\n\t\tERROR: Cannot get %s results per page, getting the minimum allowed (i.e. 10)."%results_per_pageresults_per_page
+results_per_page = min(max(results_per_page,10), 100)	
 
-
-
-
+print "\n\n\n\n"
 
 ##-----------------------CODE----------------------##
 
@@ -376,6 +344,7 @@ for i in range(0,num_time_periods_remaining):	##  This is the reason you should 
 		results_link_dict = googlesearch.get_google_search_results(
 							query = query, 
 							num_results = results_per_time_period, 
+							results_per_page = results_per_page,
 							google_domain = google_domain,
 							waiting=waiting, wait=wait_between_pages)
 	except Exception, e:
