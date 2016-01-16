@@ -17,12 +17,18 @@ browser_handler=""
 can_compile=True
 
 
+
 try:					## First, try to import splinter
-	import splintera
-	import zope.testbrowser
+	import splinter
+	browser = splinter.Browser("phantomjs")
 	browser_handler = "splinter"
 
 except Exception:
+	print """\n\tERROR: One of the following softwares is not installed:
+	> splinter		[install to Python with the command 'sudo pip install splinter'].
+	> phantomjs  	[refer to http://phantomjs.org as to how to install it to your machine ]
+	> selenium 		[usually packaged with splinter, you might need to update with 'sudo pip install selenium --upgrade']
+	"""
 
 	try:				## If importing splinter fails, try to import twill 0.9
 		import twill
@@ -76,7 +82,7 @@ def do_some_waiting(wait, printing=True):
 
 def clear_browser_data():
 	if browser_handler=="splinter":
-		browser = splinter.Browser()
+		browser = splinter.Browser("phantomjs")
 		browser.cookies.delete()  # deletes all cookies
 
 	elif browser_handler=="twill":
@@ -125,16 +131,16 @@ def perform_initial_google_search(query, google_domain):	## return the HTML of t
 		## Source: http://splinter.readthedocs.org/en/latest/tutorial.html
 
 		# browser = splinter.Browser('zope.testbrowser', ignore_robots=True)
-		browser = splinter.Browser()
+		browser = splinter.Browser("phantomjs")
 		browser.visit(google_domain)
 		browser.fill('q', query)
 		button = browser.find_by_name('btnG')	## btnG was found by looking at google.com's HTML code.6
 		button.click()
 		url = browser.url
-		browser.quit()
-		browser = splinter.Browser()
+		# browser.quit()
+		browser = splinter.Browser("phantomjs")
 		browser.visit(url)
-		print "SPLINTER URL:%s"%browser.url
+		# print "SPLINTER URL:%s"%browser.url
 		print browser.title
 		return browser.html
 
@@ -173,20 +179,15 @@ def extract_results_from_google_search_results_page(bs, printing_debug=False):	#
 	for temp_url in temp_results_urls:
 		# print type(temp_url) 		#<-is a BeautifulSoup object
 		# print "\n\n\nCHICKEN",str(temp_url)	#<-yeah this is how i debug stuff.
-		if browser_handler == "twill":
-			result_page_url=re.findall('(?<=/url\?q=)(.*?)(?=")', str(temp_url))
-			if result_page_url!=[]:
-				result_page_url=result_page_url[0]
-				result_page_url=re.findall('(.*?)(?=&amp)', result_page_url)
-				if result_page_url != []:
-						result_page_url=result_page_url[0]
-						results_page_urls.append(result_page_url)
-		elif browser_handler == "splinter":
-			result_page_url=re.findall('(?<=href=")(.*?)(?=")', str(temp_url))
-			if result_page_url!=[]:
-				result_page_url=result_page_url[0]
-			results_page_urls.append(result_page_url)
-
+		
+		result_page_url=re.findall('(?<=/url\?q=)(.*?)(?=")', str(temp_url))
+		if result_page_url!=[]:
+			result_page_url=result_page_url[0]
+			result_page_url=re.findall('(.*?)(?=&amp)', result_page_url)
+			if result_page_url != []:
+					result_page_url=result_page_url[0]
+					results_page_urls.append(result_page_url)
+		
 	if results_page_urls==[]:
 		if printing_debug:
 			print "[]"
@@ -446,7 +447,7 @@ def get_google_search_results(query, num_results=10, results_per_page=10, google
 				results_page_html=t_brw.get_html()
 
 			elif browser_handler == "splinter":
-				browser = splinter.Browser()
+				browser = splinter.Browser("phantomjs")
 				browser.visit(next_page_url)
 				results_page_html = browser.html
 
