@@ -304,24 +304,24 @@ results_per_page = min(max(results_per_page,10), 100)
 
 if results_per_page <= 20 and wait_between_pages/float(results_per_page) < 150/float(10):
 	print "\n\t\tWARNING: the wait time between pages may not be large enough to prevent IP blocking."
-	print "\t\tRecommend wait time between pages: %s seconds."%(10*( int(results_per_page*( 150/float(10) )/10) ))
+	print "\t\tRecommend wait time between pages: %s seconds or more."%(10*( int(results_per_page*( 150/float(10) )/10) ))
 
 elif results_per_page > 20 and results_per_page <= 50 and wait_between_pages/float(results_per_page) < 240/float(20):
 	print "\n\t\tWARNING: the wait time between pages may not be large enough to prevent IP blocking."
-	print "\t\tRecommend wait time between pages: %s seconds."%(10*( int(results_per_page*( 240/float(20) )/10) ))
+	print "\t\tRecommend wait time between pages: %s seconds or more."%(10*( int(results_per_page*( 240/float(20) )/10) ))
 	
 elif results_per_page > 50 and results_per_page <= 80 and wait_between_pages/float(results_per_page) < 450/float(50):
 	print "\n\t\tWARNING: the wait time between pages may not be large enough to prevent IP blocking."
-	print "\t\tRecommend wait time between pages: %s seconds."%(10*( int(results_per_page*( 450/float(50) )/10) ))
+	print "\t\tRecommend wait time between pages: %s seconds or more."%(10*( int(results_per_page*( 450/float(50) )/10) ))
 	
-elif results_per_page >80 and results_per_page < 100 and wait_between_pages/float(results_per_page) < 520/float(80):
+elif results_per_page >80 and results_per_page < 100 and wait_between_pages/float(results_per_page) < 540/float(80):
 	print "\n\t\tWARNING: the wait time between pages may not be large enough to prevent IP blocking."
-	print "\t\tRecommend wait time between pages: %s seconds."%(10*( int(results_per_page*( 520/float(80) )/10) ))
+	print "\t\tRecommend wait time between pages: %s seconds or more."%(10*( int(results_per_page*( 540/float(80) )/10) ))
 
 	
 elif results_per_page == 100 and wait_between_pages/float(results_per_page) < 600/float(100):
 	print "\n\t\tWARNING: the wait time between pages may not be large enough to prevent IP blocking."
-	print "\t\tRecommend wait time between pages: %s seconds."%(10*( int(results_per_page*( 600/float(100) )/10) ))
+	print "\t\tRecommend wait time between pages: %s seconds or more."%(10*( int(results_per_page*( 600/float(100) )/10) ))
 
 
 
