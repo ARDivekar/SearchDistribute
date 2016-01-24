@@ -14,13 +14,12 @@ import re
 
 
 browser_handler=""
+browser_js=""
 can_compile=True
-
-
 
 try:					## First, try to import splinter
 	import splinter
-	browser = splinter.Browser("phantomjs")
+	browser_js = splinter.Browser("phantomjs")
 	browser_handler = "splinter"
 
 except Exception:
@@ -74,7 +73,7 @@ def write_to_file(text, filepath, make_if_not_exists=True, encoding='utf-8'):
 def do_some_waiting(wait, printing=True):
 	wait_time=random.uniform(0.3*wait, 1.5*wait)
 	if printing:
-		print "\n\n\t\tWAITING %s seconds between searches.\n"%(wait_time)
+		print "\n\t\tWAITING %s seconds between searches.\n"%(wait_time)
 	time.sleep(wait_time)
 
 
@@ -82,14 +81,13 @@ def do_some_waiting(wait, printing=True):
 
 def clear_browser_data():
 	if browser_handler=="splinter":
-		browser = splinter.Browser("phantomjs")
-		browser.cookies.delete()  # deletes all cookies
+		browser_js.cookies.delete()  # deletes all cookies
 
 	elif browser_handler=="twill":
 		t_com=twill.commands
 		t_com.reset_browser; 
 		t_com.reset_output; 	
-		t_com.clear_cookies
+		t_com.clear_cookies;
 
 
 
@@ -99,6 +97,8 @@ def clear_browser_data():
 
 
 def perform_initial_google_search(query, google_domain):	## return the HTML of the first result page
+
+	print "\n\n\nBrowser handler: %s"%browser_handler
 
 	if browser_handler == "twill":	## This uses the twill library
 		## Source for code: http://pymantra.pythonblogs.com/90_pymantra/archive/407_form_submit_using_twill.html
@@ -131,18 +131,17 @@ def perform_initial_google_search(query, google_domain):	## return the HTML of t
 		## Source: http://splinter.readthedocs.org/en/latest/tutorial.html
 
 		# browser = splinter.Browser('zope.testbrowser', ignore_robots=True)
-		browser = splinter.Browser("phantomjs")
-		browser.visit(google_domain)
-		browser.fill('q', query)
-		button = browser.find_by_name('btnG')	## btnG was found by looking at google.com's HTML code.6
+		
+		browser_js.visit(google_domain)
+		browser_js.fill('q', query)
+		button = browser_js.find_by_name('btnG')	## btnG was found by looking at google.com's HTML code.6
 		button.click()
-		url = browser.url
-		# browser.quit()
-		browser = splinter.Browser("phantomjs")
-		browser.visit(url)
-		# print "SPLINTER URL:%s"%browser.url
-		print browser.title
-		return browser.html
+		url = browser_js.url
+		browser_js.visit(url)
+		# print "SPLINTER URL:%s"%browser_js.url
+		print "\n\n\nGetting results from ===> %s"%browser_js.url
+		# print browser_js.title
+		return browser_js.html
 
 
 
@@ -405,6 +404,7 @@ def get_google_search_results(query, num_results=10, results_per_page=10, google
 	search_result_count = search_result_count+len(first_page_result_urls);
 	results_link_dict[1] = first_page_result_urls
 
+	print "\n\t\tResults obtained so far: (%s/%s)"%(search_result_count, num_results)
 
 	if num_results <= search_result_count:	## We WANTED < 10 results, i.e. the first 'X' results, where X <= 10
 		results_link_dict[1] = results_link_dict[1][0:num_results]
@@ -447,9 +447,10 @@ def get_google_search_results(query, num_results=10, results_per_page=10, google
 				results_page_html=t_brw.get_html()
 
 			elif browser_handler == "splinter":
-				browser = splinter.Browser("phantomjs")
-				browser.visit(next_page_url)
-				results_page_html = browser.html
+				# browser_js = splinter.Browser("phantomjs")
+				print "\n\n\nGetting results from ===> %s"%next_page_url
+				browser_js.visit(next_page_url)
+				results_page_html = browser_js.html
 
 			bs = BeautifulSoup(results_page_html)
 			page_result_urls = extract_results_from_google_search_results_page(bs, printing_debug)
@@ -463,12 +464,14 @@ def get_google_search_results(query, num_results=10, results_per_page=10, google
 			## if we have got as many as we need
 			if search_result_count + len(page_result_urls) >= num_results:	
 				results_link_dict[page_count] = page_result_urls[0:num_results-search_result_count]
+				print "\n\t\tResults obtained so far: (%s/%s)"%(num_results, num_results)
 				return results_link_dict
 
 			## We have not got enough results, so keep getting:
 			else:	
 				search_result_count = search_result_count + len(page_result_urls);
 				results_link_dict[page_count] = page_result_urls
+				print "\n\t\tResults obtained so far: (%s/%s)"%(search_result_count, num_results)
 
 			clear_browser_data()
 

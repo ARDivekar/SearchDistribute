@@ -127,12 +127,23 @@ inurl=""
 # 			'thehindubusinessline.com/markets/stock-markets/', 'thehindubusinessline.com/companies/']
 
 
-site_list=[	'financialexpress.com/article/', 
-			 
-			'livemint.com/companies', 
-			'timesofindia.indiatimes.com/business/india-business/', 
+site_list=[	
+			'business-standard.com/article/', 
 			
-			'thehindubusinessline.com/markets/stock-markets/', 'thehindubusinessline.com/companies/']
+			
+			'articles.economictimes.indiatimes.com/', 'economictimes.indiatimes.com/markets/stocks/news/',
+			]
+
+
+
+
+
+# site_list=[	'financialexpress.com/article/', 
+			 
+# 			'livemint.com/companies', 
+# 			'timesofindia.indiatimes.com/business/india-business/', 
+			
+# 			'thehindubusinessline.com/markets/stock-markets/', 'thehindubusinessline.com/companies/']
 
 
 initial_start_date = to_julian_date_datetime(datetime.now().date())
@@ -465,7 +476,7 @@ for i in range(0,num_time_periods_remaining):	##  This is the reason you should 
 		exit()
 
 
-	print "\n\n\n\n\tWAITING BEFORE NEXT SEARCH QUERY IS FIRED..."
+	print "\n\n\n\n\n\n\tWAITING BEFORE NEXT SEARCH QUERY IS FIRED..."
 	googlesearch.do_some_waiting(wait=wait_between_searches)
 
 
