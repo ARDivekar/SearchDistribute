@@ -1,3 +1,5 @@
+# Author: Abhishek Divekar, Jan 2016. Licence: Creative Commons.
+
 import os
 import sqlite3
 import datetime
