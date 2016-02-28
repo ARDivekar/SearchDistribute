@@ -4,7 +4,7 @@ import os
 import sqlite3
 import datetime
 
-def get_conn(db_file_name):
+def get_conn(db_file_name, printing=True):
 	#makes a new file if it does not exist
 
 	BASE_DIR = os.path.dirname(os.path.abspath(__file__))	#gets direcotry path in which file is stored. 
@@ -13,10 +13,19 @@ def get_conn(db_file_name):
 	with sqlite3.connect(db_path, detect_types=sqlite3.PARSE_DECLTYPES) as conn:	
 					#souce for		"detect_types=sqlite3.PARSE_DECLTYPES"		is:
 					#http://stackoverflow.com/questions/4272908/sqlite-date-storage-and-conversion
-		print "\t\tOpened connection successfully"
+		if printing:
+			print("\n\tOpened connection successfully to database:\n\t%s"%db_path)
 		return conn
 	return None
 
+
+# def getConn(dbFilePath):
+# 	with sqlite3.connect(dbFilePath, detect_types=sqlite3.PARSE_DECLTYPES) as conn:	
+# 					#souce for		"detect_types=sqlite3.PARSE_DECLTYPES"		is:
+# 					#http://stackoverflow.com/questions/4272908/sqlite-date-storage-and-conversion
+# 		print "\t\tOpened connection successfully"
+# 		return conn
+# 	return None
 
 class Table:
 	def __init__ (self, input_attributes, input_table):
@@ -92,16 +101,16 @@ def build_insert_query(tablename, insert_params_list, tuple_values_list):
 	insert_query+=") VALUES "
 	#print insert_query
 	
-	insert_query+="\n('%s'"%tuple_values_list[0][0]
+	insert_query+="\n(\"%s\""%tuple_values_list[0][0]
 	for j in range(1,len(tuple_values_list[0])):
-		insert_query+=" ,'%s'"%tuple_values_list[0][j]
+		insert_query+=" ,\"%s\""%tuple_values_list[0][j]
 	insert_query+=")"
 
 
 	for i in range(1,len(tuple_values_list)):
-		insert_query+=",\n('%s'"%tuple_values_list[i][0]
+		insert_query+=",\n(\"%s\""%tuple_values_list[i][0]
 		for j in range(1,len(tuple_values_list[i])):
-			insert_query+=" ,'%s'"%tuple_values_list[i][j]
+			insert_query+=" ,\"%s\""%tuple_values_list[i][j]
 	insert_query+=";"
 	# print insert_query
 	return insert_query
@@ -176,10 +185,11 @@ elif table[j][2]<table[i][2]:
 
 
 
-def insert_table_sqlite(conn, tablename, insert_params_list, tuple_values_list, commit=True):
+def insert_table_sqlite(conn, tablename, insert_params_list, tuple_values_list, commit=True, printing_debug=False):
 	
 	insert_query= build_insert_query(tablename=tablename, insert_params_list=insert_params_list, tuple_values_list=tuple_values_list)
-	# print insert_query
+	if printing_debug:
+		print("\n\n\n\tSQLITE INSERTION QUERY:\n%s\n\n"%insert_query)
 	cursor=conn.cursor()
 	cursor.execute(insert_query)
 	if commit:
