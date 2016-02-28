@@ -189,68 +189,471 @@ class GoogleSearch:
 
 
 
-	def _tryGetCurrentPageHTML(self, nextPageUrl, printing=True, printingDebug=False):
-		## We attempt to get the HTML of a page.3 times before giving up.
-		try:
-			self.browserHandler.go(nextPageUrl)
-			currentPageHTML = self.browserHandler.getCurrentPageHtml()
-			if currentPageHTML==None: 
-				x=1/0
-		except Exception:
-			try:
-				self.doSomeWaiting(avgWaitTime=15, printing=False)
-				currentPageHTML = self.browserHandler.getHtml(url=nextPageUrl)
-				if currentPageHTML==None: 
-					x=1/0
-			except Exception:
-				try:
-					if self.browserHandler.clearBrowserData() == False:
-						if printing:
-							print("\n\tGoogleSearch._tryGetCurrentPageHTML(): Cannot clear browser data.")
-					self.browserHandler.go(nextPageUrl)
-					currentPageHTML = self.browserHandler.getCurrentPageHtml()
-					if currentPageHTML==None:	
-						x=1/0
-				except Exception:
-					if self.browserHandler.resetBrowser() == False:
-						if printing:
-							print("\n\tGoogleSearch._tryGetCurrentPageHTML(): Cannot reset browser.")
-					self.browserHandler.go(nextPageUrl)
-					currentPageHTML = self.browserHandler.getCurrentPageHtml()
-		if printingDebug:
-			print("GoogleSearch._tryGetCurrentPageHTML(): Length of HTML obtained: %s"%(len(currentPageHTML)))
-		return currentPageHTML
+
+	def getTopSearchResults(self,
+		numResults,
+		searchQueryString=None,
+
+		siteList=[],
+		fuzzyTopicsList=[],
+		necessaryTopicsList=[],
+		inurl=None,
+		daterangeFrom=None, 
+		daterangeTo=None,
+
+
+		googleDomain="http://www.google.com",
+		resultsPerPage  = 10,
+		waitBetweenPages= 150,
+		
+		printing = True,
+		printingDebug = False
+		):
+		"""
+		Extracts and returns a tuple of ordered search results.
+		We can pass the exact query itself as a string into 'searchQueryString'. 
+		Alternatively, we can pass the items siteList, fuzzyTopicsList, necessaryTopicsList, inurl, daterangeFrom, daterangeTo=None to the function, and it generates the query for us.
+
+		The returned argument is a tuple of two parts: 
+			part 1 is the searchQueryString used to generate the results
+			part 2 is the tuple of ordered results.
+
+		"""
+		
+
+		if searchQueryString==None:
+			## check for errors:
+			errors = self._checkInputsForErrors(
+				necessaryTopicsList=necessaryTopicsList, 
+				fuzzyTopicsList=fuzzyTopicsList, 
+				siteList=siteList, 
+				inurl=inurl, 
+				resultsPerPage=resultsPerPage,  
+				waitBetweenPages=waitBetweenPages)
+		
+			if errors!="": 
+				if printing:
+					print("###-------------------------ERRORS-------------------------###\n%s"%errors)
+				return None
+
+
+			googleSearchQueryObj = self._initializeGoogleSearchQueryObj(
+				siteList=siteList, 
+				fuzzyTopicsList=fuzzyTopicsList, 
+				necessaryTopicsList=necessaryTopicsList, 
+				inurl=inurl, 
+				daterangeFrom = daterangeFrom, 
+				daterangeTo = daterangeTo, 
+				printing=printing)
+
+			searchQueryString = googleSearchQueryObj.toString()
+
+
+
+		## check for warnings in the data:
+		warnings = self._checkInputsForWarnings(resultsPerPage=resultsPerPage, waitBetweenPages=waitBetweenPages)
+		if warnings!="":
+			if printing:
+				print("\n\n\n###-------------------------WARNINGs-------------------------###\n%s"%warnings)
+
+
+		if printing:
+			print("\n\n\nBrowser Handler in use:\n%s"%(self.browserHandler.getName()))
+
+
+		## Actually extract search results.
+		resultsLinkDict = self._getSearchResults(
+			searchQueryString = searchQueryString,
+			googleDomain = googleDomain,
+			numResultsRequested = numResults,
+			resultsPerPage = resultsPerPage,
+			waitBetweenPages = waitBetweenPages,
+			printing = printing,
+			printingDebug = printingDebug
+		)
+
+		## Convert resultsLinkDict into an ordered tuple
+		searchResultsList = []
+		for pageNo in sorted(resultsLinkDict.keys()):
+			for resultUrl in resultsLinkDict[pageNo]:
+				searchResultsList.append(resultUrl)
+
+		return (searchQueryString, tuple(searchResultsList)[0:numResults])
 
 
 
 
-	def _insertGetSearchResults(self, 
-		conn, 
-		dbTableName,
-		numResultsRequested, 
-		googleSearchQueryObj,
-		pageCount, 
-		pageResultUrls,
-		printing, 
-		printingDebug
+
+
+
+
+
+
+
+	def saveToSQLiteDatabase(self, 
+		dbFilePath="GoogleSearchResults.db", dbTableName="SearchResultUrls",
+		googleDomain="http://www.google.com",
+		necessaryTopicsList=[], fuzzyTopicsList=[], 
+		siteList=[], 
+		inurl=None, 
+		timePeriod=None, numTimePeriodsRemaining=1, 
+		resultsPerPage=10, resultsPerTimePeriod=30, 
+		resumeFrom=None, 
+		waitBetweenPages=150, waitBetweenSearches=180, 
+		printing=True, printingDebug=False,
+		insertBetweenPages = False, insertBetweenSearches = True, 
+		insertOnError = True, 
+		skipErroneousSearches = False
 		):
 
-		tempDict = {}
-		try:
-			if printingDebug:
-				print("pageCount:%s\n%s\n\n"%(pageCount,pageResultUrls))
-			tempDict[pageCount] = pageResultUrls
-			self._insertResultsLinkDictIntoDB(conn=conn, 
-				dbTableName=dbTableName, 
-				resultsLinkDict=tempDict, 
-				googleSearchQueryObj=googleSearchQueryObj, 
-				printing=printing,
-				printingDebug = printingDebug
-			)
-		except Exception, e:
+		"""This function saves the GoogleSearchResults to a database of your choosing. It is assumed that you may run this function several times with different parameters; the database will remain for all those times. The module sqliteDefaults is used to perform the actual SQLite handling.
+		Return values:
+			> If None is returned, that means the operation has failed and no results were extracted. 
+			> We otherwise return allResults, which is a dictionary indexed by a (startDate, EndDate) pair [it becomes (-1,-1) if no daterange is specified]. Each element in allResults is a dictionary of similar structure to resultsLinkDict, i.e. a dictionary indexed by result page numbers [1 onwards] whose elements are a tuple of search result urls for that page.
+		"""
+		
+
+		## check for errors:
+		errors = self._checkInputsForErrors(dbFilePath=dbFilePath, dbTableName=dbTableName, 
+			necessaryTopicsList=necessaryTopicsList, fuzzyTopicsList=fuzzyTopicsList, 
+			siteList=siteList, 
+			inurl=inurl, 
+			timePeriod=timePeriod, numTimePeriodsRemaining=numTimePeriodsRemaining, 
+			resultsPerPage=resultsPerPage, resultsPerTimePeriod=resultsPerTimePeriod, 
+			resumeFrom=resumeFrom, waitBetweenPages=waitBetweenPages, waitBetweenSearches=waitBetweenSearches)
+	
+		if errors!="": 
 			if printing:
-				print("\n\t\tGoogleSearch._insertGetSearchResults(): cannot insert page results into database.")
-				print("\t\tError description: %s\n"%e)
+				print("###-------------------------ERRORS-------------------------###\n%s"%errors)
+			return None
+
+
+		## Initialize the database.
+		conn = self._SQLiteDBSetup(dbFilePath, dbTableName, printing)
+		if conn == None:
+			return None
+
+
+		## check for warnings in the data:
+		warnings = self._checkInputsForWarnings(resultsPerPage=resultsPerPage, waitBetweenPages=waitBetweenPages)
+		if warnings!="":
+			if printing:
+				print("\n\n\n###-------------------------WARNINGs-------------------------###\n%s"%warnings)
+
+
+		if printing:
+			print("\n\n\nBrowser Handler in use:\n%s"%(self.browserHandler.getName()))
+
+		## Actually extract data.
+
+		if timePeriod==None:	## We only get for one time period, thus no dateranges have to be given.
+			googleSearchQueryObj = self._initializeGoogleSearchQueryObj(
+				siteList=siteList, 
+				fuzzyTopicsList=fuzzyTopicsList, 
+				necessaryTopicsList=necessaryTopicsList, 
+				inurl=inurl,  
+				printing=printing)
+
+			resultsLinkDict = self._getSearchResults(
+				searchQueryString=googleSearchQueryObj.toString(),
+				googleDomain=googleDomain,
+				numResultsRequested=resultsPerTimePeriod,
+				resultsPerPage  = resultsPerPage,
+				waitBetweenPages= waitBetweenPages,
+				printing = printing,
+				insertBetweenPages=insertBetweenPages,
+				printingDebug = printingDebug)
+
+			if self._isEmpty(resultsLinkDict):
+				print("GoogleSearch.saveToSQLiteDatabase(): no results obtained.\n")
+				return None
+
+			self._insertResultsLinkDictIntoDB(conn=conn, dbTableName=dbTableName, resultsLinkDict=resultsLinkDict, googleSearchQueryObj=googleSearchQueryObj, printing=printing, printingDebug=printingDebug)
+
+			allResults = {}
+			allResults[(-1,-1)]=resultsLinkDict
+
+
+			if printing:
+				print("\n\n\n\tDONE GETTING RESULTS FOR TOPIC '%s'\n\n"%(googleSearchQueryObj.getTopicStringForDB()))
+
+			return allResults
+
+		else:
+			allResults = self._getStaggeredSearchResults(
+				googleDomain=googleDomain,
+				necessaryTopicsList=necessaryTopicsList, 
+				fuzzyTopicsList=fuzzyTopicsList, 
+				siteList=siteList, 
+				inurl=inurl, 
+				timePeriod=timePeriod, 
+				numTimePeriodsRemaining=numTimePeriodsRemaining, 
+				resultsPerPage=resultsPerPage, 
+				resultsPerTimePeriod=resultsPerTimePeriod, 
+				resumeFrom=resumeFrom,
+
+				waitBetweenPages=waitBetweenPages, 
+				waitBetweenSearches=waitBetweenSearches, 
+
+				printing=printing, 
+				printingDebug=printingDebug, 
+
+				skipErroneousSearches = skipErroneousSearches,
+				insertBetweenPages = insertBetweenPages,
+				insertBetweenSearches = insertBetweenSearches,
+				insertOnError = insertOnError,
+
+				conn=conn, 
+				dbTableName=dbTableName,
+				dbFilePath=dbFilePath
+			)
+
+			if self._isEmpty(allResults):
+				if printing:
+					print("GoogleSearch.saveToSQLiteDatabase(): no results obtained.\n")
+				return None
+			return allResults
+
+
+
+
+
+
+
+
+
+
+	##-----------------------------------PRIVATE METHODS-----------------------------------##
+
+
+	def _isEmpty(self, thing, exceptThisThing="\!@#$%^&*()[]:;?<>,.1234567890/"):		
+		"""Checks if 'thing' is empty; returns True for a bunch of empty things; only exceptThisThing is permitted.
+		"""
+		if thing!=exceptThisThing and (thing==None or thing=="" or thing==[] or thing=={} or thing==()):
+			return True
+		return False
+
+
+
+
+	def _SQLiteDBSetup(self, dbFilePath, dbTableName, printing):
+		conn = None
+		if self.hasImportedNecessaryModulesSQLite():
+			try:
+				conn=self.sqliteDefaults.get_conn(dbFilePath, printing)
+			except Exception:
+				if printing:
+					print("\n\tERROR in GoogleSearch._SQLiteDBSetup(): could not connect to database.")
+				return None
+
+			try:
+				conn.execute('''CREATE TABLE IF NOT EXISTS %s(
+					resultNumberInSearch 	INTEGER,
+					Topic 					TEXT 	NOT NULL,
+					URL 					TEXT 	NOT NULL,
+					ResultPageNumber 		INTEGER NOT NULL,
+					ResultNumberOnPage		INTEGER NOT NULL,
+					StartDate 				INTEGER,
+					EndDate 				INTEGER,
+					SearchedOnDate 			DATE,
+					ObtainedFromQuery 		TEXT 	NOT NULL,
+					PRIMARY KEY(Topic, URL)
+				);
+				'''%dbTableName)
+				conn.commit()
+
+			except Exception:
+				if printing:
+					print("\n\tERROR in GoogleSearch._SQLiteDBSetup(): could not create table in database.")
+				return None
+
+		return conn
+
+
+
+
+	def _isIntegerInRange(self, n, lowerBound=None, upperBound=None):
+		if type(n)!=type(0):
+			return False
+		elif lowerBound!=None and upperBound!=None and (n<lowerBound or n>upperBound):
+			return  False
+		elif upperBound!=None and n>upperBound:
+			return False
+		elif lowerBound!=None and n<lowerBound:
+			return False
+
+		return True
+
+
+
+
+	def _checkInputsForErrors(self, 
+		necessaryTopicsList, 
+		fuzzyTopicsList, 
+		siteList, 
+		inurl, 
+
+		resultsPerPage=None, 
+		resultsPerTimePeriod=None, 
+
+		timePeriod=None, 
+		numTimePeriodsRemaining=None, 
+
+
+		resumeFrom=None, 
+		waitBetweenPages=None, 
+		waitBetweenSearches=None,
+
+		dbFilePath=None, 
+		dbTableName=None
+		):
+
+		errorFunctionBase = "\n\tERROR in GoogleSearch._checkInputsForErrors(): "
+		errors = ""
+
+
+		## check dbFilePath and dbTableName:
+		if self._isEmpty(dbFilePath, None):
+			errors+=errorFunctionBase+"The SQLite file name (i.e. dbFilePath variable) cannot be None or an empty string."
+
+		elif dbFilePath!=None and dbFilePath.endswith(".db") == False:
+			errors+=errorFunctionBase+"The SQLite file must be a .db file."
+
+
+		if self._isEmpty(dbTableName, None):
+			errors+=errorFunctionBase+"The SQLite table name (i.e. dbTableName variable) cannot be None or an empty string."
+
+
+
+		## check fuzzyTopicsList and necessaryTopicsList:
+		if self._isEmpty(fuzzyTopicsList) and self._isEmpty(necessaryTopicsList):
+			errors+=errorFunctionBase+"both fuzzyTopicsList and necessaryTopicsList cannot be empty or None."
+			
+
+		if self._isEmpty(fuzzyTopicsList)==False and type(fuzzyTopicsList)!=type([]):
+			errors+=errorFunctionBase+"if fuzzyTopicsList is not empty, it must be a list of strings."
+			
+		if self._isEmpty(necessaryTopicsList)==False and type(necessaryTopicsList)!=type([]):
+			errors+=errorFunctionBase+"if necessaryTopicsList is not empty, it must be a list of strings."
+
+
+		## check siteList:
+		if self._isEmpty(siteList)==False and type(siteList)!=type([]):
+			errors+=errorFunctionBase+"if siteList is not empty, it must be a list of strings."
+
+		## check inurl:
+		if self._isEmpty(inurl, ""):
+			errors+=errorFunctionBase+'if inurl is to be empty, set it to "".'
+		elif inurl!=None and type(inurl)!=type(""):
+			errors+=errorFunctionBase+'inurl, if not None, must be a string with no spaces.'
+		elif inurl!=None and inurl.find(" ") != -1:
+			errors+=errorFunctionBase+'inurl must be a string with no spaces.'
+
+
+		## check 'timePeriod', 'numTimePeriodsRemaining', 'resultsPerPage', 'resultsPerTimePeriod', 'resumeFrom', 'waitBetweenPages', 'waitBetweenSearches' :
+		
+		if timePeriod!=None and self._isIntegerInRange(timePeriod, lowerBound=1) == False:
+			errors+=errorFunctionBase+"timePeriod must be an integer greater than 0, or None."
+
+		if numTimePeriodsRemaining!=None and self._isIntegerInRange(numTimePeriodsRemaining, lowerBound=1) == False:
+			errors+=errorFunctionBase+"numTimePeriodsRemaining must be an integer, greater than 0."
+		
+		if resultsPerPage!=None and self._isIntegerInRange(resultsPerPage, lowerBound=10, upperBound=100) == False:
+			errors+=errorFunctionBase+"resultsPerPage must be an integer between 10 and 100, or None."
+		
+		if resultsPerTimePeriod!=None and self._isIntegerInRange(resultsPerTimePeriod, lowerBound=1) == False:
+			errors+=errorFunctionBase+"resultsPerTimePeriod must be an integer greater than 0, or None."
+		
+		if resumeFrom!=None and self._isIntegerInRange(resumeFrom, lowerBound=2440588) == False:	## start of UNIX time, i.e. 1 Jan 1970
+			errors+=errorFunctionBase+"resumeFrom must be an integer greater than 2440587, or None."
+		
+		if waitBetweenPages!=None and self._isIntegerInRange(waitBetweenPages, lowerBound=0) == False:
+			errors+=errorFunctionBase+"waitBetweenPages must be an integer greater than -1, or None."
+		
+		if waitBetweenSearches!=None and self._isIntegerInRange(waitBetweenSearches, lowerBound=0) == False:
+			errors+=errorFunctionBase+"waitBetweenSearches must be an integer greater than -1, or None."
+
+
+		return errors
+
+
+
+
+
+	def _checkInputsForWarnings(self, resultsPerPage, waitBetweenPages):
+		warningFunctionBase = "\n\n\tWARNING in GoogleSearch._checkInputsForWarnings(): "
+		warnings = ""
+		
+		## check ratio of resultsPerPage to waitBetweenPages:
+		resultsPerPagetowaitBetweenPagesRatioWarning = warningFunctionBase+"the wait time between pages may not be large enough to prevent IP blocking."+"\n\tRecommend wait time between pages: %s seconds or more."
+
+		if resultsPerPage <= 20 and waitBetweenPages/float(resultsPerPage) < 150/float(10):
+			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 150/float(10) )/10) ))
+
+		elif resultsPerPage > 20 and resultsPerPage <= 50 and waitBetweenPages/float(resultsPerPage) < 240/float(20):
+			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 240/float(20) )/10) ))
+			
+		elif resultsPerPage > 50 and resultsPerPage <= 80 and waitBetweenPages/float(resultsPerPage) < 450/float(50):
+			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 450/float(50) )/10) ))
+			
+		elif resultsPerPage >80 and resultsPerPage < 100 and waitBetweenPages/float(resultsPerPage) < 540/float(80):
+			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 540/float(80) )/10) ))
+
+		elif resultsPerPage == 100 and waitBetweenPages/float(resultsPerPage) < 600/float(100):
+			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 600/float(100) )/10) ))
+
+		return warnings
+
+
+
+
+
+	def _printExtractionStats(self, dbFilePath, dbTableName, googleDomain, topic, inurl, timePeriod, numTimePeriodsRemaining, resultsPerTimePeriod, resultsPerPage, waitBetweenPages, waitBetweenSearches):
+
+		print("\n\n\n###-------------------------EXTRACION STATS-------------------------###\n")
+		print("dbFilePath = %s"%(dbFilePath))
+		print("dbTableName = %s"%(dbTableName))
+		print("googleDomain = %s"%(googleDomain))
+		print("topic = %s"%(topic))
+		if inurl!="":
+			print("inurl = %s"%inurl)
+		print("timePeriod = %s days"%(timePeriod))
+		print("numTimePeriodsRemaining = %s"%(numTimePeriodsRemaining))
+		print("resultsPerTimePeriod = %s"%(resultsPerTimePeriod))
+		print("resultsPerPage = %s"%(resultsPerPage))
+		print("waitBetweenPages = %s seconds"%(waitBetweenPages))
+		print("waitBetweenSearches = %s seconds"%(waitBetweenSearches))
+
+
+
+
+
+
+	def _initializeGoogleSearchQueryObj(self, 
+		siteList=[],
+		fuzzyTopicsList=[],
+		necessaryTopicsList=[],
+		inurl=None,
+		daterangeFrom=None,
+		daterangeTo=None,
+		printing=False
+		):
+
+		gs = self.GoogleSearchQuery.GoogleSearchQuery()
+		if siteList != []:
+			gs.setSiteList(siteList=siteList, printing=printing)
+		if fuzzyTopicsList != []:
+			gs.setFuzzyTopicsList(fuzzyTopicsList=fuzzyTopicsList, printing=printing)
+		if necessaryTopicsList != []:
+			gs.setNecessaryTopicsList(necessaryTopicsList=necessaryTopicsList, printing=printing)
+		if inurl!=None:
+			gs.setInUrl(inurl=inurl, printing=printing)
+		if daterangeFrom!=None and daterangeTo!=None:
+			gs.setDateRange(daterangeFrom=daterangeFrom, daterangeTo=daterangeTo, printing=printing)
+		return gs
+
+
+
 
 
 
@@ -295,7 +698,7 @@ class GoogleSearch:
 
 
 		if printing:
-			print("\n\tTrying to execute query:\n\t\t%s\n"%searchQueryString)
+			print("\n\tTrying to execute query:\n\t\t%s"%searchQueryString)
 
 		resultsLinkDict={}	
 		searchResultsObtained=0;	## keeps track of the TOTAL number of search results obtained. 
@@ -322,7 +725,7 @@ class GoogleSearch:
 
 		if totalNumResultsFromSearch!=None:
 			if printing:
-				print("\n\t\tYour query has about %s results in total. We will try to get the top %s results\n"%(totalNumResultsFromSearch, numResultsRequested))
+				print("\n\tYour query has about %s results in total. We will try to get the top %s results\n"%(totalNumResultsFromSearch, numResultsRequested))
 
 		firstPageResultUrls = googleParser.extractResultUrlsFromGoogleSearchResultsPageHtml(htmlString=firstResultsPageHTML, printingDebug=printingDebug)
 
@@ -425,10 +828,9 @@ class GoogleSearch:
 
 			searchResultsObtained = searchResultsObtained + len(currentPageResultUrls)
 			
-			if searchResultsObtained + len(currentPageResultUrls) >= numResultsRequested:	
-				resultsLinkDict[pageCount] = currentPageResultUrls[0:numResultsRequested-searchResultsObtained]
+			resultsLinkDict[pageCount] = currentPageResultUrls
 
-			print("\n\t\t\tCurrent page number:%s\n\t\t\tResults obtained so far: (%s/%s)."%(pageCount, min(searchResultsObtained,numResultsRequested), numResultsRequested))
+			print("\n\t\t\tCurrent page number:%s\n\t\t\tResults obtained so far: (%s/%s)."%(pageCount,searchResultsObtained, numResultsRequested))
 
 			if insertBetweenPages and conn!=None and dbTableName!= None:
 				self._insertGetSearchResults(
@@ -436,7 +838,7 @@ class GoogleSearch:
 					dbTableName=dbTableName,
 					numResultsRequested=numResultsRequested,
 					pageCount=pageCount, 
-					pageResultUrls=currentPageResultUrls[0:numResultsRequested-searchResultsObtained],
+					pageResultUrls=currentPageResultUrls,
 					googleSearchQueryObj=googleSearchQueryObj,
 					printing=printing,
 					printingDebug = printingDebug)
@@ -472,6 +874,7 @@ class GoogleSearch:
 
 			self.browserHandler.clearBrowserData()
 
+		print("\n\n\n\n\n_getSearchResults: resultsLinkDict = \n%s\n\n\n"%resultsLinkDict)
 
 		return resultsLinkDict
 
@@ -480,127 +883,34 @@ class GoogleSearch:
 
 
 
-	def getTopSearchResults(self,
-		numResults,
-		searchQueryString=None,
 
-		siteList=[],
-		fuzzyTopicsList=[],
-		necessaryTopicsList=[],
-		inurl=None,
-		daterangeFrom=None, 
-		daterangeTo=None,
-
-
-		googleDomain="http://www.google.com",
-		resultsPerPage  = 10,
-		waitBetweenPages= 150,
-		
-		printing = True,
-		printingDebug = False
+	def _insertGetSearchResults(self, 
+		conn, 
+		dbTableName,
+		numResultsRequested, 
+		googleSearchQueryObj,
+		pageCount, 
+		pageResultUrls,
+		printing, 
+		printingDebug
 		):
-		"""
-		Extracts and returns a tuple of ordered search results.
-		We can pass the exact query itself as a string into 'searchQueryString'. 
-		Alternatively, we can pass the items siteList, fuzzyTopicsList, necessaryTopicsList, inurl, daterangeFrom, daterangeTo=None to the function, and it generates the query for us.
 
-		The returned argument is a tuple of two parts: 
-			part 1 is the searchQueryString used to generate the results
-			part 2 is the tuple of ordered results.
-
-		"""
-		
-
-		if searchQueryString==None:
-			## check for errors:
-			errors = self._checkInputsForErrors(
-				necessaryTopicsList=necessaryTopicsList, 
-				fuzzyTopicsList=fuzzyTopicsList, 
-				siteList=siteList, 
-				inurl=inurl, 
-				resultsPerPage=resultsPerPage,  
-				waitBetweenPages=waitBetweenPages)
-		
-			if errors!="": 
-				if printing:
-					print("###-------------------------ERRORS-------------------------###\n%s"%errors)
-				return None
-
-
-			googleSearchQueryObj = self._initializeGoogleSearchQueryObj(
-				siteList=siteList, 
-				fuzzyTopicsList=fuzzyTopicsList, 
-				necessaryTopicsList=necessaryTopicsList, 
-				inurl=inurl, 
-				daterangeFrom = daterangeFrom, 
-				daterangeTo = daterangeTo, 
-				printing=printing)
-
-			searchQueryString = googleSearchQueryObj.toString()
-
-
-
-		## check for warnings in the data:
-		warnings = self._checkInputsForWarnings(resultsPerPage=resultsPerPage, waitBetweenPages=waitBetweenPages)
-		if warnings!="":
+		tempDict = {}
+		try:
+			if printingDebug:
+				print("pageCount:%s\n%s\n\n"%(pageCount,pageResultUrls))
+			tempDict[pageCount] = pageResultUrls
+			self._insertResultsLinkDictIntoDB(conn=conn, 
+				dbTableName=dbTableName, 
+				resultsLinkDict=tempDict, 
+				googleSearchQueryObj=googleSearchQueryObj, 
+				printing=printing,
+				printingDebug = printingDebug
+			)
+		except Exception, e:
 			if printing:
-				print("\n\n\n###-------------------------WARNINGs-------------------------###\n%s"%warnings)
-
-
-		if printing:
-			print("\n\n\nBrowser Handler in use:\n%s"%(self.browserHandler.getName()))
-
-
-		## Actually extract search results.
-		resultsLinkDict = self._getSearchResults(
-			searchQueryString = searchQueryString,
-			googleDomain = googleDomain,
-			numResultsRequested = numResults,
-			resultsPerPage = resultsPerPage,
-			waitBetweenPages = waitBetweenPages,
-			printing = printing,
-			printingDebug = printingDebug
-		)
-
-		## Convert resultsLinkDict into an ordered tuple
-		searchResultsList = []
-		for pageNo in sorted(resultsLinkDict.keys()):
-			for resultUrl in resultsLinkDict[pageNo]:
-				searchResultsList.append(resultUrl)
-
-		return (searchQueryString, tuple(searchResultsList)[0:numResults])
-
-
-
-
-
-
-
-	def _initializeGoogleSearchQueryObj(self, 
-		siteList=[],
-		fuzzyTopicsList=[],
-		necessaryTopicsList=[],
-		inurl=None,
-		daterangeFrom=None,
-		daterangeTo=None,
-		printing=False
-		):
-
-		gs = self.GoogleSearchQuery.GoogleSearchQuery()
-		if siteList != []:
-			gs.setSiteList(siteList=siteList, printing=printing)
-		if fuzzyTopicsList != []:
-			gs.setFuzzyTopicsList(fuzzyTopicsList=fuzzyTopicsList, printing=printing)
-		if necessaryTopicsList != []:
-			gs.setNecessaryTopicsList(necessaryTopicsList=necessaryTopicsList, printing=printing)
-		if inurl!=None:
-			gs.setInUrl(inurl=inurl, printing=printing)
-		if daterangeFrom!=None and daterangeTo!=None:
-			gs.setDateRange(daterangeFrom=daterangeFrom, daterangeTo=daterangeTo, printing=printing)
-		return gs
-
-
-
+				print("\n\t\tGoogleSearch._insertGetSearchResults(): cannot insert page results into database.")
+				print("\t\tError description: %s\n"%e)
 
 
 
@@ -616,6 +926,10 @@ class GoogleSearch:
 				resultCount = 0		## gives priority of results. ResultNumber = 1 means the top result
 				repeatCount = 0
 				uniqueResultNumber=0
+
+				if printingDebug:
+					print("\n\n\nresultsLinkDict=\n%s\n\n"%resultsLinkDict)
+					print("sorted(resultsLinkDict.keys()) = %s\n\n\n"%sorted(resultsLinkDict.keys()))
 
 				for pageNum in sorted(resultsLinkDict.keys()):
 					for resultNumberOnPage in range(1, len(resultsLinkDict[pageNum])+1): 
@@ -639,7 +953,9 @@ class GoogleSearch:
 
 
 						except Exception, e:
-							repeatCount += 1
+							errorString = str(e).lower()
+							if errorString.find('syntax error')==-1: 
+								repeatCount += 1
 							if printing:
 								print("\n\t\t\t\tCould not insert topic-url pair ( %s  ,  %s ), possible duplicate."%(topic, resUrl))
 								print("\t\t\t\tError description: %s\n"%e)
@@ -672,120 +988,6 @@ class GoogleSearch:
 
 
 
-
-
-	def saveToSQLiteDatabase(self, 
-		dbFilePath="GoogleSearchResults.db", dbTableName="SearchResultUrls",
-		googleDomain="http://www.google.com",
-		necessaryTopicsList=[], fuzzyTopicsList=[], 
-		siteList=[], 
-		inurl=None, 
-		timePeriod=None, numTimePeriodsRemaining=1, 
-		resultsPerPage=10, resultsPerTimePeriod=30, 
-		resumeFrom=None, 
-		waitBetweenPages=150, waitBetweenSearches=180, 
-		printing=True, printingDebug=False,
-		insertBetweenPages = False, insertBetweenSearches = True, 
-		insertOnError = True, 
-		skipErroneousSearches = False
-		):
-
-		"""This function saves the GoogleSearchResults to a database of your choosing. It is assumed that you may run this function several times with different parameters; the database will remain for all those times. The module sqliteDefaults is used to perform the actual SQLite handling.
-		Return values:
-			> If None is returned, that means the operation has failed and no results were extracted. 
-			> If False is returned, that means that some results were extracted, but not all the required ones, so it is possible you should change some values, e.g. your computer's IP address or the wait periods.
-			  Note that False is NOT returned when different searches return similar URLs.
-			> If True is returned, that means the entire search has executed successfully and the function stops running.
-		"""
-		
-
-		## check for errors:
-		errors = self._checkInputsForErrors(dbFilePath=dbFilePath, dbTableName=dbTableName, 
-			necessaryTopicsList=necessaryTopicsList, fuzzyTopicsList=fuzzyTopicsList, 
-			siteList=siteList, 
-			inurl=inurl, 
-			timePeriod=timePeriod, numTimePeriodsRemaining=numTimePeriodsRemaining, 
-			resultsPerPage=resultsPerPage, resultsPerTimePeriod=resultsPerTimePeriod, 
-			resumeFrom=resumeFrom, waitBetweenPages=waitBetweenPages, waitBetweenSearches=waitBetweenSearches)
-	
-		if errors!="": 
-			if printing:
-				print("###-------------------------ERRORS-------------------------###\n%s"%errors)
-			return None
-
-
-		## Initialize the database.
-		conn = self._SQLiteDBSetup(dbFilePath, dbTableName, printing)
-		if conn == None:
-			return None
-
-
-		## check for warnings in the data:
-		warnings = self._checkInputsForWarnings(resultsPerPage=resultsPerPage, waitBetweenPages=waitBetweenPages)
-		if warnings!="":
-			if printing:
-				print("\n\n\n###-------------------------WARNINGs-------------------------###\n%s"%warnings)
-
-
-		if printing:
-			print("\n\n\nBrowser Handler in use:\n%s"%(self.browserHandler.getName()))
-
-		## Actually extract data.
-
-		if timePeriod==None:	## We only get for one time period, thus no dateranges have to be given.
-			googleSearchQueryObj = self._initializeGoogleSearchQueryObj(
-				siteList=siteList, 
-				fuzzyTopicsList=fuzzyTopicsList, 
-				necessaryTopicsList=necessaryTopicsList, 
-				inurl=inurl,  
-				printing=printing)
-
-			resultsLinkDict = self._getSearchResults(
-				searchQueryString=googleSearchQueryObj.toString(),
-				googleDomain=googleDomain,
-				numResultsRequested=resultsPerTimePeriod,
-				resultsPerPage  = resultsPerPage,
-				waitBetweenPages= waitBetweenPages,
-				printing = printing,
-				insertBetweenPages=insertBetweenPages,
-				printingDebug = printingDebug)
-
-			self._insertResultsLinkDictIntoDB(conn=conn, dbTableName=dbTableName, resultsLinkDict=resultsLinkDict, googleSearchQueryObj=googleSearchQueryObj, printing=printing, printingDebug=printingDebug)
-
-			return True
-
-		else:
-			allResults = self._getStaggeredSearchResults(
-				googleDomain=googleDomain,
-				necessaryTopicsList=necessaryTopicsList, 
-				fuzzyTopicsList=fuzzyTopicsList, 
-				siteList=siteList, 
-				inurl=inurl, 
-				timePeriod=timePeriod, 
-				numTimePeriodsRemaining=numTimePeriodsRemaining, 
-				resultsPerPage=resultsPerPage, 
-				resultsPerTimePeriod=resultsPerTimePeriod, 
-				resumeFrom=resumeFrom,
-
-				waitBetweenPages=waitBetweenPages, 
-				waitBetweenSearches=waitBetweenSearches, 
-
-				printing=printing, 
-				printingDebug=printingDebug, 
-
-				skipErroneousSearches = skipErroneousSearches,
-				insertBetweenPages = insertBetweenPages,
-				insertBetweenSearches = insertBetweenSearches,
-				insertOnError = insertOnError,
-
-				conn=conn, 
-				dbTableName=dbTableName,
-				dbFilePath=dbFilePath
-			)
-
-			if self._isEmpty(allResults):
-				if printing:
-					print("GoogleSearch.saveToSQLiteDatabase(): no results obtained.\n")
 
 
 
@@ -1017,31 +1219,38 @@ class GoogleSearch:
 
 
 
+	def _tryGetCurrentPageHTML(self, nextPageUrl, printing=True, printingDebug=False):
+		## We attempt to get the HTML of a page.3 times before giving up.
+		try:
+			self.browserHandler.go(nextPageUrl)
+			currentPageHTML = self.browserHandler.getCurrentPageHtml()
+			if currentPageHTML==None: 
+				x=1/0
+		except Exception:
+			try:
+				self.doSomeWaiting(avgWaitTime=15, printing=False)
+				currentPageHTML = self.browserHandler.getHtml(url=nextPageUrl)
+				if currentPageHTML==None: 
+					x=1/0
+			except Exception:
+				try:
+					if self.browserHandler.clearBrowserData() == False:
+						if printing:
+							print("\n\tGoogleSearch._tryGetCurrentPageHTML(): Cannot clear browser data.")
+					self.browserHandler.go(nextPageUrl)
+					currentPageHTML = self.browserHandler.getCurrentPageHtml()
+					if currentPageHTML==None:	
+						x=1/0
+				except Exception:
+					if self.browserHandler.resetBrowser() == False:
+						if printing:
+							print("\n\tGoogleSearch._tryGetCurrentPageHTML(): Cannot reset browser.")
+					self.browserHandler.go(nextPageUrl)
+					currentPageHTML = self.browserHandler.getCurrentPageHtml()
+		if printingDebug:
+			print("GoogleSearch._tryGetCurrentPageHTML(): Length of HTML obtained: %s"%(len(currentPageHTML)))
+		return currentPageHTML
 
-
-
-
-
-
-
-
-
-
-	def _printExtractionStats(self, dbFilePath, dbTableName, googleDomain, topic, inurl, timePeriod, numTimePeriodsRemaining, resultsPerTimePeriod, resultsPerPage, waitBetweenPages, waitBetweenSearches):
-
-		print("\n\n\n###-------------------------EXTRACION STATS-------------------------###\n")
-		print("dbFilePath = %s"%(dbFilePath))
-		print("dbTableName = %s"%(dbTableName))
-		print("googleDomain = %s"%(googleDomain))
-		print("topic = %s"%(topic))
-		if inurl!="":
-			print("inurl = %s"%inurl)
-		print("timePeriod = %s days"%(timePeriod))
-		print("numTimePeriodsRemaining = %s"%(numTimePeriodsRemaining))
-		print("resultsPerTimePeriod = %s"%(resultsPerTimePeriod))
-		print("resultsPerPage = %s"%(resultsPerPage))
-		print("waitBetweenPages = %s seconds"%(waitBetweenPages))
-		print("waitBetweenSearches = %s seconds"%(waitBetweenSearches))
 
 
 
@@ -1086,186 +1295,6 @@ class GoogleSearch:
 		return startDate, endDate, numTimePeriodsRemaining
 
 
-
-
-
-
-
-
-	def _SQLiteDBSetup(self, dbFilePath, dbTableName, printing):
-		conn = None
-		if self.hasImportedNecessaryModulesSQLite():
-			try:
-				conn=self.sqliteDefaults.get_conn(dbFilePath, printing)
-			except Exception:
-				if printing:
-					print("\n\tERROR in GoogleSearch._SQLiteDBSetup(): could not connect to database.")
-				return None
-
-			try:
-				conn.execute('''CREATE TABLE IF NOT EXISTS %s(
-					resultNumberInSearch 	INTEGER,
-					Topic 					TEXT 	NOT NULL,
-					URL 					TEXT 	NOT NULL,
-					ResultPageNumber 		INTEGER NOT NULL,
-					ResultNumberOnPage		INTEGER NOT NULL,
-					StartDate 				INTEGER,
-					EndDate 				INTEGER,
-					SearchedOnDate 			DATE,
-					ObtainedFromQuery 		TEXT 	NOT NULL,
-					PRIMARY KEY(Topic, URL)
-				);
-				'''%dbTableName)
-				conn.commit()
-
-			except Exception:
-				if printing:
-					print("\n\tERROR in GoogleSearch._SQLiteDBSetup(): could not create table in database.")
-				return None
-
-		return conn
-
-
-
-
-	def _isEmpty(self, thing, exceptThisThing="\!@#$%^&*()[]:;?<>,.1234567890/"):		
-		"""Checks if 'thing' is empty; returns True for a bunch of empty things; only exceptThisThing is permitted.
-		"""
-		if thing!=exceptThisThing and (thing==None or thing=="" or thing==[] or thing=={} or thing==()):
-			return True
-		return False
-
-
-
-	def _isIntegerInRange(self, n, lowerBound=None, upperBound=None):
-		if type(n)!=type(0):
-			return False
-		elif lowerBound!=None and upperBound!=None and (n<lowerBound or n>upperBound):
-			return  False
-		elif upperBound!=None and n>upperBound:
-			return False
-		elif lowerBound!=None and n<lowerBound:
-			return False
-
-		return True
-
-
-
-	def _checkInputsForErrors(self, 
-		necessaryTopicsList, 
-		fuzzyTopicsList, 
-		siteList, 
-		inurl, 
-
-		resultsPerPage=None, 
-		resultsPerTimePeriod=None, 
-
-		timePeriod=None, 
-		numTimePeriodsRemaining=None, 
-
-
-		resumeFrom=None, 
-		waitBetweenPages=None, 
-		waitBetweenSearches=None,
-
-		dbFilePath=None, 
-		dbTableName=None
-		):
-
-		errorFunctionBase = "\n\tERROR in GoogleSearch._checkInputsForErrors(): "
-		errors = ""
-
-
-		## check dbFilePath and dbTableName:
-		if self._isEmpty(dbFilePath, None):
-			errors+=errorFunctionBase+"The SQLite file name (i.e. dbFilePath variable) cannot be None or an empty string."
-
-		elif dbFilePath!=None and dbFilePath.endswith(".db") == False:
-			errors+=errorFunctionBase+"The SQLite file must be a .db file."
-
-
-		if self._isEmpty(dbTableName, None):
-			errors+=errorFunctionBase+"The SQLite table name (i.e. dbTableName variable) cannot be None or an empty string."
-
-
-
-		## check fuzzyTopicsList and necessaryTopicsList:
-		if self._isEmpty(fuzzyTopicsList) and self._isEmpty(necessaryTopicsList):
-			errors+=errorFunctionBase+"both fuzzyTopicsList and necessaryTopicsList cannot be empty or None."
-			
-
-		if self._isEmpty(fuzzyTopicsList)==False and type(fuzzyTopicsList)!=type([]):
-			errors+=errorFunctionBase+"if fuzzyTopicsList is not empty, it must be a list of strings."
-			
-		if self._isEmpty(necessaryTopicsList)==False and type(necessaryTopicsList)!=type([]):
-			errors+=errorFunctionBase+"if necessaryTopicsList is not empty, it must be a list of strings."
-
-
-		## check siteList:
-		if self._isEmpty(siteList)==False and type(siteList)!=type([]):
-			errors+=errorFunctionBase+"if siteList is not empty, it must be a list of strings."
-
-		## check inurl:
-		if self._isEmpty(inurl, ""):
-			errors+=errorFunctionBase+'if inurl is to be empty, set it to "".'
-		elif inurl!=None and type(inurl)!=type(""):
-			errors+=errorFunctionBase+'inurl, if not None, must be a string with no spaces.'
-		elif inurl!=None and inurl.find(" ") != -1:
-			errors+=errorFunctionBase+'inurl must be a string with no spaces.'
-
-
-		## check 'timePeriod', 'numTimePeriodsRemaining', 'resultsPerPage', 'resultsPerTimePeriod', 'resumeFrom', 'waitBetweenPages', 'waitBetweenSearches' :
-		
-		if timePeriod!=None and self._isIntegerInRange(timePeriod, lowerBound=1) == False:
-			errors+=errorFunctionBase+"timePeriod must be an integer greater than 0, or None."
-
-		if numTimePeriodsRemaining!=None and self._isIntegerInRange(numTimePeriodsRemaining, lowerBound=1) == False:
-			errors+=errorFunctionBase+"numTimePeriodsRemaining must be an integer, greater than 0."
-		
-		if resultsPerPage!=None and self._isIntegerInRange(resultsPerPage, lowerBound=10, upperBound=100) == False:
-			errors+=errorFunctionBase+"resultsPerPage must be an integer between 10 and 100, or None."
-		
-		if resultsPerTimePeriod!=None and self._isIntegerInRange(resultsPerTimePeriod, lowerBound=1) == False:
-			errors+=errorFunctionBase+"resultsPerTimePeriod must be an integer greater than 0, or None."
-		
-		if resumeFrom!=None and self._isIntegerInRange(resumeFrom, lowerBound=2440588) == False:	## start of UNIX time, i.e. 1 Jan 1970
-			errors+=errorFunctionBase+"resumeFrom must be an integer greater than 2440587, or None."
-		
-		if waitBetweenPages!=None and self._isIntegerInRange(waitBetweenPages, lowerBound=0) == False:
-			errors+=errorFunctionBase+"waitBetweenPages must be an integer greater than -1, or None."
-		
-		if waitBetweenSearches!=None and self._isIntegerInRange(waitBetweenSearches, lowerBound=0) == False:
-			errors+=errorFunctionBase+"waitBetweenSearches must be an integer greater than -1, or None."
-
-
-		return errors
-
-
-
-
-	def _checkInputsForWarnings(self, resultsPerPage, waitBetweenPages):
-		warningFunctionBase = "\n\n\tWARNING in GoogleSearch._checkInputsForWarnings(): "
-		warnings = ""
-		
-		## check ratio of resultsPerPage to waitBetweenPages:
-		resultsPerPagetowaitBetweenPagesRatioWarning = warningFunctionBase+"the wait time between pages may not be large enough to prevent IP blocking."+"\n\tRecommend wait time between pages: %s seconds or more."
-
-		if resultsPerPage <= 20 and waitBetweenPages/float(resultsPerPage) < 150/float(10):
-			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 150/float(10) )/10) ))
-
-		elif resultsPerPage > 20 and resultsPerPage <= 50 and waitBetweenPages/float(resultsPerPage) < 240/float(20):
-			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 240/float(20) )/10) ))
-			
-		elif resultsPerPage > 50 and resultsPerPage <= 80 and waitBetweenPages/float(resultsPerPage) < 450/float(50):
-			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 450/float(50) )/10) ))
-			
-		elif resultsPerPage >80 and resultsPerPage < 100 and waitBetweenPages/float(resultsPerPage) < 540/float(80):
-			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 540/float(80) )/10) ))
-
-		elif resultsPerPage == 100 and waitBetweenPages/float(resultsPerPage) < 600/float(100):
-			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 600/float(100) )/10) ))
-
-		return warnings
 
 
 
