@@ -1,13 +1,15 @@
+import re
+
 
 class GoogleWebsiteParser:
 
 	def __init__(self):
-		_canParse = True
+		self._canParse = True
 		try:
 			from bs4 import BeautifulSoup
 		except Exception:
-			print("\n\n\n\tERROR: module BeautifulSoup not found, please install to Python [e.g. with the command 'pip install beautifulsoup4'].\n")
-			_canParse = False
+			print("\n\n\n\tERROR in class GoogleWebsiteParser: module BeautifulSoup not found, please install to Python [e.g. with the command 'pip install beautifulsoup4'].\n")
+			self._canParse = False
 
 
 
@@ -16,7 +18,7 @@ class GoogleWebsiteParser:
 
 
 
-	def extractResultUrlsFromGoogleSearchResultsPageHtml(htmlString, printingDebug=False):	
+	def extractResultUrlsFromGoogleSearchResultsPageHtml(self, htmlString, printingDebug=False):	
 		""" This function, given the HTML of a Google Search results page, extracts the urls of the Search Results. """
 		if self.checkParser() == False:
 			return None
@@ -26,13 +28,13 @@ class GoogleWebsiteParser:
 		bs = BeautifulSoup(htmlString)
 
 		if printingDebug:
-			print "\n\nextractResultsFromGoogleSearchResultsPageHtml:"
+			print "\n\nGoogleWebsiteParser.extractResultsFromGoogleSearchResultsPageHtml() output:"
 
 
 		temp_results_urls=bs.findAll(attrs={"class":"r"}) 	## I have found that this extracts all 10 links per page
 
 		if printingDebug:
-			print "\n\ttemp_results_urls:"
+			print("\n\ttemp_results_urls:")
 
 		if temp_results_urls==[]:
 			if printingDebug:
@@ -70,13 +72,13 @@ class GoogleWebsiteParser:
 				print "\n\t",x
 
 
-		return results_page_urls
+		return tuple(results_page_urls)
 
 
 	
 
 
-	def extractTotalNumberOfResultsFromQuery(htmlString, printingDebug=False):
+	def extractTotalNumberOfResultsFromQuery(self, htmlString, printingDebug=False):
 		""" This function, given the HTML of a Google Search results page, extracts the total number of Search Results the query has. 
 		This can technically be extracted from any search result page of that query."""
 
@@ -112,7 +114,7 @@ class GoogleWebsiteParser:
 
 
 
-	def extractNextGoogleSearchResultsPageLink(htmlString, googleDomain, printingDebug=False):	
+	def extractNextGoogleSearchResultsPageLink(self, htmlString, googleDomain, printingDebug=False):	
 		"""This function, given the HTML of a Google Search results page, will get a single link, of the next results page.
 		This function is an easier version of extract_next_google_search_results_page_links(), which allows us to just keep clicking 'Next' to get more results."""
 
@@ -124,7 +126,7 @@ class GoogleWebsiteParser:
 		bs = BeautifulSoup(htmlString)	
 		
 		if printingDebug:
-			print "\n\extractNextGoogleSearchResultsPageLink:"
+			print "\n\GoogleWebsiteParser.extractNextGoogleSearchResultsPageLink() output:"
 
 		if printingDebug:
 			print "\n\tnav_html:\n"

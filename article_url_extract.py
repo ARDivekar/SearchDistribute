@@ -146,7 +146,7 @@ site_list=[
 # 			'thehindubusinessline.com/markets/stock-markets/', 'thehindubusinessline.com/companies/']
 
 
-initial_start_date = to_julian_date_datetime(datetime.now().date())
+
 
 
 
@@ -357,7 +357,7 @@ conn.commit()
 
 
 
-
+initial_start_date = to_julian_date_datetime(datetime.now().date())
 start_date=0
 end_date=0
 
