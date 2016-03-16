@@ -74,8 +74,6 @@ class Enum(set):	## Source: http://stackoverflow.com/a/2182437/4900327
 
 
 import traceback
-import time
-import random
 
 class BrowserHandlerTemplate(object):
 	browser = None
@@ -134,6 +132,19 @@ class BrowserHandlerTemplate(object):
 			return url
 
 
+	def _waitBeforeTypingQueryIntoSearchBox(self, searchQueryString, errorPrinting=True):
+		import time
+		import random
+		searchQueryStringLen=len(searchQueryString)
+		waitTime = random.uniform(searchQueryStringLen/float(5), searchQueryStringLen/float(3))	## wait a random amount of time. This assumes that the average typing speed is between 3 and 5 characters per second.
+		if errorPrinting:
+			print("\t\t\tWaiting for %s seconds before entering query into search box."%waitTime)
+		time.sleep(waitTime) 
+
+
+			
+
+
 # print("\n\tSplinter is the default headless client of this package as it is more reliable.")
 
 
@@ -157,7 +168,6 @@ class splinterBrowserHandler(BrowserHandlerTemplate):
 		import splinter
 
 	except Exception:
-		print(_splinterErrorText)
 		browser = None
 		_headless = None
 
@@ -187,7 +197,8 @@ class splinterBrowserHandler(BrowserHandlerTemplate):
 		else:
 			try:
 				import os
-				os.system("killall phantomjs")
+				if self.isHeadless():
+					os.kill("phantomjs")
 				if printing:
 					print("\n\tSuccessfully closed Splinter phantomjs headless browser.")
 				return True
@@ -200,18 +211,47 @@ class splinterBrowserHandler(BrowserHandlerTemplate):
 
 
 
-	def resetBrowser(self, headless=True, errorPrinting=False):
+	def resetBrowser(self, headless=None, errorPrinting=True):
 
 		try:					
 			import splinter
-
 		except Exception:
-			print(self._splinterErrorText)
+			if errorPrinting:
+				print(self._splinterErrorText)
 			self.browser = None
 			self._headless = None
 			return False
 
-		if headless:
+
+		if self.checkBrowserAvailability()==False:		## We are starting the browser for the first time.
+			if headless:
+				try:
+					self.browserClose(errorPrinting)
+					self.browser = splinter.Browser("phantomjs")
+					self._headless = True
+					return True
+				except Exception:
+					if errorPrinting:
+						print(self._phantomjsErrorText)
+					self.browser = None
+					self._headless = None
+					return False
+
+			else:
+				self.browserClose(errorPrinting)
+				try:
+					self.browser = splinter.Browser()
+					self._headless = False
+					return True
+				except Exception:
+					if errorPrinting:
+						print(self._splinterErrorText)
+					self.browser = None
+					self._headless = None
+					return False
+
+
+		elif self.isHeadless()==True:
 			try:
 				self.browserClose(errorPrinting)
 				self.browser = splinter.Browser("phantomjs")
@@ -225,7 +265,7 @@ class splinterBrowserHandler(BrowserHandlerTemplate):
 				return False
 
 
-		else:
+		elif self.isHeadless()==False:
 			self.browserClose(errorPrinting)
 			try:
 				self.browser = splinter.Browser()
@@ -237,6 +277,9 @@ class splinterBrowserHandler(BrowserHandlerTemplate):
 				self.browser = None
 				self._headless = None
 				return False
+		
+
+
 
 
 	def clearBrowserData(self):
@@ -282,28 +325,33 @@ class splinterBrowserHandler(BrowserHandlerTemplate):
 		
 
 	def getInitialGoogleSearchResultsPageHtml(self, searchQueryString, googleDomain="http://www.google.com", secure=False, errorPrinting=False):
+
 		googleDomain = self._ensureHTTPorHTTPS(url=googleDomain, secure=secure)
 		if self.checkBrowserAvailability(errorPrinting):
 			self.browser.visit(googleDomain)
+
+			self._waitBeforeTypingQueryIntoSearchBox(searchQueryString=searchQueryString, errorPrinting=errorPrinting)
+			
 			self.browser.fill('q', searchQueryString)
 			button = self.browser.find_by_name('btnG')	## btnG was found by looking at google.com's HTML code.
-
-			searchQueryStringLen=len(searchQueryString)
-			time.sleep(random.uniform(searchQueryStringLen/float(5), searchQueryStringLen/float(1.5))) ## wait a random amount of time. This assumes that the average typing speed is between 1.5 and 5 characters per second.
-			
 			button.click()
-			url = self._ensureHTTPorHTTPS(self.browser.url, secure=secure)
-			self.browser.visit(url)
+
+
+			if self.isHeadless()==True:
+				url = self._ensureHTTPorHTTPS(self.browser.url, secure=secure)
+				self.browser.visit(url)
+
+			if self.isHeadless()==False:
+				import time
+				time.sleep(5)
+
 			return self.browser.html
 		else:
 			return None
 	
 
-	def __init__(self, headless=True):
-		self.resetBrowser(headless=headless)		
-
-
-
+	def __init__(self, headless=True, errorPrinting=True):
+		self.resetBrowser(headless=headless, errorPrinting=errorPrinting)		
 
 
 
@@ -324,11 +372,10 @@ class twillBrowserHandler(BrowserHandlerTemplate):
 			raise IncorrectVersionError(_twillErrorText)
 
 	except Exception:
-		print(_twillErrorText)
 		browser = None
 		_headless = None
 
-	_version="0.9"
+	
 
 
 
@@ -364,7 +411,8 @@ class twillBrowserHandler(BrowserHandlerTemplate):
 				raise IncorrectVersionError(_twillErrorText)
 
 		except Exception:
-			print(self._twillErrorText)
+			if errorPrinting:
+				print(self._twillErrorText)
 			self.browser = None
 			self._headless = None
 			return False
@@ -444,19 +492,19 @@ class twillBrowserHandler(BrowserHandlerTemplate):
 					ctrl = each_frm.controls    ## return all control objects within that form (all html tags as control inside form)
 					for ct in ctrl:
 						if ct.type == 'text':     	## i did it as per my use, you can put your condition here
+							self._waitBeforeTypingQueryIntoSearchBox(searchQueryString=searchQueryString, errorPrinting=errorPrinting)
+							
 							ct._value = searchQueryString 	## The Google query we want to fire.
 							self.browser.clicked(each_frm, ct.attrs['name'])	## clicked() takes two parameter: a form object and button name to be clicked.
-
-							time.sleep(random.uniform(searchQueryStringLen/float(5), searchQueryStringLen/float(1.5))) ## wait a random amount of time. This assumes that the average typing speed is between 1.5 and 5 characters per second.
-
 							self.browser.submit()		## Clicks the submit button on that form
+
 			return self.getCurrentPageHtml()
 		else:
 			return None
 	
 
-	def __init__(self):
-		self.resetBrowser()	
+	def __init__(self, errorPrinting=True):
+		self.resetBrowser(errorPrinting=errorPrinting)	
 
 
 

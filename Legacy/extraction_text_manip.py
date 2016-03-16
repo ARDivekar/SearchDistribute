@@ -9,6 +9,9 @@ import datetime
 from jdcal import gcal2jd
 
 
+def select_everything(str):
+	return re.findall("(\n.*)*?",str)
+
 
 def strip_http_https_from_url(url):
 	return (url.split("https://")[-1]).split("http://")[-1]
@@ -286,7 +289,7 @@ def shorten_whitespace(str):
 
 def remove_HTML_tags(str): #removes html tags completely from a string, not their contents
 	str=re.sub("<br>","\n", str)
-	return re.sub("<.*?>","", str)
+	return re.sub("<(.*?|\n)*?>","", str)
 	
 
 def remove_HTML(str, tag, attributes=""): #removed everything inside all occurences of that html tag

@@ -24,13 +24,13 @@ class GoogleSearch:
 	try:
 		import GoogleSearchQuery
 	except Exception:
-		print("\n\n\n\tFatal ERROR in class GoogleSearch: cannot locate module GoogleSearchQuery.py")
+		print("\n\n\n\tFatal ERROR while importing GoogleSearchQuery.py: . The module may have syntax errors or may be missing entirely.")
 		_hasImportedNecessaryModules = False
 
 	try:
 		import GoogleWebsiteParser
 	except Exception:
-		print("\n\n\n\tFatal ERROR in class GoogleSearch: cannot locate module GoogleWebsiteParser.py")
+		print("\n\n\n\tFatal ERROR while importing GoogleWebsiteParser.py: . The module may have syntax errors or may be missing entirely.")
 		_hasImportedNecessaryModules = False
 
 	try:
@@ -38,17 +38,21 @@ class GoogleSearch:
 		PossibleBrowserHandlers = BrowserHandler.PossibleBrowserHandlers
 		
 	except Exception:
-		print("\n\n\n\tFatal ERROR in class GoogleSearch: cannot locate module BrowserHandler.py")
+		print("\n\n\n\tFatal ERROR while importing BrowserHandler.py: . The module may have syntax errors or may be missing entirely.")
 		_hasImportedNecessaryModules = False
 
 	try: 
 		import sqliteDefaults
 	except Exception:
-		print("\n\n\n\tERROR in class GoogleSearch: cannot locate module sqliteDefaults.py")
+		print("\n\n\n\tERROR while importing sqliteDefaults.py: . The module may have syntax errors or may be missing entirely.")
 		_hasImportedNecessaryModulesSQLite = False
 
 
 
+	def canRun(self):
+		if self.hasImportedNecessaryModules() and self.hasBrowserHandler() and self.hasImportedNecessaryModulesSQLite():
+			return True
+		return False
 
 
 	def __init__(self, browserHandlerChoice=None, printing=True):
@@ -60,7 +64,7 @@ class GoogleSearch:
 		]
 		if self.hasImportedNecessaryModules():
 			if browserHandlerChoice == None:	## Use the default sequence...
-				if self._tryAssignBrowserHandler(defaultSequence)==False:
+				if self._tryAssignBrowserHandler(browserHandlerPriorityList=defaultSequence, errorPrinting=False)==False:
 					if printing:
 						print("\n\tFATAL ERROR in GoogleSearch.__init__(): no browserHandler is available, please follow their instructions for installation.")
 
@@ -92,9 +96,9 @@ class GoogleSearch:
 					]
 
 
-				if self._tryAssignBrowserHandler(sequence):
+				if self._tryAssignBrowserHandler(browserHandlerPriorityList=sequence, errorPrinting=False) == False:
 					if printing:
-						print("\n\tERROR in GoogleSearch.__init__(): cannot instantise self.browserHandler variable.")
+						print("\n\tERROR in GoogleSearch.__init__(): cannot instantise any self.browserHandler variable. Browser Handlers tried so far: %s"%sequence)
 
 
 
@@ -114,23 +118,24 @@ class GoogleSearch:
 
 	
 
-	def _tryAssignBrowserHandler(self, browserHandlerPriorityList):
+	def _tryAssignBrowserHandler(self, browserHandlerPriorityList, errorPrinting=True):
 		for bh in browserHandlerPriorityList:
 			if bh == self.PossibleBrowserHandlers.SPLINTER:
-				self.browserHandler = self.BrowserHandler.splinterBrowserHandler(headless=True)
+				self.browserHandler = self.BrowserHandler.splinterBrowserHandler(headless=True, errorPrinting=errorPrinting)
 				if self.browserHandler.checkBrowserAvailability():
 					return True
 
 			elif bh == self.PossibleBrowserHandlers.SPLINTER_HEADLESS:
-				self.browserHandler = self.BrowserHandler.splinterBrowserHandler(headless=False)
+				self.browserHandler = self.BrowserHandler.splinterBrowserHandler(headless=False, errorPrinting=errorPrinting)
 				if self.browserHandler.checkBrowserAvailability():
 					return True
 
 			elif bh == self.PossibleBrowserHandlers.TWILL0_9:
-				self.browserHandler = self.BrowserHandler.twillBrowserHandler()
+				self.browserHandler = self.BrowserHandler.twillBrowserHandler(errorPrinting=errorPrinting)
 				if self.browserHandler.checkBrowserAvailability():
 					return True
 
+		self.browserHandler=None
 		return False
 
 
@@ -159,10 +164,10 @@ class GoogleSearch:
 		if printing:
 			if waitingBetweenMessage=="":
 				if printing:
-					print("\n\t\tWaiting %s seconds."%(waitTime))
+					print("\n\n\t\tWaiting %s seconds."%(waitTime))
 			else:
 				if printing:
-					print("\n\t\tWaiting %s seconds between %s."%(waitTime, waitingBetweenMessage))
+					print("\n\n\t\tWaiting %s seconds between %s."%(waitTime, waitingBetweenMessage))
 		startTime = time.time()
 		if countDown and printing:
 			currentTime = time.time()
@@ -173,7 +178,7 @@ class GoogleSearch:
 					print("\r"+timeString, end="")
 					sys.stdout.flush()
 					currentTime = time.time()
-				time.sleep(max(0,time.time()-currentTime-0.1))
+				# time.sleep(max(0,time.time()-currentTime-0.1))	## <-does not allow Ctrl+C behaviour.
 
 			print("\r\t\tDone waiting.                                           ")
 			print("\n")
@@ -258,7 +263,7 @@ class GoogleSearch:
 
 
 		if printing:
-			print("\n\n\nBrowser Handler in use:\n%s"%(self.browserHandler.getName()))
+			print("\n\n\nBrowser Handler in use:\n\t%s"%(self.browserHandler.getName()))
 
 
 		## Actually extract search results.
@@ -301,7 +306,7 @@ class GoogleSearch:
 		resumeFrom=None, 
 		waitBetweenPages=150, waitBetweenSearches=180, 
 		printing=True, printingDebug=False,
-		insertBetweenPages = False, insertBetweenSearches = True, 
+		insertBetweenPages = True, insertBetweenSearches = True, 
 		insertOnError = True, 
 		skipErroneousSearches = False
 		):
@@ -711,15 +716,14 @@ class GoogleSearch:
 		# numResultsRequested=int(math.ceil(numResultsRequested/10))
 
 
-		firstResultsPageHTML = self.browserHandler.getInitialGoogleSearchResultsPageHtml(searchQueryString=searchQueryString, googleDomain=googleDomain)
+		firstResultsPageHTML = self.browserHandler.getInitialGoogleSearchResultsPageHtml(searchQueryString=searchQueryString, googleDomain=googleDomain, errorPrinting=printingDebug)
 		## We have now clicked the button on the www.google.com page. Now it is time to extract the links.
 
-		
-		# print len(firstResultsPageHTML)
 
 		googleParser = self.GoogleWebsiteParser.GoogleWebsiteParser()
 		totalNumResultsFromSearch = googleParser.extractTotalNumberOfResultsFromQuery(
 			htmlString=firstResultsPageHTML, 
+			printing=printing,
 			printingDebug=printingDebug
 			)
 
@@ -727,7 +731,7 @@ class GoogleSearch:
 			if printing:
 				print("\n\tYour query has about %s results in total. We will try to get the top %s results\n"%(totalNumResultsFromSearch, numResultsRequested))
 
-		firstPageResultUrls = googleParser.extractResultUrlsFromGoogleSearchResultsPageHtml(htmlString=firstResultsPageHTML, printingDebug=printingDebug)
+		firstPageResultUrls = googleParser.extractResultUrlsFromGoogleSearchResultsPageHtml(htmlString=firstResultsPageHTML, printing=printing, printingDebug=printingDebug)
 
 		
 		if firstPageResultUrls == None or firstPageResultUrls==[]:
@@ -744,6 +748,8 @@ class GoogleSearch:
 		if printing:
 			# print("fizbo")
 			print("\n\t\t\tCurrent page number:%s\n\t\t\tResults obtained so far: (%s/%s)."%(pageCount, searchResultsObtained, numResultsRequested))
+			for printingResUrl in resultsLinkDict[1]:
+				print("\t\t\t\t%s"%printingResUrl)
 
 		if numResultsRequested <= searchResultsObtained:	## We WANTED < 10 results, i.e. the first 'X' results, where X <= 10
 			resultsLinkDict[1] = resultsLinkDict[1][0:numResultsRequested]
@@ -780,6 +786,7 @@ class GoogleSearch:
 			nextPageUrl = googleParser.extractNextGoogleSearchResultsPageLink(
 							htmlString=currentPageHTML, 
 							googleDomain=googleDomain, 
+							printing=printing,
 							printingDebug=printingDebug
 			)
 
@@ -815,7 +822,7 @@ class GoogleSearch:
 
 
 			## get next page results.
-			currentPageResultUrls = googleParser.extractResultUrlsFromGoogleSearchResultsPageHtml(htmlString=currentPageHTML, printingDebug=printingDebug)
+			currentPageResultUrls = googleParser.extractResultUrlsFromGoogleSearchResultsPageHtml(htmlString=currentPageHTML, printing=printing, printingDebug=printingDebug)
 
 
 			if currentPageResultUrls==None:
@@ -830,7 +837,10 @@ class GoogleSearch:
 			
 			resultsLinkDict[pageCount] = currentPageResultUrls
 
-			print("\n\t\t\tCurrent page number:%s\n\t\t\tResults obtained so far: (%s/%s)."%(pageCount,searchResultsObtained, numResultsRequested))
+			if printing:
+				print("\n\n\t\t\tCurrent page number:%s\n\t\t\tResults obtained so far: (%s/%s)."%(pageCount,searchResultsObtained, numResultsRequested))
+				for printingResUrl in resultsLinkDict[pageCount]:
+					print("\t\t\t\t%s"%printingResUrl)
 
 			if insertBetweenPages and conn!=None and dbTableName!= None:
 				self._insertGetSearchResults(
@@ -874,7 +884,15 @@ class GoogleSearch:
 
 			self.browserHandler.clearBrowserData()
 
-		print("\n\n\n\n\n_getSearchResults: resultsLinkDict = \n%s\n\n\n"%resultsLinkDict)
+		if printingDebug:
+			print("\n\n\n\n\nGoogleSearch._getSearchResults(): resultsLinkDict = ")
+			for printingPageNum in sorted(resultsLinkDict.keys()):
+				print("\tPage #%s"%printingPageNum)
+				for printingResUrl in resultsLinkDict[printingPageNum]:
+					print("\t\t%s"%printingResUrl)
+
+
+
 
 		return resultsLinkDict
 
@@ -957,14 +975,14 @@ class GoogleSearch:
 							if errorString.find('syntax error')==-1: 
 								repeatCount += 1
 							if printing:
-								print("\n\t\t\t\tCould not insert topic-url pair ( %s  ,  %s ), possible duplicate."%(topic, resUrl))
+								print("\n\t\t\t\tCould not insert topic-url pair ( %s  ,  %s )"%(topic, resUrl))
 								print("\t\t\t\tError description: %s\n"%e)
 							if printingDebug:
 								traceback.print_stack()
 
 
 				if printing:	
-					print("\n\n\t\t\t\tNumber of URLs repeated: (%s/%s)"%(repeatCount,resultCount))
+					print("\n\t\t\t\tNumber of URLs repeated: (%s/%s)"%(repeatCount,resultCount))
 					print("\t\t\t\tNumber of unique URLs inserted: (%s/%s)\n"%(uniqueResultNumber, resultCount))
 
 			except Exception, e:
@@ -1047,7 +1065,7 @@ class GoogleSearch:
 			printing=printing)
 
 		if printingDebug:
-			print("As returned from _determineWhenToResumeFromDB():\nstartDate = %s, endDate=%s, actualNumTimePeriodsRemaining=%s"%(startDate, endDate, actualNumTimePeriodsRemaining1))
+			print("As returned from _determineWhenToResumeFromDB():\nstartDate = %s, endDate=%s, actualNumTimePeriodsRemaining=%s"%(startDate, endDate, actualNumTimePeriodsRemaining))
 
 
 
@@ -1070,9 +1088,9 @@ class GoogleSearch:
 		else:
 			if printing:
 				if actualNumTimePeriodsRemaining < numTimePeriodsRemaining:
-					print("\n\n\tTopic     %s     was found in database.\n\tResuming from Julian date: %s. \n\tRemaining: %s time periods of %s days each.\n"%(topic, endDate, actualNumTimePeriodsRemaining, timePeriod))
+					print("\n\n\tTopic\n\t\t%s\nwas found in database.\n\tResuming from Julian date: %s. \n\tRemaining: %s time periods of %s days each.\n"%(topic, endDate, actualNumTimePeriodsRemaining, timePeriod))
 				else:
-					print("\n\n\tNo topic in database matches:         %s\n\tStarting new topic entry, from Julian date: %s.\n\tRemaining: %s time periods of %s days each.\n"%(topic, endDate, actualNumTimePeriodsRemaining, timePeriod))
+					print("\n\n\tNo topic in database matches:\n\t\t%s\n\tStarting new topic entry, from Julian date: %s.\n\tRemaining: %s time periods of %s days each.\n"%(topic, endDate, actualNumTimePeriodsRemaining, timePeriod))
 
 		
 
@@ -1205,7 +1223,7 @@ class GoogleSearch:
 				dbTableName=dbTableName, 
 				resultsLinkDict=resultsLinkDict, 
 				googleSearchQueryObj=googleSearchQueryObj, 
-				printing=printing,
+				printing=False,
 				printingDebug = printingDebug
 			)
 		else:
@@ -1352,7 +1370,7 @@ signal.signal(signal.SIGINT, ctrl_c_signal_handler)		## assign ctrl_c_signal_han
 
 
 ###-----------------------------TESTS-----------------------------###
-g = GoogleSearch()
+# g = GoogleSearch()
 
 # g.doSomeWaiting(avgWaitTime=30, printing=True, countDown=True, waitingBetweenMessage="things")
 

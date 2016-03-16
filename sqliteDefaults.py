@@ -101,16 +101,16 @@ def build_insert_query(tablename, insert_params_list, tuple_values_list):
 	insert_query+=") VALUES "
 	#print insert_query
 	
-	insert_query+="\n(\"%s\""%tuple_values_list[0][0]
+	insert_query+="\n('%s'"%tuple_values_list[0][0]
 	for j in range(1,len(tuple_values_list[0])):
-		insert_query+=" ,\"%s\""%tuple_values_list[0][j]
+		insert_query+=" ,'%s'"%tuple_values_list[0][j]
 	insert_query+=")"
 
 
 	for i in range(1,len(tuple_values_list)):
-		insert_query+=",\n(\"%s\""%tuple_values_list[i][0]
+		insert_query+=",\n('%s'"%tuple_values_list[i][0]
 		for j in range(1,len(tuple_values_list[i])):
-			insert_query+=" ,\"%s\""%tuple_values_list[i][j]
+			insert_query+=" ,'%s'"%tuple_values_list[i][j]
 	insert_query+=";"
 	# print insert_query
 	return insert_query

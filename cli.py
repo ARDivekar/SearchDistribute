@@ -397,8 +397,8 @@ results_per_time_period=30
 wait_between_pages=150
 wait_between_searches=180
 printing=True
-insert_between_pages = False 
-insert_between_searches = True
+insert_between_pages = True
+insert_between_searches = False
 insert_on_error = True
 skip_invalid_searches = False
 
@@ -537,70 +537,74 @@ if insert_between_searches==False and insert_between_pages==False:
 	exit()
 
 
-def formatted_printing(var_name, var_value, max_var_width=50, underscore_printing_factor=100, before_spacing_factor=5):
-	before_spacing_string=" "*before_spacing_factor
-	underscore_string="_"*underscore_printing_factor
-	var_string=str(var_value)
-	width_spacing = " "*(max_var_width-len(var_name))
-	final_string = before_spacing_string + var_name + ':' + width_spacing + var_string + "\n" + before_spacing_string + underscore_string 
-	print(final_string)
-
-
-
-
-print("\n\n\n\n")
-
-underscore_printing_factor = 90
-max_var_width = 35
-before_spacing_factor=5		## must be >= 2
-
-print("="*(before_spacing_factor-2)+"> ARGUMENT VALUES:")
-print(" "*before_spacing_factor + "_"*underscore_printing_factor)
-
-formatted_printing("db_file_path", db_file_path, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("db_table_name", db_table_name, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("google_domain", google_domain, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("fuzzy_topics_list", fuzzy_topics_list, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("necessary_topics_list", necessary_topics_list, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("site_list", site_list, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("time_period", time_period, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("num_time_periods_remaining", num_time_periods_remaining, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("results_per_time_period", results_per_time_period, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("results_per_page", results_per_page, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("resume_from", resume_from, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("wait_between_pages", wait_between_pages, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("wait_between_searches", wait_between_searches, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("printing", printing, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("insert_between_pages", insert_between_pages, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("insert_between_searches", insert_between_searches, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("insert_on_error", insert_on_error, max_var_width, underscore_printing_factor, before_spacing_factor)
-formatted_printing("skip_invalid_searches", skip_invalid_searches, max_var_width, underscore_printing_factor, before_spacing_factor)
-
-
-
-
-print("\n\n\n\n")
 
 g = GoogleSearch()
+if g.canRun()==False:
+    exit()
 
-allResults = g.saveToSQLiteDatabase(
-	dbFilePath = db_file_path,
-	dbTableName = db_table_name,
-	googleDomain = google_domain,
-	fuzzyTopicsList = fuzzy_topics_list,
-	necessaryTopicsList = necessary_topics_list,
-	siteList = site_list,
-	inurl = inurl,
-	timePeriod = time_period,
-	numTimePeriodsRemaining = num_time_periods_remaining,
-	resultsPerTimePeriod = results_per_time_period,
-	resultsPerPage = results_per_page,
-	resumeFrom = resume_from,
-	waitBetweenPages = wait_between_pages,
-	waitBetweenSearches = wait_between_searches,
-	printing = printing,
-	insertBetweenPages = insert_between_pages,
-	insertBetweenSearches = insert_between_searches,
-	insertOnError = insert_on_error,
-	skipErroneousSearches = skip_invalid_searches
-)
+else:
+
+    def formatted_printing(var_name, var_value, max_var_width=50, underscore_printing_factor=100, before_spacing_factor=5):
+    	before_spacing_string=" "*before_spacing_factor
+    	underscore_string="_"*underscore_printing_factor
+    	var_string=str(var_value)
+    	width_spacing = " "*(max_var_width-len(var_name))
+    	final_string = before_spacing_string + var_name + ':' + width_spacing + var_string + "\n" + before_spacing_string + underscore_string 
+    	print(final_string)
+
+    print("\n\n\n\n")
+
+    underscore_printing_factor = 90
+    max_var_width = 35
+    before_spacing_factor=5		## must be >= 2
+
+    print("="*(before_spacing_factor-2)+"> ARGUMENT VALUES:")
+    print(" "*before_spacing_factor + "_"*underscore_printing_factor)
+
+    formatted_printing("db_file_path", db_file_path, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("db_table_name", db_table_name, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("google_domain", google_domain, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("fuzzy_topics_list", fuzzy_topics_list, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("necessary_topics_list", necessary_topics_list, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("site_list", site_list, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("time_period", time_period, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("num_time_periods_remaining", num_time_periods_remaining, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("results_per_time_period", results_per_time_period, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("results_per_page", results_per_page, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("resume_from", resume_from, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("wait_between_pages", wait_between_pages, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("wait_between_searches", wait_between_searches, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("printing", printing, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("insert_between_pages", insert_between_pages, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("insert_between_searches", insert_between_searches, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("insert_on_error", insert_on_error, max_var_width, underscore_printing_factor, before_spacing_factor)
+    formatted_printing("skip_invalid_searches", skip_invalid_searches, max_var_width, underscore_printing_factor, before_spacing_factor)
+
+    print("\n\n\n\n")
+
+
+
+
+
+    allResults = g.saveToSQLiteDatabase(
+    	dbFilePath = db_file_path,
+    	dbTableName = db_table_name,
+    	googleDomain = google_domain,
+    	fuzzyTopicsList = fuzzy_topics_list,
+    	necessaryTopicsList = necessary_topics_list,
+    	siteList = site_list,
+    	inurl = inurl,
+    	timePeriod = time_period,
+    	numTimePeriodsRemaining = num_time_periods_remaining,
+    	resultsPerTimePeriod = results_per_time_period,
+    	resultsPerPage = results_per_page,
+    	resumeFrom = resume_from,
+    	waitBetweenPages = wait_between_pages,
+    	waitBetweenSearches = wait_between_searches,
+    	printing = printing,
+    	insertBetweenPages = insert_between_pages,
+    	insertBetweenSearches = insert_between_searches,
+    	insertOnError = insert_on_error,
+    	skipErroneousSearches = skip_invalid_searches
+        # printingDebug=True
+    )
