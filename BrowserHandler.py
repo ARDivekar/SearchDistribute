@@ -37,6 +37,9 @@ class BrowserHandlerTemplate(object):
 	browser = None
 	_headless = True
 
+	def isHeadless(self):
+		return self._headless
+
 	def resetBrowser(self):
 		raise NotImplementedError("\n\tFATAL ERROR: BrowserHandlerTemplate.resetBrowser() has not been implemented")
 
@@ -71,9 +74,6 @@ class BrowserHandlerTemplate(object):
 
 	def getInitialGoogleSearchResultsPageHtml(self, searchQuery, googleDomain):
 		raise NotImplementedError("\n\tFATAL ERROR: BrowserHandlerTemplate.getInitialGoogleSearchResultsPageHtml() has not been implemented")
-
-	def isHeadless(self):
-		raise NotImplementedError("\n\tFATAL ERROR: BrowserHandlerTemplate.isHeadless() has not been implemented")
 
 	def browserClose(self):
 		raise NotImplementedError("\n\tFATAL ERROR: BrowserHandlerTemplate.browserClose() has not been implemented")
@@ -150,11 +150,6 @@ class splinterBrowserHandler(BrowserHandlerTemplate):
 			if errorPrinting:
 				print(self._splinterErrorText)
 
-
-
-
-	def isHeadless(self):
-		return self._headless
 		
 
 
@@ -455,11 +450,6 @@ class twillBrowserHandler(BrowserHandlerTemplate):
 		else:
 			return False
 	
-
-
-	def isHeadless(self):
-		return self._headless
-
 
 	def go(self, url, secure=False):
 		url = self._ensureHTTPorHTTPS(url, secure)
