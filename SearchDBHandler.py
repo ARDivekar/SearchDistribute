@@ -33,7 +33,7 @@ class SearchDBHandler:
 				return None
 
 			try:
-				conn.execute('''CREATE TABLE IF NOT EXISTS %s(
+				conn.execute('''CREATE TABLE IF NOT EXISTS `%s`(
 					resultNumberInSearch 	INTEGER,
 					Topic 					TEXT 	NOT NULL,
 					URL 					TEXT 	NOT NULL,

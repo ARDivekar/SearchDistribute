@@ -75,14 +75,14 @@ def build_select_query(tablename, select_params_list, where_params_list=None, wh
 	select_query+=" %s"%select_params_list[0]
 	for i in range(1,len(select_params_list)):
 		select_query+=", %s"%select_params_list[i]
-	select_query+=" FROM %s "%tablename
+	select_query+=" FROM `%s` "%tablename
 	select_query+=build_where_clause(where_params_list=where_params_list, where_values_list=where_values_list)
 	select_query+=";"
 	return select_query
 
 
 def build_update_query(tablename, update_params_list, update_values_list, where_params_list=None, where_values_list=None):
-	update_query="UPDATE "+tablename+" SET " 
+	update_query="UPDATE `"+tablename+"` SET " 
 	update_query+=" %s='%s' "%(str(update_params_list[0]), str(update_values_list[0]))
 	for i in range(1,len(update_values_list)):
 		update_query+=", %s='%s' "%(str(update_params_list[i]), str(update_values_list[i]))	
@@ -92,7 +92,7 @@ def build_update_query(tablename, update_params_list, update_values_list, where_
 
 
 def build_insert_query(tablename, insert_params_list, tuple_values_list):
-	insert_query="INSERT INTO %s(" %tablename+"%s"%insert_params_list[0]
+	insert_query="INSERT INTO `%s`(" %tablename+"%s"%insert_params_list[0]
 	# print insert_query
 	
 	for param in insert_params_list:
@@ -151,7 +151,7 @@ sqliteDefaults.insert_table_sqlite(conn,
 #Source:	http://stackoverflow.com/questions/4272908/sqlite-date-storage-and-conversion
 
 
-table=sqliteDefaults.verified_select_sqlite(conn,"select * from person order by DOB desc;")
+table=sqliteDefaults.verified_select_sqlite(conn,"select * from `person` order by DOB desc;")
 for row in table:
 	print row
 
@@ -206,9 +206,9 @@ def insert_table_sqlite2(conn, tablename, parameters_tuple=(), tuple_values_list
 		return
 	query=""
 	if parameters_tuple==():
-		query="INSERT INTO %s VALUES " %(tablename);
+		query="INSERT INTO `%s` VALUES " %(tablename);
 	else:
-		query="INSERT INTO %s %s VALUES" %(tablename, parameters_tuple);
+		query="INSERT INTO `%s` %s VALUES" %(tablename, parameters_tuple);
 	#else:
 		#print("\n\tSQLiteDefaults: insert_table_sqlite() ERROR: parameters_tuple must be a tuple")
 	
@@ -276,7 +276,7 @@ def print_table(conn, select_query):
 
 def list_all_tables(db_file_name):
 	conn=get_conn(db_file_name)
-	print_table(conn,"select name from sqlite_master where type = 'table';")
+	print_table(conn,"select name from `sqlite_master` where type = 'table';")
 
 
 '''
@@ -286,9 +286,9 @@ print("\n\n<------------TEST CODE----------->\n")
 def select_table_sqlite(conn, tablename, parameters_tuple=(), where_string="", order_by_string=""):
 	query=""
 	if parameters_tuple==():
-		query="SELECT * FROM %s"%(tablename)
+		query="SELECT * FROM `%s`"%(tablename)
 	elif type(parameters_tuple)=="tuple":
-		query="SELECT %s FROM %s"%(parameters_tuple, tablename)
+		query="SELECT %s FROM `%s`"%(parameters_tuple, tablename)
 	else:
 		print("\n\tSQLiteDefaults: select_table_sqlite() ERROR: parameters_tuple must be a tuple")
 
