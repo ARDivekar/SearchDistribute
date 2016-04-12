@@ -6,131 +6,141 @@ from __future__ import print_function	## Source: http://stackoverflow.com/questi
 import datetime
 import traceback
 import random 
+import time
 
 import sys
 pythonVersionNumber = sys.version_info.major 	##tells us if it is Python 2 or 3.
 
-keepWaiting = True
+_GoogleSearchImportedBasicModules = True
+_GoogleSearchImportedDBHandler = True
+_GoogleSearchImportErrors = ""
+
+try:
+	import GoogleSearchQuery
+except Exception, e:
+	_GoogleSearchImportErrors+="\n\n\n\tFatal ERROR while importing GoogleSearchQuery.py: . The module may have syntax errors or may be missing entirely."
+	_GoogleSearchImportErrors+="\n\t\tError description: %s"%(e)
+	_GoogleSearchImportedBasicModules = False
+
+try:
+	import GoogleWebsiteParser
+except Exception, e:
+	_GoogleSearchImportErrors+="\n\n\n\tFatal ERROR while importing GoogleWebsiteParser.py: . The module may have syntax errors or may be missing entirely."
+	_GoogleSearchImportErrors+="\n\t\tError description: %s"%(e)
+	_GoogleSearchImportedBasicModules = False
+
+try:
+	import BrowserHandler 
+	
+except Exception, e:
+	_GoogleSearchImportErrors+="\n\n\n\tFatal ERROR while importing BrowserHandler.py: . The module may have syntax errors or may be missing entirely."
+	_GoogleSearchImportErrors+="\n\t\tError description: %s"%(e)
+	_GoogleSearchImportedBasicModules = False
+
+try: 
+	import SearchDBHandler
+except Exception, e:
+	_GoogleSearchImportErrors+="\n\n\n\tERROR while importing SearchDBHandler.py: . The module may have syntax errors or may be missing entirely."
+	_GoogleSearchImportErrors+="\n\t\tError description: %s"%(e)
+	_GoogleSearchImportedDBHandler = False
+
+## Note: these were move to the start of the file because it's faster. Source: http://stackoverflow.com/questions/128478/should-python-import-statements-always-be-at-the-top-of-a-module 
+
+
+
+keepWaiting = True 		## Used for signal handling.
+
+
+
+
 
 class GoogleSearch:
 	
-	## Note: the following imports are made in local scope, i.e. they are only visible inside the class GoogleSearch.
-
-
-	_hasImportedNecessaryModules = True
-	_hasImportedNecessaryModulesSQLite = True
+	possibleBrowserHandlers = None
 	browserHandler = None
-
-	try:
-		import GoogleSearchQuery
-	except Exception:
-		print("\n\n\n\tFatal ERROR while importing GoogleSearchQuery.py: . The module may have syntax errors or may be missing entirely.")
-		_hasImportedNecessaryModules = False
-
-	try:
-		import GoogleWebsiteParser
-	except Exception:
-		print("\n\n\n\tFatal ERROR while importing GoogleWebsiteParser.py: . The module may have syntax errors or may be missing entirely.")
-		_hasImportedNecessaryModules = False
-
-	try:
-		import BrowserHandler 
-		PossibleBrowserHandlers = BrowserHandler.PossibleBrowserHandlers
-		
-	except Exception:
-		print("\n\n\n\tFatal ERROR while importing BrowserHandler.py: . The module may have syntax errors or may be missing entirely.")
-		_hasImportedNecessaryModules = False
-
-	try: 
-		import sqliteDefaults
-	except Exception:
-		print("\n\n\n\tERROR while importing sqliteDefaults.py: . The module may have syntax errors or may be missing entirely.")
-		_hasImportedNecessaryModulesSQLite = False
-
-
-
-	def canRun(self):
-		if self.hasImportedNecessaryModules() and self.hasBrowserHandler() and self.hasImportedNecessaryModulesSQLite():
-			return True
-		return False
+	dbHandler = None
 
 
 	def __init__(self, browserHandlerChoice=None, printing=True):
+		if _GoogleSearchImportedBasicModules:
 
-		defaultSequence = [
-			self.PossibleBrowserHandlers.SPLINTER, 
-			self.PossibleBrowserHandlers.TWILL0_9, 
-			self.PossibleBrowserHandlers.SPLINTER_HEADLESS
-		]
-		if self.hasImportedNecessaryModules():
+			## Assign possibleBrowserHandlers:
+			try:
+				self.possibleBrowserHandlers = BrowserHandler.POossibleBrowserHandlers
+			except Exception:
+				self.possibleBrowserHandlers = None
+
+
+			## Assign browserHandler:
+			if self.possibleBrowserHandlers != None:
+				defaultSequence = [self.possibleBrowserHandlers.SPLINTER, self.possibleBrowserHandlers.TWILL0_9, self.possibleBrowserHandlers.SPLINTER_HEADLESS]
+				
+				self._setBrowserHandlerFromChoice(
+					defaultSequence=defaultSequence, 
+					browserHandlerChoice=browserHandlerChoice, 
+					printing=printing
+				)
+			
+			## Assign dbHandler:
+			if _GoogleSearchImportedDBHandler:
+				try:
+					self.dbHandler = SearchDBHandler.SearchDBHandler()
+				except Exception:
+					self.dbHandler = None
+
+		else:
+			self.browserHandler = None
+			self.dbHandler = None
+
+
+
+	def _setBrowserHandlerFromChoice(self, defaultSequence, browserHandlerChoice, printing):
+		if self.canRunBasic(printing=printing):
 			if browserHandlerChoice == None:	## Use the default sequence...
 				if self._tryAssignBrowserHandler(browserHandlerPriorityList=defaultSequence, errorPrinting=False)==False:
 					if printing:
 						print("\n\tFATAL ERROR in GoogleSearch.__init__(): no browserHandler is available, please follow their instructions for installation.")
 
-			elif browserHandlerChoice not in self.PossibleBrowserHandlers:
+
+			elif browserHandlerChoice not in self.possibleBrowserHandlers:
 				if printing:
 					print("\n\tERROR in GoogleSearch.__init__(): invalid browserHandlerChoice input.")
 
 			else:
 				sequence = []
-				if browserHandlerChoice==self.PossibleBrowserHandlers.SPLINTER:
-					sequence = [
-						self.PossibleBrowserHandlers.SPLINTER, 
-						self.PossibleBrowserHandlers.SPLINTER_HEADLESS, 
-						self.PossibleBrowserHandlers.TWILL0_9
-					]
+				if browserHandlerChoice==self.possibleBrowserHandlers.SPLINTER:
+					sequence = [self.possibleBrowserHandlers.SPLINTER, self.possibleBrowserHandlers.SPLINTER_HEADLESS, self.possibleBrowserHandlers.TWILL0_9]
 					
-				elif browserHandlerChoice==self.PossibleBrowserHandlers.SPLINTER_HEADLESS:
-					sequence = [
-						self.PossibleBrowserHandlers.SPLINTER_HEADLESS, 
-						self.PossibleBrowserHandlers.SPLINTER, 
-						self.PossibleBrowserHandlers.TWILL0_9
-					]
+				elif browserHandlerChoice==self.possibleBrowserHandlers.SPLINTER_HEADLESS:
+					sequence = [self.possibleBrowserHandlers.SPLINTER_HEADLESS, self.possibleBrowserHandlers.SPLINTER, self.possibleBrowserHandlers.TWILL0_9]
 
-				elif browserHandlerChoice==self.PossibleBrowserHandlers.TWILL0_9:
-					sequence = [
-						self.PossibleBrowserHandlers.TWILL0_9, 
-						self.PossibleBrowserHandlers.SPLINTER, 
-						self.PossibleBrowserHandlers.SPLINTER_HEADLESS
-					]
+				elif browserHandlerChoice==self.possibleBrowserHandlers.TWILL0_9:
+					sequence = [self.possibleBrowserHandlers.TWILL0_9, self.possibleBrowserHandlers.SPLINTER, self.possibleBrowserHandlers.SPLINTER_HEADLESS]
 
 
 				if self._tryAssignBrowserHandler(browserHandlerPriorityList=sequence, errorPrinting=False) == False:
 					if printing:
 						print("\n\tERROR in GoogleSearch.__init__(): cannot instantise any self.browserHandler variable. Browser Handlers tried so far: %s"%sequence)
 
-
-
-
 		else:
 			if printing:
-				print("\n\tFATAL ERROR in GoogleSearch.__init__(): Cannot run because required code files cannot be found.")
-
-
-	def listPossibleBrowserHandlers(self, printing=True):
-		if printing:
-			print("\nAvailable browser handlers:")
-			for bH in self.PossibleBrowserHandlers:
-				print("\t%s"%bH)
-			print("\n") 
-		return self.PossibleBrowserHandlers
+				print("\n\tFATAL ERROR in GoogleSearch.__init__(): Cannot run because required modules cannot be imported.")
 
 	
 
 	def _tryAssignBrowserHandler(self, browserHandlerPriorityList, errorPrinting=True):
 		for bh in browserHandlerPriorityList:
-			if bh == self.PossibleBrowserHandlers.SPLINTER:
+			if bh == self.possibleBrowserHandlers.SPLINTER:
 				self.browserHandler = self.BrowserHandler.splinterBrowserHandler(headless=True, errorPrinting=errorPrinting)
 				if self.browserHandler.checkBrowserAvailability():
 					return True
 
-			elif bh == self.PossibleBrowserHandlers.SPLINTER_HEADLESS:
+			elif bh == self.possibleBrowserHandlers.SPLINTER_HEADLESS:
 				self.browserHandler = self.BrowserHandler.splinterBrowserHandler(headless=False, errorPrinting=errorPrinting)
 				if self.browserHandler.checkBrowserAvailability():
 					return True
 
-			elif bh == self.PossibleBrowserHandlers.TWILL0_9:
+			elif bh == self.possibleBrowserHandlers.TWILL0_9:
 				self.browserHandler = self.BrowserHandler.twillBrowserHandler(errorPrinting=errorPrinting)
 				if self.browserHandler.checkBrowserAvailability():
 					return True
@@ -141,11 +151,43 @@ class GoogleSearch:
 
 
 
-	def hasImportedNecessaryModules(self):
-		return self._hasImportedNecessaryModules
+	
 
-	def hasImportedNecessaryModulesSQLite(self):
-		return self._hasImportedNecessaryModulesSQLite
+
+
+
+
+	def canRunBasic(self, printing=True):
+		if _GoogleSearchImportedBasicModules and self.possibleBrowserHandlers != None and self.browserHandler != None:
+			return True
+
+		if printing:
+			print(_GoogleSearchImportErrors)
+			if self.possibleBrowserHandlers == None:
+				print("\n\tFatal Error in class GoogleSearch : cannot instantise self.possibleBrowserHandlers")
+			if self.browserHandler == None:
+				print("\n\tFatal Error in class GoogleSearch : cannot instantise self.browserHandler")
+		return False
+
+
+	def canRunDB(self, printing=True):
+		if _GoogleSearchImportedDBHandler and self.dbHandler != None:
+			return True
+
+		if printing:
+			print(_GoogleSearchImportErrors)
+			if self.dbHandler == None:
+				print("\n\tError in class GoogleSearch : cannot instantise self.dbHandler")
+		return False
+
+
+
+	def hasDBHandler(self):
+		if self.dbHandler == None:
+			return False
+		return True
+
+
 
 	def hasBrowserHandler(self):
 		if self.browserHandler == None:
@@ -153,43 +195,41 @@ class GoogleSearch:
 		return True
 
 
-	def doSomeWaiting(self, avgWaitTime, printing=True, waitingBetweenMessage="", countDown=True):
-		## Note: this uses global variable stopWaiting, which is modified by ctrl_c_signal_handler()
-		import random
-		import time
-		import sys
-		global keepWaiting
+	def browserHandlerTest(self, printing=False):
+		if self.hasBrowserHandler():
+			try:
+				self.browserHandler.go("http://www.google.com")
+				if self.browserHandler.getCurrentPageHtml() != None:
+					return True
 
-		waitTime=random.uniform(0.3*avgWaitTime, 1.5*avgWaitTime)
+			except Exception, e:
+				if printing:
+					print("\n\tFatal ERROR in class GoogleSearch : Browser Handler cannot access websites.")
+					print("\n\t\tError description: %s"%(e))
+			
+		return False
+
+
+
+	def listpossibleBrowserHandlers(self, printing=True):
 		if printing:
-			if waitingBetweenMessage=="":
-				if printing:
-					print("\n\n\t\tWaiting %s seconds."%(waitTime))
-			else:
-				if printing:
-					print("\n\n\t\tWaiting %s seconds between %s."%(waitTime, waitingBetweenMessage))
-		startTime = time.time()
-		if countDown and printing:
-			currentTime = time.time()
-			while time.time() - startTime < waitTime and keepWaiting:
-				nextTime = time.time()
-				if nextTime-currentTime >= 1:
-					timeString = "\t\t\tTime remaining: %s seconds.         "%(int(waitTime - (time.time()-startTime)))
-					print("\r"+timeString, end="")
-					sys.stdout.flush()
-					currentTime = time.time()
-				# time.sleep(max(0,time.time()-currentTime-0.1))	## <-does not allow Ctrl+C behaviour.
+			print("\nAvailable browser handlers:")
+			for bH in self.possibleBrowserHandlers:
+				print("\t%s"%bH)
+			print("\n") 
+		return self.possibleBrowserHandlers
 
-			print("\r\t\tDone waiting.                                           ")
-			print("\n")
 
-			if keepWaiting==False:
-				keepWaiting = True
-				self.browserHandler.resetBrowser()
 
-		else:
-			time.sleep(waitTime)
 
+
+
+
+	def setDatabase(self, dbFilePath="GoogleSearchResults.db", dbTableName="SearchResultUrls", printing=True):
+		return self.dbHandler.setDatabase(dbFilePath=dbFilePath, dbTableName=dbTableName, printing=printing)
+
+
+	
 		
 
 
@@ -224,7 +264,9 @@ class GoogleSearch:
 			part 2 is the tuple of ordered results.
 
 		"""
-		
+		if self.canRunBasic(printing=printing) == False:
+			return ()		## return an empty tuple
+
 
 		if searchQueryString==None:
 			## check for errors:
@@ -290,13 +332,7 @@ class GoogleSearch:
 
 
 
-
-
-
-
-
 	def saveToSQLiteDatabase(self, 
-		dbFilePath="GoogleSearchResults.db", dbTableName="SearchResultUrls",
 		googleDomain="http://www.google.com",
 		necessaryTopicsList=[], fuzzyTopicsList=[], 
 		siteList=[], 
@@ -333,10 +369,10 @@ class GoogleSearch:
 			return None
 
 
-		## Initialize the database.
-		conn = self._SQLiteDBSetup(dbFilePath, dbTableName, printing)
-		if conn == None:
-			return None
+		# ## Initialize the database.
+		# conn = self._SQLiteDBSetup(dbFilePath, dbTableName, printing)
+		# if conn == None:
+		# 	return None
 
 
 		## check for warnings in the data:
@@ -373,7 +409,7 @@ class GoogleSearch:
 				print("GoogleSearch.saveToSQLiteDatabase(): no results obtained.\n")
 				return None
 
-			self._insertResultsLinkDictIntoDB(conn=conn, dbTableName=dbTableName, resultsLinkDict=resultsLinkDict, googleSearchQueryObj=googleSearchQueryObj, printing=printing, printingDebug=printingDebug)
+			self.dbHandler.insertResultsLinkDictIntoDB(resultsLinkDict=resultsLinkDict, googleSearchQueryObj=googleSearchQueryObj, printing=printing, printingDebug=printingDebug)
 
 			allResults = {}
 			allResults[(-1,-1)]=resultsLinkDict
@@ -431,235 +467,40 @@ class GoogleSearch:
 	##-----------------------------------PRIVATE METHODS-----------------------------------##
 
 
-	def _isEmpty(self, thing, exceptThisThing="\!@#$%^&*()[]:;?<>,.1234567890/"):		
-		"""Checks if 'thing' is empty; returns True for a bunch of empty things; only exceptThisThing is permitted.
-		"""
-		if thing!=exceptThisThing and (thing==None or thing=="" or thing==[] or thing=={} or thing==()):
-			return True
-		return False
+	def _doSomeWaiting(self, avgWaitTime, printing=True, waitingBetweenMessage="", countDown=True):
+		## Note: this uses global variable stopWaiting, which is modified by ctrl_c_signal_handler()
+		
+		global keepWaiting
 
-
-
-
-	def _SQLiteDBSetup(self, dbFilePath, dbTableName, printing):
-		conn = None
-		if self.hasImportedNecessaryModulesSQLite():
-			try:
-				conn=self.sqliteDefaults.get_conn(dbFilePath, printing)
-			except Exception:
+		waitTime=random.uniform(0.3*avgWaitTime, 1.5*avgWaitTime)
+		if printing:
+			if waitingBetweenMessage=="":
 				if printing:
-					print("\n\tERROR in GoogleSearch._SQLiteDBSetup(): could not connect to database.")
-				return None
-
-			try:
-				conn.execute('''CREATE TABLE IF NOT EXISTS %s(
-					resultNumberInSearch 	INTEGER,
-					Topic 					TEXT 	NOT NULL,
-					URL 					TEXT 	NOT NULL,
-					ResultPageNumber 		INTEGER NOT NULL,
-					ResultNumberOnPage		INTEGER NOT NULL,
-					StartDate 				INTEGER,
-					EndDate 				INTEGER,
-					SearchedOnDate 			DATE,
-					ObtainedFromQuery 		TEXT 	NOT NULL,
-					PRIMARY KEY(Topic, URL)
-				);
-				'''%dbTableName)
-				conn.commit()
-
-			except Exception:
+					print("\n\n\t\tWaiting %s seconds."%(waitTime))
+			else:
 				if printing:
-					print("\n\tERROR in GoogleSearch._SQLiteDBSetup(): could not create table in database.")
-				return None
+					print("\n\n\t\tWaiting %s seconds between %s."%(waitTime, waitingBetweenMessage))
+		startTime = time.time()
+		if countDown and printing:
+			currentTime = time.time()
+			while time.time() - startTime < waitTime and keepWaiting:
+				nextTime = time.time()
+				if nextTime-currentTime >= 1:
+					timeString = "\t\t\tTime remaining: %s seconds.         "%(int(waitTime - (time.time()-startTime)))
+					print("\r"+timeString, end="")
+					sys.stdout.flush()
+					currentTime = time.time()
+				# time.sleep(max(0,time.time()-currentTime-0.1))	## <-does not allow Ctrl+C behaviour.
 
-		return conn
+			print("\r\t\tDone waiting.                                           ")
+			print("\n")
 
+			if keepWaiting==False:		## used for signal handling.
+				keepWaiting = True
+				self.browserHandler.resetBrowser()
 
-
-
-	def _isIntegerInRange(self, n, lowerBound=None, upperBound=None):
-		if type(n)!=type(0):
-			return False
-		elif lowerBound!=None and upperBound!=None and (n<lowerBound or n>upperBound):
-			return  False
-		elif upperBound!=None and n>upperBound:
-			return False
-		elif lowerBound!=None and n<lowerBound:
-			return False
-
-		return True
-
-
-
-
-	def _checkInputsForErrors(self, 
-		necessaryTopicsList, 
-		fuzzyTopicsList, 
-		siteList, 
-		inurl, 
-
-		resultsPerPage=None, 
-		resultsPerTimePeriod=None, 
-
-		timePeriod=None, 
-		numTimePeriodsRemaining=None, 
-
-
-		resumeFrom=None, 
-		waitBetweenPages=None, 
-		waitBetweenSearches=None,
-
-		dbFilePath=None, 
-		dbTableName=None
-		):
-
-		errorFunctionBase = "\n\tERROR in GoogleSearch._checkInputsForErrors(): "
-		errors = ""
-
-
-		## check dbFilePath and dbTableName:
-		if self._isEmpty(dbFilePath, None):
-			errors+=errorFunctionBase+"The SQLite file name (i.e. dbFilePath variable) cannot be None or an empty string."
-
-		elif dbFilePath!=None and dbFilePath.endswith(".db") == False:
-			errors+=errorFunctionBase+"The SQLite file must be a .db file."
-
-
-		if self._isEmpty(dbTableName, None):
-			errors+=errorFunctionBase+"The SQLite table name (i.e. dbTableName variable) cannot be None or an empty string."
-
-
-
-		## check fuzzyTopicsList and necessaryTopicsList:
-		if self._isEmpty(fuzzyTopicsList) and self._isEmpty(necessaryTopicsList):
-			errors+=errorFunctionBase+"both fuzzyTopicsList and necessaryTopicsList cannot be empty or None."
-			
-
-		if self._isEmpty(fuzzyTopicsList)==False and type(fuzzyTopicsList)!=type([]):
-			errors+=errorFunctionBase+"if fuzzyTopicsList is not empty, it must be a list of strings."
-			
-		if self._isEmpty(necessaryTopicsList)==False and type(necessaryTopicsList)!=type([]):
-			errors+=errorFunctionBase+"if necessaryTopicsList is not empty, it must be a list of strings."
-
-
-		## check siteList:
-		if self._isEmpty(siteList)==False and type(siteList)!=type([]):
-			errors+=errorFunctionBase+"if siteList is not empty, it must be a list of strings."
-
-		## check inurl:
-		if self._isEmpty(inurl, ""):
-			errors+=errorFunctionBase+'if inurl is to be empty, set it to "".'
-		elif inurl!=None and type(inurl)!=type(""):
-			errors+=errorFunctionBase+'inurl, if not None, must be a string with no spaces.'
-		elif inurl!=None and inurl.find(" ") != -1:
-			errors+=errorFunctionBase+'inurl must be a string with no spaces.'
-
-
-		## check 'timePeriod', 'numTimePeriodsRemaining', 'resultsPerPage', 'resultsPerTimePeriod', 'resumeFrom', 'waitBetweenPages', 'waitBetweenSearches' :
-		
-		if timePeriod!=None and self._isIntegerInRange(timePeriod, lowerBound=1) == False:
-			errors+=errorFunctionBase+"timePeriod must be an integer greater than 0, or None."
-
-		if numTimePeriodsRemaining!=None and self._isIntegerInRange(numTimePeriodsRemaining, lowerBound=1) == False:
-			errors+=errorFunctionBase+"numTimePeriodsRemaining must be an integer, greater than 0."
-		
-		if resultsPerPage!=None and self._isIntegerInRange(resultsPerPage, lowerBound=10, upperBound=100) == False:
-			errors+=errorFunctionBase+"resultsPerPage must be an integer between 10 and 100, or None."
-		
-		if resultsPerTimePeriod!=None and self._isIntegerInRange(resultsPerTimePeriod, lowerBound=1) == False:
-			errors+=errorFunctionBase+"resultsPerTimePeriod must be an integer greater than 0, or None."
-		
-		if resumeFrom!=None and self._isIntegerInRange(resumeFrom, lowerBound=2440588) == False:	## start of UNIX time, i.e. 1 Jan 1970
-			errors+=errorFunctionBase+"resumeFrom must be an integer greater than 2440587, or None."
-		
-		if waitBetweenPages!=None and self._isIntegerInRange(waitBetweenPages, lowerBound=0) == False:
-			errors+=errorFunctionBase+"waitBetweenPages must be an integer greater than -1, or None."
-		
-		if waitBetweenSearches!=None and self._isIntegerInRange(waitBetweenSearches, lowerBound=0) == False:
-			errors+=errorFunctionBase+"waitBetweenSearches must be an integer greater than -1, or None."
-
-
-		return errors
-
-
-
-
-
-	def _checkInputsForWarnings(self, resultsPerPage, waitBetweenPages):
-		warningFunctionBase = "\n\n\tWARNING in GoogleSearch._checkInputsForWarnings(): "
-		warnings = ""
-		
-		## check ratio of resultsPerPage to waitBetweenPages:
-		resultsPerPagetowaitBetweenPagesRatioWarning = warningFunctionBase+"the wait time between pages may not be large enough to prevent IP blocking."+"\n\tRecommend wait time between pages: %s seconds or more."
-
-		if resultsPerPage <= 20 and waitBetweenPages/float(resultsPerPage) < 150/float(10):
-			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 150/float(10) )/10) ))
-
-		elif resultsPerPage > 20 and resultsPerPage <= 50 and waitBetweenPages/float(resultsPerPage) < 240/float(20):
-			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 240/float(20) )/10) ))
-			
-		elif resultsPerPage > 50 and resultsPerPage <= 80 and waitBetweenPages/float(resultsPerPage) < 450/float(50):
-			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 450/float(50) )/10) ))
-			
-		elif resultsPerPage >80 and resultsPerPage < 100 and waitBetweenPages/float(resultsPerPage) < 540/float(80):
-			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 540/float(80) )/10) ))
-
-		elif resultsPerPage == 100 and waitBetweenPages/float(resultsPerPage) < 600/float(100):
-			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 600/float(100) )/10) ))
-
-		return warnings
-
-
-
-
-
-	def _printExtractionStats(self, dbFilePath, dbTableName, googleDomain, topic, inurl, timePeriod, numTimePeriodsRemaining, resultsPerTimePeriod, resultsPerPage, waitBetweenPages, waitBetweenSearches):
-
-		print("\n\n\n###-------------------------EXTRACION STATS-------------------------###\n")
-		print("dbFilePath = %s"%(dbFilePath))
-		print("dbTableName = %s"%(dbTableName))
-		print("googleDomain = %s"%(googleDomain))
-		print("topic = %s"%(topic))
-		if inurl!="":
-			print("inurl = %s"%inurl)
-		print("timePeriod = %s days"%(timePeriod))
-		print("numTimePeriodsRemaining = %s"%(numTimePeriodsRemaining))
-		print("resultsPerTimePeriod = %s"%(resultsPerTimePeriod))
-		print("resultsPerPage = %s"%(resultsPerPage))
-		print("waitBetweenPages = %s seconds"%(waitBetweenPages))
-		print("waitBetweenSearches = %s seconds"%(waitBetweenSearches))
-
-
-
-
-
-
-	def _initializeGoogleSearchQueryObj(self, 
-		siteList=[],
-		fuzzyTopicsList=[],
-		necessaryTopicsList=[],
-		inurl=None,
-		daterangeFrom=None,
-		daterangeTo=None,
-		printing=False
-		):
-
-		gs = self.GoogleSearchQuery.GoogleSearchQuery()
-		if siteList != []:
-			gs.setSiteList(siteList=siteList, printing=printing)
-		if fuzzyTopicsList != []:
-			gs.setFuzzyTopicsList(fuzzyTopicsList=fuzzyTopicsList, printing=printing)
-		if necessaryTopicsList != []:
-			gs.setNecessaryTopicsList(necessaryTopicsList=necessaryTopicsList, printing=printing)
-		if inurl!=None:
-			gs.setInUrl(inurl=inurl, printing=printing)
-		if daterangeFrom!=None and daterangeTo!=None:
-			gs.setDateRange(daterangeFrom=daterangeFrom, daterangeTo=daterangeTo, printing=printing)
-		return gs
-
-
-
-
+		else:
+			time.sleep(waitTime)
 
 
 
@@ -782,7 +623,7 @@ class GoogleSearch:
 
 
 
-			## We first see if the next page exists, then we doSomeWaiting()
+			## We first see if the next page exists, then we _doSomeWaiting()
 			nextPageUrl = googleParser.extractNextGoogleSearchResultsPageLink(
 							htmlString=currentPageHTML, 
 							googleDomain=googleDomain, 
@@ -804,9 +645,9 @@ class GoogleSearch:
 
 			## Wait period between searches
 			if waitBetweenPages!=None:
-					self.doSomeWaiting(waitBetweenPages, printing=printing, waitingBetweenMessage="pages")
+					self._doSomeWaiting(waitBetweenPages, printing=printing, waitingBetweenMessage="pages")
 			else:	
-				self.doSomeWaiting(120, printing=printing, waitingBetweenMessage="pages")
+				self._doSomeWaiting(120, printing=printing, waitingBetweenMessage="pages")
 
 
 
@@ -929,79 +770,6 @@ class GoogleSearch:
 			if printing:
 				print("\n\t\tGoogleSearch._insertGetSearchResults(): cannot insert page results into database.")
 				print("\t\tError description: %s\n"%e)
-
-
-
-
-
-		
-	def _insertResultsLinkDictIntoDB(self, conn, dbTableName, resultsLinkDict, googleSearchQueryObj, printing, printingDebug):
-
-		if conn!=None and type(dbTableName)==type(""):
-			if printing:
-				print("\n\t\t\tTrying to insert results obtained...")
-			try:
-				resultCount = 0		## gives priority of results. ResultNumber = 1 means the top result
-				repeatCount = 0
-				uniqueResultNumber=0
-
-				if printingDebug:
-					print("\n\n\nresultsLinkDict=\n%s\n\n"%resultsLinkDict)
-					print("sorted(resultsLinkDict.keys()) = %s\n\n\n"%sorted(resultsLinkDict.keys()))
-
-				for pageNum in sorted(resultsLinkDict.keys()):
-					for resultNumberOnPage in range(1, len(resultsLinkDict[pageNum])+1): 
-						## Insert the url into the database.
-						resUrl = resultsLinkDict[pageNum][resultNumberOnPage-1]	## We always increment the result number to show where it would be on the page, even in case of duplicates
-						resultCount += 1
-						try:
-							topic = googleSearchQueryObj.getTopicStringForDB()
-							startDate = googleSearchQueryObj.getDaterangeFrom()
-							endDate = googleSearchQueryObj.getDaterangeTO()
-
-							self.sqliteDefaults.insert_table_sqlite(conn, dbTableName, 
-								('resultNumberInSearch','URL', 'Topic','ResultPageNumber', 'ResultNumberOnPage','StartDate',	'EndDate', 	'SearchedOnDate', 				'ObtainedFromQuery'), 
-								[(resultCount, 			resUrl,	topic,	pageNum, 			resultNumberOnPage,	 startDate, 	endDate, 	datetime.datetime.now().date(),	googleSearchQueryObj.toString() )
-								],
-								printing_debug = printingDebug
-
-							)
-
-							uniqueResultNumber += 1
-
-
-						except Exception, e:
-							errorString = str(e).lower()
-							if errorString.find('syntax error')==-1: 
-								repeatCount += 1
-							if printing:
-								print("\n\t\t\t\tCould not insert topic-url pair ( %s  ,  %s )"%(topic, resUrl))
-								print("\t\t\t\tError description: %s\n"%e)
-							if printingDebug:
-								traceback.print_stack()
-
-
-				if printing:	
-					print("\n\t\t\t\tNumber of URLs repeated: (%s/%s)"%(repeatCount,resultCount))
-					print("\t\t\t\tNumber of unique URLs inserted: (%s/%s)\n"%(uniqueResultNumber, resultCount))
-
-			except Exception, e:
-				if printing:
-					print("\t\t\tERROR in GoogleSearch._insertResultsLinkDictIntoDB(): Cannot insert results extracted so far into database.\n")
-					print("\n\t\t\tERROR description: %s"%e)
-				if printingDebug:
-					print("\n\t\t\tPrinting stack traceback:\n")
-					traceback.print_stack()
-					print("\n\n\n")
-
-		else:
-			if printing:
-				print("\n\tERROR in GoogleSearch._insertResultsLinkDictIntoDB(): trying to insert into database, but conn or dbTableName passed is invalid.\n")
-
-		
-
-
-
 
 
 
@@ -1149,7 +917,7 @@ class GoogleSearch:
 
 			if printing:
 				print("\n\n\n\n\n\n\tWAITING BEFORE NEXT SEARCH QUERY IS FIRED...")
-			self.doSomeWaiting(avgWaitTime=waitBetweenSearches, printing=printing, waitingBetweenMessage="searches")
+			self._doSomeWaiting(avgWaitTime=waitBetweenSearches, printing=printing, waitingBetweenMessage="searches")
 
 		return allResults
 
@@ -1237,6 +1005,216 @@ class GoogleSearch:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+	def _isEmpty(self, thing, exceptThisThing="\!@#$%^&*()[]:;?<>,.1234567890/"):		
+		"""Checks if 'thing' is empty; returns True for a bunch of empty things; only exceptThisThing is permitted.
+		"""
+		if thing!=exceptThisThing and (thing==None or thing=="" or thing==[] or thing=={} or thing==()):
+			return True
+		return False
+
+
+	def _isIntegerInRange(self, n, lowerBound=None, upperBound=None):
+		if type(n)!=type(0):
+			return False
+		elif lowerBound!=None and upperBound!=None and (n<lowerBound or n>upperBound):
+			return  False
+		elif upperBound!=None and n>upperBound:
+			return False
+		elif lowerBound!=None and n<lowerBound:
+			return False
+
+		return True
+
+
+
+	def _checkInputsForErrors(self, 
+		necessaryTopicsList, 
+		fuzzyTopicsList, 
+		siteList, 
+		inurl, 
+
+		resultsPerPage=None, 
+		resultsPerTimePeriod=None, 
+
+		timePeriod=None, 
+		numTimePeriodsRemaining=None, 
+
+
+		resumeFrom=None, 
+		waitBetweenPages=None, 
+		waitBetweenSearches=None,
+
+		dbFilePath=None, 
+		dbTableName=None
+		):
+
+		errorFunctionBase = "\n\tERROR in GoogleSearch._checkInputsForErrors(): "
+		errors = ""
+
+
+		## check dbFilePath and dbTableName:
+		if self._isEmpty(dbFilePath, None):
+			errors+=errorFunctionBase+"The SQLite file name (i.e. dbFilePath variable) cannot be None or an empty string."
+
+		elif dbFilePath!=None and dbFilePath.endswith(".db") == False:
+			errors+=errorFunctionBase+"The SQLite file must be a .db file."
+
+
+		if self._isEmpty(dbTableName, None):
+			errors+=errorFunctionBase+"The SQLite table name (i.e. dbTableName variable) cannot be None or an empty string."
+
+
+
+		## check fuzzyTopicsList and necessaryTopicsList:
+		if self._isEmpty(fuzzyTopicsList) and self._isEmpty(necessaryTopicsList):
+			errors+=errorFunctionBase+"both fuzzyTopicsList and necessaryTopicsList cannot be empty or None."
+			
+
+		if self._isEmpty(fuzzyTopicsList)==False and type(fuzzyTopicsList)!=type([]):
+			errors+=errorFunctionBase+"if fuzzyTopicsList is not empty, it must be a list of strings."
+			
+		if self._isEmpty(necessaryTopicsList)==False and type(necessaryTopicsList)!=type([]):
+			errors+=errorFunctionBase+"if necessaryTopicsList is not empty, it must be a list of strings."
+
+
+		## check siteList:
+		if self._isEmpty(siteList)==False and type(siteList)!=type([]):
+			errors+=errorFunctionBase+"if siteList is not empty, it must be a list of strings."
+
+		## check inurl:
+		if self._isEmpty(inurl, ""):
+			errors+=errorFunctionBase+'if inurl is to be empty, set it to "".'
+		elif inurl!=None and type(inurl)!=type(""):
+			errors+=errorFunctionBase+'inurl, if not None, must be a string with no spaces.'
+		elif inurl!=None and inurl.find(" ") != -1:
+			errors+=errorFunctionBase+'inurl must be a string with no spaces.'
+
+
+		## check 'timePeriod', 'numTimePeriodsRemaining', 'resultsPerPage', 'resultsPerTimePeriod', 'resumeFrom', 'waitBetweenPages', 'waitBetweenSearches' :
+		
+		if timePeriod!=None and self._isIntegerInRange(timePeriod, lowerBound=1) == False:
+			errors+=errorFunctionBase+"timePeriod must be an integer greater than 0, or None."
+
+		if numTimePeriodsRemaining!=None and self._isIntegerInRange(numTimePeriodsRemaining, lowerBound=1) == False:
+			errors+=errorFunctionBase+"numTimePeriodsRemaining must be an integer, greater than 0."
+		
+		if resultsPerPage!=None and self._isIntegerInRange(resultsPerPage, lowerBound=10, upperBound=100) == False:
+			errors+=errorFunctionBase+"resultsPerPage must be an integer between 10 and 100, or None."
+		
+		if resultsPerTimePeriod!=None and self._isIntegerInRange(resultsPerTimePeriod, lowerBound=1) == False:
+			errors+=errorFunctionBase+"resultsPerTimePeriod must be an integer greater than 0, or None."
+		
+		if resumeFrom!=None and self._isIntegerInRange(resumeFrom, lowerBound=2440588) == False:	## start of UNIX time, i.e. 1 Jan 1970
+			errors+=errorFunctionBase+"resumeFrom must be an integer greater than 2440587, or None."
+		
+		if waitBetweenPages!=None and self._isIntegerInRange(waitBetweenPages, lowerBound=0) == False:
+			errors+=errorFunctionBase+"waitBetweenPages must be an integer greater than -1, or None."
+		
+		if waitBetweenSearches!=None and self._isIntegerInRange(waitBetweenSearches, lowerBound=0) == False:
+			errors+=errorFunctionBase+"waitBetweenSearches must be an integer greater than -1, or None."
+
+		return errors
+
+
+
+
+
+	def _checkInputsForWarnings(self, resultsPerPage, waitBetweenPages):
+		warningFunctionBase = "\n\n\tWARNING in GoogleSearch._checkInputsForWarnings(): "
+		warnings = ""
+		
+		## check ratio of resultsPerPage to waitBetweenPages:
+		resultsPerPagetowaitBetweenPagesRatioWarning = warningFunctionBase+"the wait time between pages may not be large enough to prevent IP blocking."+"\n\tRecommend wait time between pages: %s seconds or more."
+
+		if resultsPerPage <= 20 and waitBetweenPages/float(resultsPerPage) < 150/float(10):
+			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 150/float(10) )/10) ))
+
+		elif resultsPerPage > 20 and resultsPerPage <= 50 and waitBetweenPages/float(resultsPerPage) < 240/float(20):
+			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 240/float(20) )/10) ))
+			
+		elif resultsPerPage > 50 and resultsPerPage <= 80 and waitBetweenPages/float(resultsPerPage) < 450/float(50):
+			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 450/float(50) )/10) ))
+			
+		elif resultsPerPage >80 and resultsPerPage < 100 and waitBetweenPages/float(resultsPerPage) < 540/float(80):
+			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 540/float(80) )/10) ))
+
+		elif resultsPerPage == 100 and waitBetweenPages/float(resultsPerPage) < 600/float(100):
+			warnings+=resultsPerPagetowaitBetweenPagesRatioWarning%(10*( int(resultsPerPage*( 600/float(100) )/10) ))
+
+		return warnings
+
+
+
+
+
+	def _printExtractionStats(self, dbFilePath, dbTableName, googleDomain, topic, inurl, timePeriod, numTimePeriodsRemaining, resultsPerTimePeriod, resultsPerPage, waitBetweenPages, waitBetweenSearches):
+
+		print("\n\n\n###-------------------------EXTRACION STATS-------------------------###\n")
+		print("dbFilePath = %s"%(dbFilePath))
+		print("dbTableName = %s"%(dbTableName))
+		print("googleDomain = %s"%(googleDomain))
+		print("topic = %s"%(topic))
+		if inurl!="":
+			print("inurl = %s"%inurl)
+		print("timePeriod = %s days"%(timePeriod))
+		print("numTimePeriodsRemaining = %s"%(numTimePeriodsRemaining))
+		print("resultsPerTimePeriod = %s"%(resultsPerTimePeriod))
+		print("resultsPerPage = %s"%(resultsPerPage))
+		print("waitBetweenPages = %s seconds"%(waitBetweenPages))
+		print("waitBetweenSearches = %s seconds"%(waitBetweenSearches))
+
+
+
+
+
+
+	def _initializeGoogleSearchQueryObj(self, 
+		siteList=[],
+		fuzzyTopicsList=[],
+		necessaryTopicsList=[],
+		inurl=None,
+		daterangeFrom=None,
+		daterangeTo=None,
+		printing=False
+		):
+
+		gs = self.GoogleSearchQuery.GoogleSearchQuery()
+		if siteList != []:
+			gs.setSiteList(siteList=siteList, printing=printing)
+		if fuzzyTopicsList != []:
+			gs.setFuzzyTopicsList(fuzzyTopicsList=fuzzyTopicsList, printing=printing)
+		if necessaryTopicsList != []:
+			gs.setNecessaryTopicsList(necessaryTopicsList=necessaryTopicsList, printing=printing)
+		if inurl!=None:
+			gs.setInUrl(inurl=inurl, printing=printing)
+		if daterangeFrom!=None and daterangeTo!=None:
+			gs.setDateRange(daterangeFrom=daterangeFrom, daterangeTo=daterangeTo, printing=printing)
+		return gs
+
+
+
+
+
+
+
+
+
+
+
+
+
 	def _tryGetCurrentPageHTML(self, nextPageUrl, printing=True, printingDebug=False):
 		## We attempt to get the HTML of a page.3 times before giving up.
 		try:
@@ -1246,7 +1224,7 @@ class GoogleSearch:
 				x=1/0
 		except Exception:
 			try:
-				self.doSomeWaiting(avgWaitTime=15, printing=False)
+				self._doSomeWaiting(avgWaitTime=15, printing=False)
 				currentPageHTML = self.browserHandler.getHtml(url=nextPageUrl)
 				if currentPageHTML==None: 
 					x=1/0
@@ -1372,7 +1350,7 @@ signal.signal(signal.SIGINT, ctrl_c_signal_handler)		## assign ctrl_c_signal_han
 ###-----------------------------TESTS-----------------------------###
 # g = GoogleSearch()
 
-# g.doSomeWaiting(avgWaitTime=30, printing=True, countDown=True, waitingBetweenMessage="things")
+# g._doSomeWaiting(avgWaitTime=30, printing=True, countDown=True, waitingBetweenMessage="things")
 
 
 # tempDict = g.saveToSQLiteDatabase( 
