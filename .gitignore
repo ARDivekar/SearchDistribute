@@ -1,0 +1,6 @@
+*.pyc
+*.log
+/Legacy
+testResult.html
+temp.py
+googleLinkExtractor.py
