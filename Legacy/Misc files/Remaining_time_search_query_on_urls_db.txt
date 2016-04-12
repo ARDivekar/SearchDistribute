@@ -1,1 +1,0 @@
-select articleTopic, (2457934-min(startdate))/30 as 'Months extracted', 120-(2457934-min(startdate))/30 as 'Months to go'  from articleUrls group by articleTopic
