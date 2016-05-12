@@ -67,6 +67,7 @@ class GoogleSearch:
 				if self._tryAssignBrowserHandler(browserHandlerPriorityList=defaultSequence, errorPrinting=False)==False:
 					if printing:
 						print("\n\tFATAL ERROR in GoogleSearch.__init__(): no browserHandler is available, please follow their instructions for installation.")
+						print('Check if you have firefox installed')
 
 			elif browserHandlerChoice not in self.PossibleBrowserHandlers:
 				if printing:
