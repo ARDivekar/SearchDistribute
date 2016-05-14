@@ -1,83 +1,70 @@
+import sys
 from Enums import Enum
 import traceback
 import time
 import random
 import os
+from SearchExtractorErrors import *
 
-
-_BrowserHandlerCanRunSplinter = True
-_BrowserHandlerCanRunSplinterHeadless = True
-_splinterBrowser=None
+availableBrowsers = Enum([]) #["SPLINTER", "TWILL0_9", "SPLINTER_PHANTOMJS"]
 try:
 	import splinter
+	availableBrowsers.SPLINTER="SPLINTER"
 	try:
 		_splinterBrowser = splinter.Browser("phantomjs")
-	except Exception:
-		_BrowserHandlerCanRunSplinterHeadless = False	
-except Exception:
-	_BrowserHandlerCanRunSplinter = False
-	_BrowserHandlerCanRunSplinterHeadless = False
+		availableBrowsers.SPLINTER_PHANTOMJS="SPLINTER_PHANTOMJS"
+	except Exception, e:
+		make_error("BrowserHandler.py", "__main__", "Could not import splinter phantomjs",e)
+except Exception, e:
+	make_error("BrowserHandler.py", "__main__", "Could not import splinter",e)
 
 
 
 
 
-
-
-
-###-----------------------------SET POSSIBLE BROWSERS BASED ON CLASSES DEFINED IN THIS FILE-----------------------------###
-
-PossibleBrowserHandlers = Enum([]) #["SPLINTER", "TWILL0_9", "SPLINTER_HEADLESS"]
-
-
-
-
-
-class BrowserHandlerTemplate(object):
+class BrowserTemplate(object):
 	browser = None
-	_headless = True
+	headless = None
 
 	def isHeadless(self):
-		return self._headless
+		return self.headless
 
 	def resetBrowser(self):
-		raise NotImplementedError("\n\tFATAL ERROR: BrowserHandlerTemplate.resetBrowser() has not been implemented")
+		raise NotImplementedError(make_unimplemented_error(self.__class__.__name__, sys._getframe().f_code.co_name))
 
 	def checkBrowserAvailability(self, errorPrinting=False):
-		# raise NotImplementedError("BrowserHandlerTemplate.checkBrowserAvailability() has not been implemented")
-		if self.browser != None:
-			if errorPrinting:
-				print("\n\tBrowser is available.")
+		if self.browser is not None:
+			print_error(errorPrinting, self.__class__.__name__, sys._getframe().f_code.co_name, "Browser is available.")
 			return True
-
-		if errorPrinting:
-			print("\n\tBrowser is not available.")
+		print_error(errorPrinting, self.__class__.__name__, sys._getframe().f_code.co_name, "Browser is not available.")
 		return False
 
 	def getName(self):
-		raise NotImplementedError("\n\tFATAL ERROR: BrowserHandlerTemplate.getName() has not been implemented")
+		raise NotImplementedError(make_unimplemented_error(self.__class__.__name__, sys._getframe().f_code.co_name))
 
 	def clearBrowserData(self):
-		raise NotImplementedError("\n\tFATAL ERROR: BrowserHandlerTemplate.clearBrowserDate() has not been implemented")
+		raise NotImplementedError(make_unimplemented_error(self.__class__.__name__, sys._getframe().f_code.co_name))
 
 	def getHtml(self, url, secure=False):
-		raise NotImplementedError("\n\tFATAL ERROR: BrowserHandlerTemplate.getHtml() has not been implemented")
+		raise NotImplementedError(make_unimplemented_error(self.__class__.__name__, sys._getframe().f_code.co_name))
 
 	def go(self, url):
-		raise NotImplementedError("\n\tFATAL ERROR: BrowserHandlerTemplate.go() has not been implemented")
+		raise NotImplementedError(make_unimplemented_error(self.__class__.__name__, sys._getframe().f_code.co_name))
 
 	def getCurrentPageHtml(self):
-		raise NotImplementedError("\n\tFATAL ERROR: BrowserHandlerTemplate.getCurrentPageHtml() has not been implemented")
+		raise NotImplementedError(make_unimplemented_error(self.__class__.__name__, sys._getframe().f_code.co_name))
 
 	def getCurrentPageUrl(self):
-		raise NotImplementedError("\n\tFATAL ERROR: BrowserHandlerTemplate.getCurrentPageUrl() has not been implemented")
+		raise NotImplementedError(make_unimplemented_error(self.__class__.__name__, sys._getframe().f_code.co_name))
 
 	def getInitialGoogleSearchResultsPageHtml(self, searchQuery, googleDomain):
-		raise NotImplementedError("\n\tFATAL ERROR: BrowserHandlerTemplate.getInitialGoogleSearchResultsPageHtml() has not been implemented")
+		raise NotImplementedError(make_unimplemented_error(self.__class__.__name__, sys._getframe().f_code.co_name))
 
 	def browserClose(self):
-		raise NotImplementedError("\n\tFATAL ERROR: BrowserHandlerTemplate.browserClose() has not been implemented")
+		raise NotImplementedError(make_unimplemented_error(self.__class__.__name__, sys._getframe().f_code.co_name))
 
+	def isAvailable(self):
+		raise NotImplementedError(make_unimplemented_error(self.__class__.__name__, sys._getframe().f_code.co_name))
 
 	def _ensureHTTPorHTTPS(self, url, secure=False):
 		if url.lower().find('http://')!= 0 and url.lower().find('https://')!= 0:
@@ -96,7 +83,26 @@ class BrowserHandlerTemplate(object):
 		waitTime = random.uniform(searchQueryStringLen/float(5), searchQueryStringLen/float(3))	## wait a random amount of time. This assumes that the average typing speed is between 3 and 5 characters per second.
 		if errorPrinting:
 			print("\t\t\tWaiting for %s seconds before entering query into search box."%waitTime)
-		time.sleep(waitTime) 
+		time.sleep(waitTime)
+
+
+	def test(self, printing=True):
+		html = None
+		try:
+			self.go("https://github.com/")	## a small test page, around 26 KB
+			html = self.getCurrentPageHtml()
+			if not self.browserClose(printing):
+				print_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name, "browser used for testing cannot be closed.")
+			if html is not None and len(html)>20:
+				print("Successfully ran test for browser: "+self.getName())
+				return True
+		except Exception, e:
+			print_fatal_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Browser cannot access the web.", e)
+		return False
+
+
+
+
 
 
 			
@@ -106,195 +112,61 @@ class BrowserHandlerTemplate(object):
 
 
 
-"""RUles for classes:
-- All imports 
-"""
+class splinterBrowser(BrowserTemplate):
 
+	## Note: the following imports are made in local scope, i.e. they are only visible inside the class splinterBrowser.
 
+	_splinterErrorText = "One of the following softwares is not installed:\n\t> splinter		[install to Python with the command 'pip install splinter'].\n\t> selenium 		[usually packaged with splinter, you might need to update with 'pip install selenium --upgrade']"
 
-class splinterBrowserHandler(BrowserHandlerTemplate):
-
-	## Note: the following imports are made in local scope, i.e. they are only visible inside the class splinterBrowserHandler.
-
-	_splinterErrorText = "\n\n\tERROR: One of the following softwares is not installed:\n\t> splinter		[install to Python with the command 'pip install splinter'].\n\t> selenium 		[usually packaged with splinter, you might need to update with 'pip install selenium --upgrade']"
-
-	_phantomjsErrorText = "\n\n\tERROR: One of the following softwares is not installed:\n\t> phantomjs  	[refer to http://phantomjs.org as to how to install it to your machine (on Linux, 'apt-get install phantomjs' worked for me in Jan 2016)]"
 
 	browser = None
-	_headless = None
-	
+	headless = False
+
+	def __init__(self):
+		self.resetBrowser()
+
+	def isAvailable(self):
+		if availableBrowsers.SPLINTER is not None:
+			return True
+		return False
 
 
-	def __init__(self, headless=True, errorPrinting=True):
-		'''We are starting the browser for the first time.'''
-		
-		self.browser = None
-		self._headless = None
-
-		if _BrowserHandlerCanRunSplinter:
-			if headless: 
-				if _BrowserHandlerCanRunSplinterHeadless: 
-					if _splinterBrowser != None: 	## use existing browser object
-						self.browser = _splinterBrowser
-						self._headless = True
-					else:
-						self.browser = splinter.Browser("phantomjs")
-						self._headless = True
-				else:
-					if errorPrinting:
-						print(self._phantomjsErrorText)
-			else:
-				self.browser = splinter.Browser()
-				self._headless = False
-		else:
-			if errorPrinting:
-				print(self._splinterErrorText)
-
-		
-
-
-
-	def resetBrowser(self, headless=None, errorPrinting=True):
+	def resetBrowser(self, errorPrinting=True):
 		'''Reset the browser in case it does not seem to be working.'''
-		self.browser = None
-		self._headless = None
-
 		try:
 			self.browserClose(errorPrinting)
-		except Exception:
-			1+1
-
-		if _BrowserHandlerCanRunSplinter:
-			if headless: 
-				if _BrowserHandlerCanRunSplinterHeadless: 
-					self.browser = splinter.Browser("phantomjs")
-					self._headless = True
-				else:
-					if errorPrinting:
-						print(self._phantomjsErrorText)
-			else:
+			if self.isAvailable():
 				self.browser = splinter.Browser()
-				self._headless = False
-		else:
-			if errorPrinting:
-				print(self._splinterErrorText)
+			return True
+		except Exception, e:
+			print_error(errorPrinting, self.__class__.__name__, sys._getframe().f_code.co_name,"Cannot reset browser.",e)
+		return False
 
-
-			
-		# except Exception:
-		# 	if errorPrinting:
-		# 		print(self._splinterErrorText)
-		# 	self.browser = None
-		# 	self._headless = None
-		# 	return False
-
-
-		# if self.checkBrowserAvailability()==False:		
-		# 	if headless:
-		# 		try:
-		# 			self.browserClose(errorPrinting)
-		# 			self.browser = splinter.Browser("phantomjs")
-		# 			self._headless = True
-		# 			return True
-		# 		except Exception:
-		# 			if errorPrinting:
-		# 				print(self._phantomjsErrorText)
-		# 			self.browser = None
-		# 			self._headless = None
-		# 			return False
-
-		# 	else:
-		# 		self.browserClose(errorPrinting)
-		# 		try:
-		# 			self.browser = splinter.Browser()
-		# 			self._headless = False
-		# 			return True
-		# 		except Exception:
-		# 			if errorPrinting:
-		# 				print(self._splinterErrorText)
-		# 			self.browser = None
-		# 			self._headless = None
-		# 			return False
-
-
-		# elif self.isHeadless()==True:
-		# 	try:
-		# 		self.browserClose(errorPrinting)
-		# 		self.browser = splinter.Browser("phantomjs")
-		# 		self._headless = True
-		# 		return True
-		# 	except Exception:
-		# 		if errorPrinting:
-		# 			print(self._phantomjsErrorText)
-		# 		self.browser = None
-		# 		self._headless = None
-		# 		return False
-
-
-		# elif self.isHeadless()==False:
-		# 	self.browserClose(errorPrinting)
-		# 	try:
-		# 		self.browser = splinter.Browser()
-		# 		self._headless = False
-		# 		return True
-		# 	except Exception:
-		# 		if errorPrinting:
-		# 			print(self._splinterErrorText)
-		# 		self.browser = None
-		# 		self._headless = None
-		# 		return False
-		
-
-
-
-		
 
 
 	def browserClose(self, printing=False):
 		if self.checkBrowserAvailability():
-			if self.isHeadless()==True:
-				try:
-					if self.isHeadless():
-						os.kill("phantomjs")
-					if printing:
-						print("\n\tSuccessfully closed Splinter phantomjs headless browser.")
-					return True
-				except Exception:
-					if printing:
-						print("\n\tUnable to close Splinter phantomjs headless browser.")
-					return False
-
-			elif self.isHeadless()==False:
-				try:
-					self.browser.close()
-					if printing:
-						print("\n\tSuccessfully closed Splinter browser window.")
-					return True
-				except Exception:
-					if printing:
-						print("\n\tUnable to close Splinter browser window.")
-					return False
-
-
-
-
-
-
+			try:
+				self.browser.quit()
+				if printing: print("\nSuccessfully closed Splinter browser window.")
+				return True
+			except Exception,e:
+				print_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Unable to close Splinter browser window.",e)
+		return False
 
 
 
 	def clearBrowserData(self):
 		if self.checkBrowserAvailability():
-			self.browser.cookies.delete()  
+			self.browser.cookies.delete()
 			return True
-		else:
-			return False
+		return False
 
 
 
 
 	def getName(self):
-		nameString = "SPLINTER; Version=%s;"%self.splinter.__version__
+		nameString = "SPLINTER; Version=%s;"%splinter.__version__
 		if self.isHeadless():
 			nameString+=" Headless=yes;"
 		else:
@@ -303,38 +175,29 @@ class splinterBrowserHandler(BrowserHandlerTemplate):
 		return nameString
 
 
-	
-
-
-	
-
 
 	def go(self, url, secure=False):
 		url = self._ensureHTTPorHTTPS(url, secure)
 		if self.checkBrowserAvailability():
 			return self.browser.visit(url)
-			return True
-		else:
-			return False
+		return False
 
 
 	def getCurrentPageUrl(self):
 		if self.checkBrowserAvailability():
 			return self.browser.url
-		else:
-			return None
+		return None
 
 
 	def getCurrentPageHtml(self):
 		if self.checkBrowserAvailability():
 			html = self.browser.html
-			if html=="" or html==None:
+			if html=="" or html is None:
 				return None
 			return html
-		else:
-			return None
+		return None
 
-		
+
 
 	def getInitialGoogleSearchResultsPageHtml(self, searchQueryString, googleDomain="http://www.google.com", secure=False, errorPrinting=False):
 
@@ -343,17 +206,17 @@ class splinterBrowserHandler(BrowserHandlerTemplate):
 			self.browser.visit(googleDomain)
 
 			self._waitBeforeTypingQueryIntoSearchBox(searchQueryString=searchQueryString, errorPrinting=errorPrinting)
-			
+
 			self.browser.fill('q', searchQueryString)
 			button = self.browser.find_by_name('btnG')	## btnG was found by looking at google.com's HTML code.
 			button.click()
 
 
-			if self.isHeadless()==True:
+			if self.isHeadless():
 				url = self._ensureHTTPorHTTPS(self.browser.url, secure=secure)
 				self.browser.visit(url)
 
-			if self.isHeadless()==False:
+			if not self.isHeadless():
 				time.sleep(5)
 
 			return self.browser.html
@@ -361,30 +224,188 @@ class splinterBrowserHandler(BrowserHandlerTemplate):
 			return None
 	
 
-	
 
 
 
 
 
 
-class twillBrowserHandler(BrowserHandlerTemplate):
 
-	## Note: the following imports are made in local scope, i.e. they are only visible inside the class twillBrowserHandler.
+
+
+
+
+
+
+
+
+
+class splinterBrowserPhantomJS(BrowserTemplate):
+
+	## Note: the following imports are made in local scope, i.e. they are only visible inside the class splinterBrowser.
+
+	_splinterErrorText = "One of the following softwares is not installed:\n\t> splinter		[install to Python with the command 'pip install splinter'].\n\t> selenium 		[usually packaged with splinter, you might need to update with 'pip install selenium --upgrade']"
+
+	_phantomjsErrorText = "One of the following softwares is not installed:\n\t> phantomjs  	[refer to http://phantomjs.org as to how to install it to your machine (on Linux, 'apt-get install phantomjs' worked for me in Jan 2016)]"
+
+	browser = None
+	headless = True
+
+	def isAvailable(self):
+		if availableBrowsers.SPLINTER_PHANTOMJS is not None:
+			return True
+		return False
+
+
+
+	def resetBrowser(self, errorPrinting=True):
+		'''Reset the browser in case it does not seem to be working.'''
+		try:
+			self.browserClose(errorPrinting)
+		except Exception,e :
+			print_error(errorPrinting, self.__class__.__name__, sys._getframe().f_code.co_name,"Cannot close browser.",e)
+
+		try:
+			if self.isAvailable():
+				self.browser = splinter.Browser("phantomjs")
+			return True
+		except Exception, e:
+			print_error(errorPrinting, self.__class__.__name__, sys._getframe().f_code.co_name,"Cannot reset browser.",e)
+		return False
+
+
+
+
+	def browserClose(self, printing=False):
+		if self.checkBrowserAvailability():
+			try:
+				self.browser.quit() 	## Usually quite glitchy.
+				if printing: print("\nSuccessfully closed Splinter browser window.")
+			except Exception, e:
+				print_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Unable to close Splinter phantomjs browser instance.",e)
+
+		try:
+			import platform
+			## see the following: https://github.com/hpcugent/easybuild/wiki/OS_flavor_name_version
+			if platform.system() == "Linux" or platform.system() ==  "Darwin": ## Linux or MacOSX
+				if os.system("killall phantomjs") == 0:
+					return True
+			elif platform.system() == "Windows":	## Windows
+				if os.system('taskkill /f /im phantomjs.exe') == 0:
+					return True
+
+			# phantomjs_list = subprocess.Popen("ps -el |grep phantomjs", shell=True, stdout=subprocess.PIPE).stdout.read()
+			# phantomjs_list = [y.strip().split(" ") for y in phantomjs_list.split("\n") if y.strip() != ""]
+			# phantomjs_list = [[z for z in y if z!=""] for y in phantomjs_list]
+			# phantomjs_pid_list = [(int(y[3]), y[-1]) for y in phantomjs_list]
+			# for row in  phantomjs_list:
+			# 	if row[1] == "phantomjs":
+			# 		os.kill(row[0], signal.SIGKILL)
+		except Exception, e:
+			print_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Unable to kill phantomjs process.",e)
+
+		return False
+
+
+
+
+
+	def clearBrowserData(self):
+		if self.checkBrowserAvailability():
+			self.browser.cookies.delete()
+			return True
+		return False
+
+
+
+
+	def getName(self):
+		nameString = "SPLINTER; Version=%s;"%splinter.__version__
+		if self.isHeadless():
+			nameString+=" Headless=yes;"
+		else:
+			nameString+=" Headless=no;"
+		if self.checkBrowserAvailability():
+			nameString += " Driver:%s;"%self.browser.driver_name
+		return nameString
+
+
+
+
+
+
+
+
+	def go(self, url, secure=False):
+		url = self._ensureHTTPorHTTPS(url, secure)
+		if self.checkBrowserAvailability():
+			return self.browser.visit(url)
+		return False
+
+
+	def getCurrentPageUrl(self):
+		if self.checkBrowserAvailability():
+			url = self.browser.url
+			if url!="" and url is not None:
+				return url
+		return None
+
+
+	def getCurrentPageHtml(self):
+		if self.checkBrowserAvailability():
+			html = self.browser.html
+			if html!="" and html is not None:
+				return html
+		return None
+
+
+
+	def getInitialGoogleSearchResultsPageHtml(self, searchQueryString, googleDomain="http://www.google.com", secure=False, errorPrinting=False):
+
+		googleDomain = self._ensureHTTPorHTTPS(url=googleDomain, secure=secure)
+		if self.checkBrowserAvailability(errorPrinting):
+			self.browser.visit(googleDomain)
+
+			self._waitBeforeTypingQueryIntoSearchBox(searchQueryString=searchQueryString, errorPrinting=errorPrinting)
+
+			self.browser.fill('q', searchQueryString)
+			button = self.browser.find_by_name('btnG')	## btnG was found by looking at google.com's HTML code.
+			button.click()
+
+
+			if self.isHeadless():
+				url = self._ensureHTTPorHTTPS(self.browser.url, secure=secure)
+				self.browser.visit(url)
+
+			if not self.isHeadless():
+				time.sleep(5)
+
+			return self.browser.html
+		else:
+			return None
+
+
+
+
+class twillBrowser(BrowserTemplate):
+
+	## Note: the following imports are made in local scope, i.e. they are only visible inside the class twillBrowser.
 
 	_twillErrorText = "\n\n\tERROR: One of the following softwares is not installed:\n\t> 'twill' module version 0.9 [install to Python with 'pip install -Iv http://darcs.idyll.org/~t/projects/twill-0.9.tar.gz'].\n\tPlease note that as of now, only version 0.9 of twill is supported."
-
-	try:					
+	
+	browser = None
+	headless = True
+	
+	try:
 		import twill
 		import twill.commands
 		if twill.__version__ != "0.9":
-			raise IncorrectVersionError(_twillErrorText)
+			raise ImportError(_twillErrorText)
 
 	except Exception:
 		browser = None
-		_headless = None
+		headless = None
 
-	
 
 
 
@@ -400,7 +421,7 @@ class twillBrowserHandler(BrowserHandlerTemplate):
 	def browserClose(self, errorPrinting=False):
 		try:		
 			self.browser = None
-			self._headless = None
+			self.headless = None
 			if errorPrinting:
 				print("\n\tSuccessfully closed Twill browser.")
 			return True
@@ -417,35 +438,35 @@ class twillBrowserHandler(BrowserHandlerTemplate):
 			import twill
 			import twill.commands
 			if twill.__version__ != "0.9":
-				raise IncorrectVersionError(_twillErrorText)
+				raise ImportError(self._twillErrorText)
 
 		except Exception:
 			if errorPrinting:
 				print(self._twillErrorText)
 			self.browser = None
-			self._headless = None
+			self.headless = None
 			return False
 
 
 		try:
 			self.browserClose(errorPrinting)
 			self.browser = twill.commands.get_browser()
-			self._headless = True
+			self.headless = True
 			return True
 		except Exception:
 			if errorPrinting:
 				print(self._phantomjsErrorText)
 			self.browser = None
-			self._headless = None
+			self.headless = None
 			return False
 
 
 
 	def clearBrowserData(self):
 		if self.checkBrowserAvailability():
-			twill.commands.reset_browser()
-			twill.commands.clear_cookies();
-			twill.commands.reset_output(); 	
+			self.twill.commands.reset_browser()
+			self.twill.commands.clear_cookies();
+			self.twill.commands.reset_output();
 			return True
 		else:
 			return False
@@ -517,8 +538,8 @@ class twillBrowserHandler(BrowserHandlerTemplate):
 ###-----------------------------TESTS-----------------------------###
 
 
-# # x = splinterBrowserHandler()
-# x = twillBrowserHandler()
+# # x = splinterBrowser()
+# x = twillBrowser()
 # print(x.isHeadless())
 # html = x.getInitialGoogleSearchResultsPageHtml(searchQueryString="man with cat", errorPrinting=True)
 # print(len(html))
@@ -528,3 +549,5 @@ class twillBrowserHandler(BrowserHandlerTemplate):
 # print(len(html))
 # html = x.getHtml("www.google.com")
 # print(len(html))
+x = splinterBrowserPhantomJS()
+print(x.test(printing=True))

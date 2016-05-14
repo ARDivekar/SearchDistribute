@@ -1,64 +1,99 @@
-
-try: 
-	import sqliteDefaults
-except Exception:
-	print("\n\n\n\tERROR while importing sqliteDefaults.py: . The module may have syntax errors or may be missing entirely.")
-
+import sqliteDefaults
+import sys
+import datetime
+import traceback
+import Enums
+from SearchExtractorErrors import make_unimplemented_error
+from SearchExtractorErrors import print_error
 
 
 class SearchDBHandler:
-
 	conn = None
-	dbFilePath = None
-	dbTableName = None
 
-	def setDatabase(self, dbFilePath="GoogleSearchResults.db", dbTableName="SearchResultUrls", printing=True):
-		self._SQLiteDBSetup(dbFilePath=dbFilePath, dbTableName=dbTableName, printing=printing)
-		if self.conn != None:
-			self.dbFilePath = dbFilePath
-			self.dbTableName = dbTableName
+	def __init__(self):
+		pass
+
+	def isConnected(self):
+		if self.conn is None:
+			return False
+		return True
+
+	def connectToMySQLDB(self):
+		raise NotImplementedError(make_unimplemented_error(self.__class__.__name__, sys._getframe().f_code.co_name))
+
+
+	def connectToSQLiteDB(self, dbFilePath="GoogleSearchResults.db", dbTableName="SearchResultURLs", printing=True):
+		"""
+		Args:
+		    dbFilePath: the file path of the SQLite database file. If not a .db file, it is corrected.
+		    	e.g. "xxx/xxx/xxx.db" stays the same, whereas "xxx/xxx/xxx" becomes the former, and "xxx/xxx/" (i.e. a directory) bedomes "xxx/xxx/GoogleSearchResults.db"
+		    dbTableName: the SQLite table name to be referred to henceforth.
+		    printing: if we should print to terminal or not.
+
+		Returns: True or False, depending on whether we have successfully connected to SQLite and created a usable table, or not.
+		"""
+
+		## Correct common errors:
+		if dbFilePath.endswith("/") or dbFilePath.endswith("\\"):
+			dbFilePath+="GoogleSearchResults.db"
+		if not dbFilePath.endswith(".db"):
+			dbFilePath+=".db"
+
+		try:
+			self.conn=sqliteDefaults.get_conn(dbFilePath, printing)
+		except Exception, e:
+			print_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name, "could not connect to SQLite database.", e)
+			self.conn = None
+			return False
+
+		if not self.DBSetup(dbTableName=dbTableName, printing=printing):
+			self.conn = None
+			return False
+
+		return True
+
+
+	def DBSetup(self, dbTableName, printing):
+		"""
+		Ensures a table with the required name exists in the database.
+		Args:
+		    dbTableName: the table name to be used in the database.
+		    printing: if we should print to terminal or not.
+
+		Returns: True or False.
+		"""
+
+
+		## Assumes self.conn is not None, throws an Exception if it is.
+		try:
+			self.conn.execute('''CREATE TABLE IF NOT EXISTS `%s`(
+				resultNumberInSearch 	INTEGER,
+				SearchEngine			TEXT,
+				Topic 					TEXT 	NOT NULL,
+				URL 					TEXT 	NOT NULL,
+				ResultPageNumber 		INTEGER NOT NULL,
+				ResultNumberOnPage		INTEGER NOT NULL,
+				StartDate 				INTEGER,
+				EndDate 				INTEGER,
+				SearchedOnDate 			DATE,
+				ObtainedFromQuery 		TEXT 	NOT NULL,
+				QueryPageURL			TEXT,
+				PRIMARY KEY(SearchEngine, Topic, URL)
+			);
+			'''%dbTableName)
+			self.conn.commit()
 			return True
-		return False
 
-
-
-	def _SQLiteDBSetup(self, dbFilePath, dbTableName, printing):
-		conn = None
-		if self.hasImportedNecessaryModulesSQLite():
-			try:
-				conn=sqliteDefaults.get_conn(dbFilePath, printing)
-			except Exception:
-				if printing:
-					print("\n\tERROR in GoogleSearch._SQLiteDBSetup(): could not connect to database.")
-				return None
-
-			try:
-				conn.execute('''CREATE TABLE IF NOT EXISTS `%s`(
-					resultNumberInSearch 	INTEGER,
-					Topic 					TEXT 	NOT NULL,
-					URL 					TEXT 	NOT NULL,
-					ResultPageNumber 		INTEGER NOT NULL,
-					ResultNumberOnPage		INTEGER NOT NULL,
-					StartDate 				INTEGER,
-					EndDate 				INTEGER,
-					SearchedOnDate 			DATE,
-					ObtainedFromQuery 		TEXT 	NOT NULL,
-					PRIMARY KEY(Topic, URL)
-				);
-				'''%dbTableName)
-				conn.commit()
-
-			except Exception:
-				if printing:
-					print("\n\tERROR in GoogleSearch._SQLiteDBSetup(): could not create table in database.")
-				return None
-		self.conn = conn
+		except Exception, e:
+			print_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name, "could not create table '"+dbTableName+"' in database.", e)
+			return False
 
 
 
 
 
-		
+
+
 	def insertResultsLinkDictIntoDB(self, resultsLinkDict, googleSearchQueryObj, printing, printingDebug):
 
 		if self.conn!=None and type(self.dbTableName)==type(""):
@@ -74,7 +109,7 @@ class SearchDBHandler:
 					print("sorted(resultsLinkDict.keys()) = %s\n\n\n"%sorted(resultsLinkDict.keys()))
 
 				for pageNum in sorted(resultsLinkDict.keys()):
-					for resultNumberOnPage in range(1, len(resultsLinkDict[pageNum])+1): 
+					for resultNumberOnPage in range(1, len(resultsLinkDict[pageNum])+1):
 						## Insert the url into the database.
 						resUrl = resultsLinkDict[pageNum][resultNumberOnPage-1]	## We always increment the result number to show where it would be on the page, even in case of duplicates
 						resultCount += 1
@@ -83,20 +118,20 @@ class SearchDBHandler:
 							startDate = googleSearchQueryObj.getDaterangeFrom()
 							endDate = googleSearchQueryObj.getDaterangeTO()
 
-							sqliteDefaults.insert_table_sqlite(self.conn, self.dbTableName, 
-								('resultNumberInSearch','URL', 'Topic','ResultPageNumber', 'ResultNumberOnPage','StartDate',	'EndDate', 	'SearchedOnDate', 				'ObtainedFromQuery'), 
-								[(resultCount, 			resUrl,	topic,	pageNum, 			resultNumberOnPage,	 startDate, 	endDate, 	datetime.datetime.now().date(),	googleSearchQueryObj.toString() )
-								],
-								printing_debug = printingDebug
+							sqliteDefaults.insert_table_sqlite(self.conn, self.dbTableName,
+															   ('resultNumberInSearch','URL', 'Topic','ResultPageNumber', 'ResultNumberOnPage','StartDate',	'EndDate', 	'SearchedOnDate', 				'ObtainedFromQuery'),
+															   [(resultCount, 			resUrl,	topic,	pageNum, 			resultNumberOnPage,	 startDate, 	endDate, 	datetime.datetime.now().date(),	googleSearchQueryObj.toString() )
+																],
+															   printing_debug = printingDebug
 
-							)
+															   )
 
 							uniqueResultNumber += 1
 
 
 						except Exception, e:
 							errorString = str(e).lower()
-							if errorString.find('syntax error')==-1: 
+							if errorString.find('syntax error')==-1:
 								repeatCount += 1
 							if printing:
 								print("\n\t\t\t\tCould not insert topic-url pair ( %s  ,  %s )"%(topic, resUrl))
@@ -105,7 +140,7 @@ class SearchDBHandler:
 								traceback.print_stack()
 
 
-				if printing:	
+				if printing:
 					print("\n\t\t\t\tNumber of URLs repeated: (%s/%s)"%(repeatCount,resultCount))
 					print("\t\t\t\tNumber of unique URLs inserted: (%s/%s)\n"%(uniqueResultNumber, resultCount))
 
