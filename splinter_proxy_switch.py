@@ -29,15 +29,18 @@ def connect_splinter_proxy(count, url, proxyIP, proxyPort, wait_on_page_time):
     b= splinter.Browser(profile_preferences=proxy_settings)
     b.driver.set_window_size(0, 0)
     b.visit(url)
-    time.sleep(15)
+    time.sleep(5)
     if len(b.html)<20000:
         b.reload()
-    time.sleep(randrange(0.5*wait_on_page_time,5*wait_on_page_time))     ## 5 minutes to 20 minutes
+    time.sleep(5)
+    if len(b.html)<20000:
+        b.reload()
+    time.sleep(randrange(0.2*wait_on_page_time,1.8*wait_on_page_time))     ## 5 minutes to 20 minutes
     b.quit()
     print("\tClosing Browser#%s"%count)
     return
 
-max_num_windows = 20
+max_num_windows = 25
 wait_on_page_time = 300
 threads = []
 count = 1
@@ -53,10 +56,10 @@ while time.time()-start_time < 24*3600:    ## continue for 24 hours
         threads.append(t)
         t.start()
         count+=1
-        time.sleep(45)
+        time.sleep(60)
 
-    print("\n\nClosing this round...\n")
-    time.sleep(10*wait_on_page_time)
+    print("\n\nWaiting for all browsers of this round to die...\n")
+    time.sleep(1.5*max_num_windows*wait_on_page_time)
 
 
 
