@@ -15,7 +15,8 @@ proxy_pool ={'202.231.218.217': 3128, '202.152.162.124': 80, '202.159.42.246': 8
 
 
 def connect_splinter_proxy(count, url, proxyIP, proxyPort, wait_on_page_time):
-    print("Starting Browser#%s   \t@ %s:%s to URL: %s"%(count,proxyIP,proxyPort,url))
+    wait_time = randrange(0.2*wait_on_page_time,1.8*wait_on_page_time)
+    print("Starting Browser#%s   \t@ %s:%s to URL: %s \tWait time: %s sec"%(count,proxyIP,proxyPort,url,wait_time))
     proxy_settings = {'network.proxy.type': 1,
        'network.proxy.http': proxyIP,
        'network.proxy.http_port': proxyPort,
@@ -31,35 +32,40 @@ def connect_splinter_proxy(count, url, proxyIP, proxyPort, wait_on_page_time):
     b.visit(url)
     time.sleep(5)
     if len(b.html)<20000:
-        b.reload()
+        b.visit(url)
     time.sleep(5)
     if len(b.html)<20000:
-        b.reload()
-    time.sleep(randrange(0.2*wait_on_page_time,1.8*wait_on_page_time))     ## 5 minutes to 20 minutes
+        b.visit(url)
+    time.sleep(wait_time)     ## 5 minutes to 20 minutes
     b.quit()
     print("\tClosing Browser#%s"%count)
     return
 
 max_num_windows = 25
+total_run_time = 24*3600    ## continue for 24 hours
 wait_on_page_time = 300
+max_page_load_time = 60
+
 threads = []
 count = 1
 start_time = time.time() ## UNIX time
-while time.time()-start_time < 24*3600:    ## continue for 24 hours
+while time.time()-start_time < total_run_time:
     print("\n\nStarting next round...\n")
     shuffled_IPs = proxy_pool.keys()
     shuffle(shuffled_IPs)
     for proxyIP in shuffled_IPs:
-        proxyPort = proxy_pool[proxyIP]
-        t = threading.Thread(target=connect_splinter_proxy, args=(count, 'https://in.linkedin.com/in/abhishek-divekar-01bb71bb', proxyIP, proxyPort, wait_on_page_time))
-        # t.setDaemon(True)
-        threads.append(t)
-        t.start()
-        count+=1
-        time.sleep(60)
+        if count%max_num_windows != 0:
+            proxyPort = proxy_pool[proxyIP]
+            url = "https://whoer.net/" ## I feel a little guilty at spamming the folks over at whoer.net, but not enough to remove this line.
+            t = threading.Thread(target=connect_splinter_proxy, args=(count, url, proxyIP, proxyPort, wait_on_page_time))
+            # t.setDaemon(True)
+            threads.append(t)
+            t.start()
+            count+=1
+            time.sleep(max_page_load_time)
 
     print("\n\nWaiting for all browsers of this round to die...\n")
-    time.sleep(1.5*max_num_windows*wait_on_page_time)
+    time.sleep(1.5*wait_on_page_time)
 
 
 
