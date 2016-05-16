@@ -176,12 +176,12 @@ class GoogleSearch:
 		if self.searchQueryObj is None and self.query is None:
 			print_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name, "no query or parameters are passed.")
 			return ()
-
 		elif self.searchQueryObj is not None:
 			self.query = self.searchQueryObj.toString()
 
 		if self.query is None or self.query == "":
 			print_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name, "query or parameters are not valid or insufficient.")
+			return ()
 
 		if searchQueryString==None:
 			## check for errors:
