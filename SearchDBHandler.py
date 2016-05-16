@@ -9,7 +9,6 @@ from SearchExtractorErrors import print_error
 
 class SearchDBHandler:
 	conn = None
-
 	def __init__(self):
 		pass
 
