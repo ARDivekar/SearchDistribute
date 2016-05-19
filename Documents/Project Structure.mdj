@@ -423,7 +423,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "+browserClose(): boolean",
+											"text": "+closeBrowser(): boolean",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5
 										},
@@ -2517,7 +2517,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "+browserClose(): boolean",
+											"text": "+closeBrowser(): boolean",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5
 										},
@@ -3027,7 +3027,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "+browserClose(): boolean",
+											"text": "+closeBrowser(): boolean",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5
 										},
@@ -7232,7 +7232,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFUCYM4Y3i9e4k="
 							},
-							"name": "browserClose",
+							"name": "closeBrowser",
 							"visibility": "public",
 							"isStatic": false,
 							"isLeaf": false,
@@ -7986,7 +7986,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFUCa1rvXPz/Js="
 							},
-							"name": "browserClose",
+							"name": "closeBrowser",
 							"visibility": "public",
 							"isStatic": false,
 							"isLeaf": false,
@@ -8419,7 +8419,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFUCbXRIUI/Bxc="
 							},
-							"name": "browserClose",
+							"name": "closeBrowser",
 							"visibility": "public",
 							"isStatic": false,
 							"isLeaf": false,
