@@ -10,10 +10,10 @@ from SearchExtractorErrors import *
 from SearchDBHandler import SearchDBHandler
 from GoogleSearchQuery import GoogleSearchQuery
 from GoogleWebsiteParser import GoogleWebsiteParser
-from BrowserHandler import twillBrowser
-from BrowserHandler import splinterBrowser
-from BrowserHandler import splinterBrowserPhantomJS
-from BrowserHandler import availableBrowsers
+from Browsers import twillBrowser
+from Browsers import splinterBrowser
+from Browsers import splinterBrowserPhantomJS
+from Browsers import availableBrowsers
 from Enums import Enum
 import sys
 
