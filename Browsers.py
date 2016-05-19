@@ -56,45 +56,51 @@ class BrowserTemplate(object):
 
 
 
-    #
-	# def test(self, printing=True):
-	# 	test_url = "https://github.com/"
-	# 	performed_full_test = True
-    #
-	# 	if printing: print("\nTest for browser \t\t"+self.getName())
-	# 	start_time = time.time()
-	# 	if self.startBrowser(printing):
-	# 		if printing: print("\tStart time: %s seconds"%(time.time()-start_time))
-	# 	else:
-	# 		print_fatal_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Could not start browser.")
-	# 		performed_full_test = False
-    #
-	# 	html = None
-	# 	try:
-	# 		visit_time=time.time()
-	# 		self.go(test_url)	## a small test page, around 26 KB
-	# 		html = self.getCurrentPageHtml()
-    #
-	# 		if html is not None and len(html)>20:
-	# 			if printing:
-	# 				print("\tPage visit time: %s seconds for visiting %s of length %s characters."%(time.time()-visit_time, test_url,len(html)))
-	# 		else:
-	# 			print_fatal_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Browser could not obtain HTML from the web.")
-	# 			performed_full_test = False
-    #
-	# 		close_time = time.time()
-	# 		if not self.closeBrowser(printing):
-	# 			print_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name, "browser used for testing cannot be closed.")
-	# 			performed_full_test = False
-	# 		else:
-	# 			if printing:
-	# 				print("\tClose time: %s seconds"%(time.time()-close_time))
-	# 				print("\nSuccessfully ran test for browser: \t\t"+self.getName())
-    #
-	# 	except Exception, e:
-	# 		print_fatal_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Browser could not complete the test.", e)
-    #
-	# 	return performed_full_test
+
+	def test(self, printing=True):
+		test_url = "https://github.com/"
+		performed_full_test = True
+
+		if printing: print("\n\n\n###----------Test for browser: \t\t"+self.getName()+"----------###")
+		start_time = time.time()
+		if self.startBrowser(printing):
+			if printing: print("\tStart time: %s seconds"%(time.time()-start_time))
+		else:
+			print_fatal_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Could not start browser.")
+			performed_full_test = False
+
+		html = None
+		try:
+			visit_time=time.time()
+			self.go(test_url)	## a small test page, around 26 KB
+			html = self.getCurrentPageHtml()
+
+			if html is not None and len(html)>20:
+				if printing:
+					print("\tPage visit time: %s seconds for visiting %s of length %s characters."%(time.time()-visit_time, test_url,len(html)))
+			else:
+				print_fatal_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Browser could not obtain HTML from the web.")
+				performed_full_test = False
+
+			close_time = time.time()
+			if not self.closeBrowser(printing):
+				print_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name, "browser used for testing cannot be closed.")
+				performed_full_test = False
+			else:
+				if printing:
+					print("\tClose time: %s seconds"%(time.time()-close_time))
+
+		except Exception, e:
+			print_fatal_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Browser could not complete the test.", e)
+
+		if printing:
+			if performed_full_test:
+				print("\n###----------Successfully ran test for browser: \t\t"+self.getName()+"----------###")
+			else:
+				print("\n###----------Failed test for browser: \t\t"+self.getName()+"----------###")
+
+
+		return performed_full_test
 
 
 
@@ -157,21 +163,6 @@ class BrowserTemplate(object):
 
 
 
-	def test(self, printing=True):
-		html = None
-		try:
-			self.go("https://github.com/")	## a small test page, around 26 KB
-			html = self.getCurrentPageHtml()
-			if not self.browserClose(printing):
-				print_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name, "browser used for testing cannot be closed.")
-			if html is not None and len(html)>20:
-				print("Successfully ran test for browser: "+self.getName())
-				return True
-		except Exception, e:
-			print_fatal_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Browser cannot access the web.", e)
-		return False
-	
-
 
 
 
@@ -200,7 +191,14 @@ class splinterBrowser(BrowserTemplate):
 			return True
 		return False
 
-
+	def startBrowser(self, errorPrinting=True):
+		try:
+			if self.isAvailable():
+				self.browser = splinter.Browser()
+				return True
+		except Exception, e:
+			print_error(errorPrinting, self.__class__.__name__, sys._getframe().f_code.co_name,"Cannot start splinter browser.",e)
+		return False
 
 	def closeBrowser(self, printing=False):
 		if self.checkBrowserAvailability():
