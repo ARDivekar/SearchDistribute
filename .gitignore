@@ -4,3 +4,8 @@
 testResult.html
 temp.py
 googleLinkExtractor.py
+.idea/.name
+
+*.xml
+
+*.iml
