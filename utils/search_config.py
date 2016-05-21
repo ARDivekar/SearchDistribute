@@ -1,6 +1,6 @@
 class SearchConfig:
 
-    def __init__(self, query=None, num_pages=1, num_results_per_page=10, in_url=None, in_title=None, file_type=None):
+    def __init__(self, query='', num_pages=1, num_results_per_page=10, in_url=None, in_title=None, file_type=None):
         self.query = query
         self.num_pages = num_pages
         self.num_results_per_page = num_results_per_page

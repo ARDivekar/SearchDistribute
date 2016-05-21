@@ -1,18 +1,17 @@
-from proxy.proxy_provider import ProxyProvider
 import os
 
 
-class DefaultProxyProvider(ProxyProvider):
+class ProxyProvider:
 
-    def __init__(self):
-        self.proxy_file = os.path.abspath('proxy/proxies.txt')
-        self.user_agents_file = os.path.abspath('proxy/user_agents.txt')
+    def __init__(self, proxy_file='proxy/proxies.txt', user_agents_file='proxy/user_agents.txt'):
+        self.proxy_file = proxy_file
+        self.user_agents_file = user_agents_file
 
     def get_user_agents(self):
         user_agents = []
         with open(self.user_agents_file, 'r') as f:
             for user_agent in f.readlines():
-                user_agents.append(user_agent.rstrip().replace('"', ''))
+                user_agents.append(user_agent.rstrip())
         return user_agents
 
     def get_proxies(self):

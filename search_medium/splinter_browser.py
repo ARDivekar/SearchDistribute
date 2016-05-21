@@ -60,12 +60,6 @@ class SplinterBrowser(SearchMedium):
         except:
             pass
 
-    def get_html_from_url(self, url):
-        self.start_browser()
-        self.browser.visit(url)
-        time.sleep(3)
-        return self.browser.html
-
     def get_htmls_from_urls(self, urls):
         self.start_browser()
         for url in urls:

@@ -36,3 +36,5 @@ class DuckDuckGoParser(Parser):
     def __init__(self):
         super().__init__()
         self.container_attr = 'result__title'
+
+

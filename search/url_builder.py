@@ -28,7 +28,7 @@ class GoogleUrlBuilder(UrlBuilder):
     def __init__(self, search_config):
         super().__init__(search_config)
         self.scheme = 'https'
-        self.netloc = 'www.google.com'
+        self.netloc = 'www.google.co.in'
         self.path = '/search'
         self.query_string = self._build_query_string(search_config)
         self.fragment = ''
@@ -42,8 +42,14 @@ class GoogleUrlBuilder(UrlBuilder):
         return urlunsplit((self.scheme, self.netloc, self.path, self.query_string, self.fragment))
 
     def _build_query_string(self, search_config):
-        # TODO implement this properly
-        return 'q=hello&gws_rd=ssl'
+        params = {'q': search_config.query, 'num': search_config.num_results_per_page}
+        if search_config.in_url:
+            params['q'] += ' inurl:' + search_config.in_url
+        if search_config.in_title:
+            params['q'] += ' intitle:' + search_config.in_title
+        if search_config.file_type:
+            params['q'] += ' filetype:' + search_config.file_type
+        return urlencode(params, doseq=True)
 
 
 class BingUrlBuilder(UrlBuilder):
@@ -65,7 +71,13 @@ class BingUrlBuilder(UrlBuilder):
         return urlunsplit((self.scheme, self.netloc, self.path, self.query_string, self.fragment))
 
     def _build_query_string(self, search_config):
-        # TODO implement this properly
-        return 'q=hello'
+        params = {'q': search_config.query, 'count': search_config.num_results_per_page}
+        if search_config.in_url:
+            print('Warning: inurl not supported by bing. Ignoring')
+        if search_config.in_title:
+            params['q'] += ' intitle:' + search_config.in_title
+        if search_config.file_type:
+            params['q'] += ' filetype:' + search_config.file_type
+        return urlencode(params, doseq=True)
 
 
