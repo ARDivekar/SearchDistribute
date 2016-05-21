@@ -16,6 +16,7 @@ class Parser(metaclass=ABCMeta):
             urls.append(container.find('a')['href'])
         return urls
 
+
 class BingParser(Parser):
 
     def __init__(self):

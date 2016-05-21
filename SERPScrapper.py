@@ -1,4 +1,3 @@
-from search.parser import DuckDuckGoParser, BingParser
 from search_medium.splinter_browser import SplinterBrowser
 from proxy.default_proxy_provider import DefaultProxyProvider
 from search.search_engine_provider import SearchEngineProvider
@@ -7,6 +6,7 @@ from utils.search_config import SearchConfig
 
 # a lot of work is yet to be done, this is just to showcase the structure of the project
 # please don't change any of the function calls in this files and expect it to work
+
 
 def main():
 

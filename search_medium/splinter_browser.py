@@ -80,4 +80,5 @@ class SplinterBrowser(SearchMedium):
 
             self.start_browser(random_proxy, random_agent)
             self.browser.visit(url)
-            time.sleep(1)
+            time.sleep(5)
+            yield self.browser.html
