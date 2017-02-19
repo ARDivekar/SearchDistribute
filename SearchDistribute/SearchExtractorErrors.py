@@ -1,6 +1,33 @@
 import sys
 import datetime
 
+
+class UnsupportedFeatureException(Exception):   ## Source: https://www.codementor.io/sheena/how-to-write-python-custom-exceptions-du107ufv9#subclassing-exceptions-and-other-fancy-things
+    def __init__(self, search_engine, param_name):
+        error_message = "%s search engine does not support the `%s` feature (%s)"
+        feature_description = None
+        if param_name == "topics":
+            feature_description = "topics which MAY be present in the results, outside of any quotes in the query string."
+        elif param_name == "necessary_topics":
+            feature_description = "topics which MUST be present in the results. Enclosed by double quotes in query string."
+        elif param_name == "excluded_topics":
+            feature_description = "topics which MUST be present in the results. Enclosed by double quotes in query string, prefixed by a hyphen."
+        elif param_name == "necessary_sites":
+            feature_description = "only search on these sites/subdomains."
+        elif param_name == "excluded_sites":
+            feature_description = "remove these sites from consideration."
+        elif param_name == "in_url":
+            feature_description = "a single word which must be in all the search result urls."
+        elif param_name == "in_title":
+            feature_description = "a single word which must be in title of the pages in all search result pages."
+        elif param_name == "daterange":
+            feature_description = "a range of dates which the search results are restricted to."
+
+        Exception.__init__(self, error_message = error_message%(search_engine, param_name, feature_description))
+        self.param_name = param_name
+        self.search_engine = search_engine
+
+
 class InvalidSearchParameterException(Exception):   ## Source: https://www.codementor.io/sheena/how-to-write-python-custom-exceptions-du107ufv9#subclassing-exceptions-and-other-fancy-things
     def __init__(self, search_engine, param_name, param_value, reason):
         Exception.__init__(self, "Invalid value `%s` encountered while generating %s search query: parameter `%s` %s"%(param_value, search_engine, param_name, reason))

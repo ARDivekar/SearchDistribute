@@ -10,16 +10,21 @@ def _convert_to_julian_date(self, d):
 
 
 class SearchQueryTemplate(object):
-    ## SearchQueryTemplate must, at every time, have a complete list of all possible parameters that can be passed to any *SearchQuery object.
     search_engine = ""          ## The search engine which we are working on.
-    topics = []                 ## topics which May be present in the results.
-    necessary_topics = []       ## topics which MUST be present in the results. Enclosed by double quotes in query.
-    excluded_topics = []        ## topics which MUST be present in the results. Enclosed by double quotes in query, prefixed by a hyphen.
+    ## SearchQueryTemplate must, at every time, have a complete list of all possible parameters that can be passed to any *SearchQuery object.
+    topics = []                 ## topics which MAY be present in the results, outside of any quotes in the query string.
+    necessary_topics = []       ## topics which MUST be present in the results. Enclosed by double quotes in query string.
+    excluded_topics = []        ## topics which MUST be present in the results. Enclosed by double quotes in query string, prefixed by a hyphen.
     necessary_sites = []        ## only search on these sites/subdomains.
     excluded_sites = []         ## remove these sites from consideration.
-    in_url = ""                 ## a single word which must be in all the search result url.
+    in_url = ""                 ## a single word which must be in all the search result urls.
     in_title = ""               ## a single word which must be in title of the pages in all search result pages.
-    daterange = ()              ## a range of dates in which the search results must lie.
+    daterange = ()              ## a range of dates which the search results are restricted to.
+
+    ## IMPORTANT: When a new field is added to the list above, we must also correspondingly add it to:
+    ##  - SearchQuery.py : SearchQueryTemplate.__init__(...)
+    ##  and
+    ##  - SearchExtractorErrors.py : UnsupportedFeatureException.__init__(...)
 
     def __init__(self, config={}):
         check_if_empty_list_or_tuple_or_dict(self.search_engine, "config", config)
@@ -142,11 +147,17 @@ class SearchQueryTemplate(object):
         return self.generate_query(random_shuffle, random_spaces)
 
 
+
+
+
 class GoogleSearchQuery(SearchQueryTemplate):
     search_engine = "Google"
 
     ## this function returns a string from the query object parameters.
     ## This must be implemented separatelty for each search engine as the name of the fields differs between search engines.
+    def __init__(self, config={}):
+        config_chooser = lambda x, y: config.get(x) if config.get(x) is not None else config.get(y)
+        super().__init__(config)
 
 
     def generate_query(self, random_shuffle=True, random_spaces = True):
