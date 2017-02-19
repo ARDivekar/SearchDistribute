@@ -27,7 +27,7 @@ def check_if_type_list_or_tuple(search_engine, param_name, param_value):
             param_value=param_value,
             reason="must be a list or a tuple.")
 
-def check_if_empty_list(search_engine, param_name, param_value):
+def check_if_empty_list_or_tuple(search_engine, param_name, param_value):
     ## Checks if the input is an empty list, raises an exception if it is not
     if len(param_value) == 0:
         raise InvalidSearchParameterException(
