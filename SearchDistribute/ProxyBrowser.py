@@ -1,6 +1,8 @@
 import platform
 import random
 import time
+from selenium import webdriver
+import datetime
 
 from SearchDistribute.Enums import Enum
 from SearchDistribute.SearchExtractorErrors import *
@@ -19,7 +21,6 @@ try:
 	availableBrowsers.SPLINTER_PHANTOMJS="SPLINTER_PHANTOMJS"
 except Exception, e:
 	make_error("ProxyBrowser.py", "__main__", "Could not import splinter and splinter phantomjs",e)
-
 
 
 
@@ -162,14 +163,64 @@ class BrowserTemplate(object):
 
 
 
+''' Note that as of 19 Feb 2017, Firefox and Chrome do not support SOCKS5 authentication [1], but PhantomJS does [2].
+[1] https://www.privateinternetaccess.com/forum/discussion/2915/setting-up-the-socks5-proxy-on-chrome-firefox
+[2] http://stackoverflow.com/a/16353584/4900327  and  http://stackoverflow.com/a/26931933/4900327
+'''
 
 
+socks5_proxies = {
+	"privateinternetaccess.com": {
+		"socks5_hostname_or_ip": "proxy-nl.privateinternetaccess.com",
+		"socks5_port": "1080",
+		"socks5_username": "x1237029",
+		"socks5_password": "3iV3za46xD"
+	}
+}
 
+socks5_proxy_service_providers = socks5_proxies.keys()
 
+class PhantomJS():
+	browser = None
+	headless = True
+	last_visit_time = None
+	service_args = []
 
+	def __init__(self, proxy_service_provider = "privateinternetaccess.com"):
+		## For PrivateInternetAccess.com : https://www.privateinternetaccess.com/forum/discussion/258/private-internet-access-proxy-now-available-now-open
+		service_args = ['--load-images=no']
+		if proxy_service_provider in socks5_proxy_service_providers:
+			phantomjs_socks5_proxy_service_args = [
+				'--proxy=' + socks5_proxies[proxy_service_provider]["socks5_hostname_or_ip"] + ':' +
+				socks5_proxies[proxy_service_provider]["socks5_port"],
+				'--proxy-type=socks5',
+				'--proxy-auth=' + socks5_proxies[proxy_service_provider]["socks5_username"] + ':' +
+				socks5_proxies[proxy_service_provider]["socks5_password"]
+			]  ## Source: http://stackoverflow.com/a/16353584/4900327
+			service_args += phantomjs_socks5_proxy_service_args
+		self.service_args = service_args
+		self.browser = webdriver.PhantomJS(service_args = service_args)
 
-			
+	def visit(self, url):
+		self.browser.get(url)
+		self.last_loaded_time = datetime.datetime.now()
 
+	def get_html(self):
+		return self.browser.page_source
+
+	def get_url(self):
+		return self.browser.current_url
+
+	def close(self):
+		'''This closes the current window. Note: browser.quit() kills the phantomjs executable, which means you cannot produce more phantomjs instances.
+		The quit() functionality is hence not exposed.
+		'''
+		self.browser.close()
+		self.browser = None
+
+	def switch_proxy(self):
+		self.browser.close()
+		self.browser = webdriver.PhantomJS(service_args = self.service_args)
 
 # print("\n\tSplinter is the default headless client of this package as it is more reliable.")
 
