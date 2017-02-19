@@ -20,6 +20,7 @@ class SearchQueryTemplate(object):
     in_url = ""                 ## a single word which must be in all the search result urls.
     in_title = ""               ## a single word which must be in title of the pages in all search result pages.
     daterange = ()              ## a range of dates which the search results are restricted to.
+    top_level_domains = []      ## top-level domains which the search urls are restricted to e.g. .net, .edu
 
     ## IMPORTANT: When a new field is added to the list above, we must also correspondingly add it to:
     ##  - SearchQuery.py : SearchQueryTemplate.__init__(...)
@@ -42,13 +43,14 @@ class SearchQueryTemplate(object):
         self.in_url = config_chooser('in_url', 'inurl')
         self.in_title = config_chooser('in_title', 'intitle')
         self.daterange = config_chooser('date_range', 'daterange')
+        self.top_level_domains = config_chooser('top_level_domains', 'topLevelDomains')
 
 
     def check_topics(self):
         '''`topics` must be a non-empty list of strings, each string must not be empty and cannot have newlines.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
-        check_if_type_list(self.search_engine, "topics", self.topics)
+        check_if_type_list(self.search_engine, "topics", self.topics)   ## Must be a list because we may random.shuffle(...) it later.
         check_if_empty_list_or_tuple_or_dict(self.search_engine, "topics", self.topics)
         for topic in self.topics:
             check_if_type_string(self.search_engine, "topics", topic)
@@ -60,7 +62,7 @@ class SearchQueryTemplate(object):
         '''`necessary_topics` must be a non-empty list of strings, each string must not be empty and cannot have newlines.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
-        check_if_type_list(self.search_engine, "necessary_topics", self.necessary_topics)
+        check_if_type_list(self.search_engine, "necessary_topics", self.necessary_topics)   ## Must be a list because we may random.shuffle(...) it later.
         check_if_empty_list_or_tuple_or_dict(self.search_engine, "necessary_topics", self.necessary_topics)
         for necessary_topic in self.necessary_topics:
             check_if_type_string(self.search_engine, "necessary_topics", necessary_topic)
@@ -72,7 +74,7 @@ class SearchQueryTemplate(object):
         '''`excluded_topics` must be a non-empty list of strings, each string must not be empty and cannot have newlines.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
-        check_if_type_list(self.search_engine, "excluded_topics", self.excluded_topics)
+        check_if_type_list(self.search_engine, "excluded_topics", self.excluded_topics)   ## Must be a list because we may random.shuffle(...) it later.
         check_if_empty_list_or_tuple_or_dict(self.search_engine, "excluded_topics", self.excluded_topics)
         for excluded_topic in self.excluded_topics:
             check_if_type_string(self.search_engine, "excluded_topics", excluded_topic)
@@ -84,7 +86,7 @@ class SearchQueryTemplate(object):
         '''`necessary_sites` must be a non-empty list of strings, each string must not be empty and cannot have newlines or spaces; only letters, hyphens, periods and underscores are permitted.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
-        check_if_type_list(self.search_engine, "necessary_sites", self.necessary_sites)
+        check_if_type_list(self.search_engine, "necessary_sites", self.necessary_sites)   ## Must be a list because we may random.shuffle(...) it later.
         check_if_empty_list_or_tuple_or_dict(self.search_engine, "necessary_sites", self.necessary_sites)
         for necessary_site in self.necessary_sites:
             check_if_type_string(self.search_engine, "necessary_sites", necessary_site)
@@ -97,7 +99,7 @@ class SearchQueryTemplate(object):
         '''`excluded_sites` must be a non-empty list of strings, each string must not be empty and cannot have newlines or spaces; only letters, hyphens, periods and underscores are permitted.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
-        check_if_type_list(self.search_engine, "excluded_sites", self.excluded_sites)
+        check_if_type_list(self.search_engine, "excluded_sites", self.excluded_sites)   ## Must be a list because we may random.shuffle(...) it later.
         check_if_empty_list_or_tuple_or_dict(self.search_engine, "excluded_sites", self.excluded_sites)
         for excluded_site in self.excluded_sites:
             check_if_type_string(self.search_engine, "excluded_sites", excluded_site)
@@ -137,6 +139,17 @@ class SearchQueryTemplate(object):
         check_if_empty_list_or_tuple_or_dict(self.search_engine, "daterange", daterange)
         check_if_date_or_datetime(self.search_engine, "daterange[0]", daterange[0])
         check_if_date_or_datetime(self.search_engine, "daterange[1]", daterange[1])
+
+    def check_top_level_domains(self):
+        '''`top_level_domains` must be a non-empty list of strings, each string must not be empty and cannot have newlines or spaces; only letters, hyphens, periods and underscores are permitted.
+        Throws a InvalidSearchParameterException if these rules are not followed.
+        '''
+        check_if_type_list(self.search_engine, "top_level_domains", self.top_level_domains)   ## Must be a list because we may random.shuffle(...) it later.
+        check_if_empty_list_or_tuple_or_dict(self.search_engine, "top_level_domains", self.top_level_domains)
+        for top_level_domain in self.top_level_domains:
+            check_if_empty_string(self.search_engine, "top_level_domains", top_level_domain)
+            check_if_has_newlines(self.search_engine, "top_level_domains", top_level_domain)
+            check_if_has_spaces(self.search_engine, "top_level_domains", top_level_domain)
 
 
     def generate_query(self, random_shuffle=True, random_spaces=True):
@@ -189,10 +202,29 @@ class GoogleSearchQuery(SearchQueryTemplate):
             for i in range(0, len(self.necessary_sites)):
                 necessary_site = self.necessary_sites[i].strip()
                 if i==0:
-                    site_str += "site:%s"%necessary_site
+                    site_str += "site:%s" % necessary_site
                 else:
                     site_str += " | site:%s" % necessary_site
             query_parts.append(site_str.strip())
+
+        if self.top_level_domains is not None:
+            domain_str = ""
+            if random_shuffle:
+                random.shuffle(self.top_level_domains)
+            self.check_top_level_domains()
+            for i in range(0, len(self.top_level_domains)):
+                top_level_domain = self.top_level_domains[i].strip()
+                if top_level_domain.startswith('.') == False and top_level_domain.startswith('*.') == False:
+                    raise InvalidSearchParameterException(
+                        search_engine=self.search_engine,
+                        param_name="top_level_domains",
+                        param_value=top_level_domain,
+                        reason="must be of the format .xyz or *.xyz  e.g. *.edu or .com")
+                if i==0:
+                    domain_str += "site:%s" % top_level_domain
+                else:
+                    domain_str += " | site:%s" % top_level_domain
+            query_parts.append(domain_str.strip())
 
         if self.excluded_sites is not None:
             if random_shuffle:

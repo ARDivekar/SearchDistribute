@@ -22,7 +22,8 @@ class UnsupportedFeatureException(Exception):   ## Source: https://www.codemento
             feature_description = "a single word which must be in title of the pages in all search result pages."
         elif param_name == "daterange":
             feature_description = "a range of dates which the search results are restricted to."
-
+        elif param_name == "top_level_domains":
+            feature_description = "top-level domains e.g. .net, .edu to which the search urls are restricted."
         Exception.__init__(self, error_message = error_message%(search_engine, param_name, feature_description))
         self.param_name = param_name
         self.search_engine = search_engine
@@ -35,6 +36,11 @@ class InvalidSearchParameterException(Exception):   ## Source: https://www.codem
         self.param_value = param_value
         self.search_engine = search_engine
         self.reason = reason
+
+
+
+## The following functions are used to check arguments passed to `config` in the constructor of *SearchQuery objects,
+## They raise InvalidSearchParameterExceptions for inputs which do not match cetain basic criterion.
 
 def check_if_type_none(search_engine, param_name, param_value):
     ## Checks if the input is of type dict, raises an exception if it is not
