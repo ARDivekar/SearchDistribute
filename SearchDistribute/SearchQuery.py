@@ -132,7 +132,6 @@ class SearchQueryTemplate(object):
         in_title = in_title.strip()
         check_if_empty_string(self.search_engine, "in_title", in_title)
         check_if_has_newlines(self.search_engine, "in_title", in_title)
-        check_if_has_spaces(self.search_engine, "in_title", in_title)
 
     def check_daterange(self):
         '''`daterange` must be a 2-tuple of datetime.datetime or datetime.date objects.
@@ -253,7 +252,10 @@ class GoogleSearchQuery(SearchQueryTemplate):
 
         if self.in_title is not None:
             self.check_in_title()
-            query_parts.append("intitle:%s"%self.in_title.strip())
+            if self.in_title.strip().find(" ") != -1:
+                ## Put quotes around the word
+                query_parts.append('intitle:"%s"'%self.in_title.strip())
+            else: query_parts.append('intitle:%s'%self.in_title.strip())
 
         if self.linked_from_page is not None:
             self.check_linked_from_page()
