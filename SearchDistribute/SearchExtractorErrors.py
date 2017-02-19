@@ -9,6 +9,24 @@ class InvalidSearchParameterException(Exception):   ## Source: https://www.codem
         self.search_engine = search_engine
         self.reason = reason
 
+def check_if_type_none(search_engine, param_name, param_value):
+    ## Checks if the input is of type dict, raises an exception if it is not
+    if param_value is None:
+        raise InvalidSearchParameterException(
+            search_engine=search_engine,
+            param_name=param_name,
+            param_value=param_value,
+            reason="must not be None.")
+
+def check_if_type_dictionary(search_engine, param_name, param_value):
+    ## Checks if the input is of type dict, raises an exception if it is not
+    if type(param_value) != type({}):
+        raise InvalidSearchParameterException(
+            search_engine=search_engine,
+            param_name=param_name,
+            param_value=param_value,
+            reason="must be a dictionary.")
+
 def check_if_type_list(search_engine, param_name, param_value):
     ## Checks if the input is of type list, raises an exception if it is not
     if type(param_value) != type([1]):

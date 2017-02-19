@@ -1,7 +1,8 @@
 
 from SearchDistribute.SearchExtractorErrors import *
 
-class SearchQueryTemplate:
+class SearchQueryTemplate(object):
+    ## SearchQueryTemplate must, at every time, have a complete list of all possible parameters that can be passed to any *SearchQuery object.
     search_engine = ""          ## The search engine which we are working on.
     topics = []                 ## topics which May be present in the results.
     necessary_topics = []       ## topics which MUST be present in the results. Enclosed by double quotes in query.
@@ -11,6 +12,23 @@ class SearchQueryTemplate:
     in_url = ""                 ## a single word which must be in all the search result url.
     in_title = ""               ## a single word which must be in title of the pages in all search result pages.
     daterange = ()              ## a range of dates in which the search results must lie.
+
+    def __init__(self, config={}):
+        check_if_type_dictionary(self.search_engine, "config", config)
+        check_if_type_none(self.search_engine, "config", config)
+
+        config_chooser = lambda x, y: config.get(x) if config.get(x) is not None else config.get(y)
+        ## This function looks for two alternative spellings of a field in the dictionary. It prefers the one with underscores.
+        ## If neither exist, the self.* value becomes None, and must be handled.
+        self.topics = config_chooser('topics', 'Topics')
+        self.necessary_topics = config_chooser('necessary_topics', 'necessaryTopics')
+        self.excluded_topics = config_chooser('excluded_topics', 'excludedTopics')
+        self.necessary_sites = config_chooser('necessary_sites', 'necessarySites')
+        self.excluded_sites = config_chooser('excluded_sites', 'excludedSites')
+        self.in_url = config_chooser('in_url', 'inurl')
+        self.in_title = config_chooser('in_title', 'intitle')
+        self.daterange = config_chooser('date_range', 'daterange')
+
 
     def check_topics(self):
         '''`topics` must be a non-empty list of strings, each string must not be empty and cannot have newlines.
@@ -105,3 +123,7 @@ class SearchQueryTemplate:
         check_if_empty_list_or_tuple(self.search_engine, "daterange", daterange)
         check_if_date_or_datetime(self.search_engine, "daterange[0]", daterange[0])
         check_if_date_or_datetime(self.search_engine, "daterange[1]", daterange[1])
+
+
+
+
