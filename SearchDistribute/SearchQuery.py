@@ -14,6 +14,7 @@ class SearchQueryTemplate(object):
     daterange = ()              ## a range of dates in which the search results must lie.
 
     def __init__(self, config={}):
+        check_if_empty_list_or_tuple_or_dict(self.search_engine, "config", config)
         check_if_type_dictionary(self.search_engine, "config", config)
         check_if_type_none(self.search_engine, "config", config)
 
@@ -35,7 +36,7 @@ class SearchQueryTemplate(object):
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
         check_if_type_list(self.search_engine, "topics", self.topics)
-        check_if_empty_list_or_tuple(self.search_engine, "topics", self.topics)
+        check_if_empty_list_or_tuple_or_dict(self.search_engine, "topics", self.topics)
         for topic in self.topics:
             check_if_type_string(self.search_engine, "topics", topic)
             topic = topic.strip()
@@ -47,7 +48,7 @@ class SearchQueryTemplate(object):
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
         check_if_type_list(self.search_engine, "necessary_topics", self.necessary_topics)
-        check_if_empty_list_or_tuple(self.search_engine, "necessary_topics", self.necessary_topics)
+        check_if_empty_list_or_tuple_or_dict(self.search_engine, "necessary_topics", self.necessary_topics)
         for necessary_topic in self.necessary_topics:
             check_if_type_string(self.search_engine, "necessary_topics", necessary_topic)
             necessary_topic = necessary_topic.strip()
@@ -59,7 +60,7 @@ class SearchQueryTemplate(object):
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
         check_if_type_list(self.search_engine, "excluded_topics", self.excluded_topics)
-        check_if_empty_list_or_tuple(self.search_engine, "excluded_topics", self.excluded_topics)
+        check_if_empty_list_or_tuple_or_dict(self.search_engine, "excluded_topics", self.excluded_topics)
         for excluded_topic in self.excluded_topics:
             check_if_type_string(self.search_engine, "excluded_topics", excluded_topic)
             excluded_topic = excluded_topic.strip()
@@ -71,7 +72,7 @@ class SearchQueryTemplate(object):
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
         check_if_type_list(self.search_engine, "necessary_sites", self.necessary_sites)
-        check_if_empty_list_or_tuple(self.search_engine, "necessary_sites", self.necessary_sites)
+        check_if_empty_list_or_tuple_or_dict(self.search_engine, "necessary_sites", self.necessary_sites)
         for necessary_site in self.necessary_sites:
             check_if_type_string(self.search_engine, "necessary_sites", necessary_site)
             necessary_site = necessary_site.strip()
@@ -84,7 +85,7 @@ class SearchQueryTemplate(object):
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
         check_if_type_list(self.search_engine, "excluded_sites", self.excluded_sites)
-        check_if_empty_list_or_tuple(self.search_engine, "excluded_sites", self.excluded_sites)
+        check_if_empty_list_or_tuple_or_dict(self.search_engine, "excluded_sites", self.excluded_sites)
         for excluded_site in self.excluded_sites:
             check_if_type_string(self.search_engine, "excluded_sites", excluded_site)
             excluded_site = excluded_site.strip()
@@ -120,10 +121,12 @@ class SearchQueryTemplate(object):
         '''
         daterange = self.daterange
         check_if_type_list_or_tuple(self.search_engine, "daterange", daterange)
-        check_if_empty_list_or_tuple(self.search_engine, "daterange", daterange)
+        check_if_empty_list_or_tuple_or_dict(self.search_engine, "daterange", daterange)
         check_if_date_or_datetime(self.search_engine, "daterange[0]", daterange[0])
         check_if_date_or_datetime(self.search_engine, "daterange[1]", daterange[1])
 
 
+class GoogleSearchQuery(SearchQueryTemplate):
+    search_engine = "Google"
 
 
