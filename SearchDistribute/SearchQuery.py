@@ -134,60 +134,12 @@ class SearchQueryTemplate(object):
         check_if_date_or_datetime(self.search_engine, "daterange[1]", daterange[1])
 
 
+    def generate_query(self, random_shuffle=True, random_spaces=True):
+        ## Each subclass MUST implement this in order to call generate_query()
+        raise NotImplementedError(make_unimplemented_error(self.__class__.__name__, sys._getframe().f_code.co_name))
 
-
-
-
-        if (self.necessaryTopicsList is None or self.necessaryTopicsList == []) and (
-                        self.fuzzyTopicsList is None or self.fuzzyTopicsList == []):  ## there are no topics in the GoogleSearchQuery object.
-            return ""
-
-        queryList = []
-
-        if self.siteList is not None and self.siteList != []:
-            siteString = ""
-            siteString += 'site:' + self.siteList[0]
-            for i in range(1, len(self.siteList)):
-                siteString += ' | site:' + self.siteList[i]
-            siteString = siteString.strip()
-            queryList.append(siteString)
-
-        topicString = ""
-        if self.necessaryTopicsList is not None and self.necessaryTopicsList != []:
-            necessaryTopicString = ""
-            for topic in self.necessaryTopicsList:
-                necessaryTopicString += ' "%s"' % topic
-            necessaryTopicString = necessaryTopicString.strip()
-            topicString += necessaryTopicString + " "
-
-        if self.fuzzyTopicsList is not None and self.fuzzyTopicsList != []:
-            fuzzyTopicString = ""
-            for topic in self.fuzzyTopicsList:
-                fuzzyTopicString += ' %s' % topic
-            fuzzyTopicString = fuzzyTopicString.strip()
-            topicString += fuzzyTopicString
-
-        queryList.append(topicString)
-
-        if self.inurl is not None and self.inurl != "":
-            queryList.append('inurl:%s' % self.inurl)
-
-        if self.daterangeFrom is not None and self.daterangeTo is not None and type(self.daterangeFrom) == type(
-                0) and type(self.daterangeTo) == type(
-                0) and self.daterangeFrom != -1 and self.daterangeTo != -1 and self.daterangeFrom <= self.daterangeFrom:
-            queryList.append('daterange:%s-%s' % (self.daterangeFrom, self.daterangeTo))
-
-        # print(queryList)
-        queryList = [i.strip() for i in queryList]
-
-        if randomShuffle:
-            random.shuffle(queryList)
-
-        query = ' '.join(queryList)
-        query = query.strip()
-
-        return query
-
+    def __str__(self, random_shuffle=True, random_spaces=True):
+        return self.generate_query(random_shuffle, random_spaces)
 
 
 class GoogleSearchQuery(SearchQueryTemplate):
@@ -195,6 +147,7 @@ class GoogleSearchQuery(SearchQueryTemplate):
 
     ## this function returns a string from the query object parameters.
     ## This must be implemented separatelty for each search engine as the name of the fields differs between search engines.
+
 
     def generate_query(self, random_shuffle=True, random_spaces = True):
         query_parts = []
