@@ -1,5 +1,13 @@
-
 from SearchDistribute.SearchExtractorErrors import *
+from jdcal import gcal2jd
+import random
+
+def _convert_to_julian_date(self, d):
+    ## takes as input a datetime.datetime or datetime.date object
+    jd_tuple = gcal2jd(d.year, d.month, d.day)
+    julian_day = jd_tuple[0] + jd_tuple[1] + 0.5
+    return int(julian_day)
+
 
 class SearchQueryTemplate(object):
     ## SearchQueryTemplate must, at every time, have a complete list of all possible parameters that can be passed to any *SearchQuery object.
@@ -126,7 +134,142 @@ class SearchQueryTemplate(object):
         check_if_date_or_datetime(self.search_engine, "daterange[1]", daterange[1])
 
 
+
+
+
+
+        if (self.necessaryTopicsList is None or self.necessaryTopicsList == []) and (
+                        self.fuzzyTopicsList is None or self.fuzzyTopicsList == []):  ## there are no topics in the GoogleSearchQuery object.
+            return ""
+
+        queryList = []
+
+        if self.siteList is not None and self.siteList != []:
+            siteString = ""
+            siteString += 'site:' + self.siteList[0]
+            for i in range(1, len(self.siteList)):
+                siteString += ' | site:' + self.siteList[i]
+            siteString = siteString.strip()
+            queryList.append(siteString)
+
+        topicString = ""
+        if self.necessaryTopicsList is not None and self.necessaryTopicsList != []:
+            necessaryTopicString = ""
+            for topic in self.necessaryTopicsList:
+                necessaryTopicString += ' "%s"' % topic
+            necessaryTopicString = necessaryTopicString.strip()
+            topicString += necessaryTopicString + " "
+
+        if self.fuzzyTopicsList is not None and self.fuzzyTopicsList != []:
+            fuzzyTopicString = ""
+            for topic in self.fuzzyTopicsList:
+                fuzzyTopicString += ' %s' % topic
+            fuzzyTopicString = fuzzyTopicString.strip()
+            topicString += fuzzyTopicString
+
+        queryList.append(topicString)
+
+        if self.inurl is not None and self.inurl != "":
+            queryList.append('inurl:%s' % self.inurl)
+
+        if self.daterangeFrom is not None and self.daterangeTo is not None and type(self.daterangeFrom) == type(
+                0) and type(self.daterangeTo) == type(
+                0) and self.daterangeFrom != -1 and self.daterangeTo != -1 and self.daterangeFrom <= self.daterangeFrom:
+            queryList.append('daterange:%s-%s' % (self.daterangeFrom, self.daterangeTo))
+
+        # print(queryList)
+        queryList = [i.strip() for i in queryList]
+
+        if randomShuffle:
+            random.shuffle(queryList)
+
+        query = ' '.join(queryList)
+        query = query.strip()
+
+        return query
+
+
+
 class GoogleSearchQuery(SearchQueryTemplate):
     search_engine = "Google"
+
+    ## this function returns a string from the query object parameters.
+    ## This must be implemented separatelty for each search engine as the name of the fields differs between search engines.
+
+    def generate_query(self, random_shuffle=True, random_spaces = True):
+        query_parts = []
+
+        if self.topics is not None:
+            if random_shuffle:
+                random.shuffle(self.topics)
+            self.check_topics()
+            query_parts += [topic.strip() for topic in self.topics]
+
+        if self.necessary_topics is not None:
+            if random_shuffle:
+                random.shuffle(self.necessary_topics)
+            self.check_necessary_topics()
+            query_parts += ['"%s"'%necessary_topic.strip() for necessary_topic in self.necessary_topics]
+
+        if self.excluded_topics is not None:
+            if random_shuffle:
+                random.shuffle(self.excluded_topics)
+            self.check_excluded_topics()
+            query_parts += ['-"%s"'%excluded_topic.strip() for excluded_topic in self.excluded_topics]
+
+        if self.necessary_sites is not None:
+            site_str = ""
+            if random_shuffle:
+                random.shuffle(self.necessary_sites)
+            self.check_necessary_sites()
+            for i in range(0, len(self.necessary_sites)):
+                necessary_site = self.necessary_sites[i].strip()
+                if i==0:
+                    site_str += "site:%s"%necessary_site
+                else:
+                    site_str += " | site:%s" % necessary_site
+            query_parts.append(site_str.strip())
+
+        if self.excluded_sites is not None:
+            if random_shuffle:
+                random.shuffle(self.excluded_sites)
+            self.check_excluded_sites()
+            query_parts += ['-"%s"'%excluded_site.strip() for excluded_site in self.excluded_sites]
+
+        if self.in_url is not None:
+            self.check_in_url()
+            query_parts.append("inurl:%s"%self.in_url.strip())
+
+        if self.in_title is not None:
+            self.check_in_title()
+            query_parts.append("intitle:%s"%self.in_title.strip())
+
+        if self.daterange is not None:
+            self.check_daterange()
+            query_parts.append('daterange:%s-%s' % (_convert_to_julian_date(self.daterange[0]), _convert_to_julian_date(self.daterange[0])))
+
+
+        if random_shuffle:
+            random.shuffle(query_parts)
+
+        query = ""
+        if random_spaces:
+            ## Adds random spaces to the query string with a particular frequency
+            for query_part in query_parts:
+                r = random.randrange(0, 10)
+                if 0<=r and r<=6:   ## 70% of the time, add a normal single space
+                    query += " %s"%query_part
+                elif 7<=r and r<=8:   ## 20% of the time, add two spaces
+                    query += "  %s"%query_part
+                elif r==9:   ## 10% of the time, add three spaces
+                    query += "   %s"%query_part
+                query += " "*random.randrange(0, 2) ## 50% of the time, add a random space at the end.
+        else:
+            query = ' '.join(query_parts)
+        return query
+
+
+
+
 
 
