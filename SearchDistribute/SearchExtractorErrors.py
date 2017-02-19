@@ -24,6 +24,8 @@ class UnsupportedFeatureException(Exception):   ## Source: https://www.codemento
             feature_description = "a range of dates which the search results are restricted to."
         elif param_name == "top_level_domains":
             feature_description = "top-level domains e.g. .net, .edu to which the search urls are restricted."
+        elif param_name == "linked_from_page":
+            feature_description = "link which must be in the content of the pages in all search result urls. e.g. all the pages with the resulting urls will link to, say, xkcd.com/493. Differs from necessary_topics"
         Exception.__init__(self, error_message = error_message%(search_engine, param_name, feature_description))
         self.param_name = param_name
         self.search_engine = search_engine

@@ -18,12 +18,15 @@ class SearchQueryTemplate(object):
     necessary_sites = []        ## only search on these sites/subdomains.
     excluded_sites = []         ## remove these sites from consideration.
     in_url = ""                 ## a single word which must be in all the search result urls.
-    in_title = ""               ## a single word which must be in title of the pages in all search result pages.
+    in_title = ""               ## a single word which must be in title of the pages in all search result urls.
     daterange = ()              ## a range of dates which the search results are restricted to.
     top_level_domains = []      ## top-level domains which the search urls are restricted to e.g. .net, .edu
+    linked_from_page = ""       ## link which must be in the content of the pages in all search result urls. e.g. all the pages with the resulting urls will link to, say, xkcd.com/493. Differs from necessary_topics.
 
     ## IMPORTANT: When a new field is added to the list above, we must also correspondingly add it to:
     ##  - SearchQuery.py : SearchQueryTemplate.__init__(...)
+    ##  - GoogleSearchQuery.generate_query(), BingSearchQuery.generate_query(), etc.
+    ##  - (Maybe) GoogleSearchQuery.__init__(), BingSearchQuery.__init__(), etc.
     ##  and
     ##  - SearchExtractorErrors.py : UnsupportedFeatureException.__init__(...)
 
@@ -44,6 +47,7 @@ class SearchQueryTemplate(object):
         self.in_title = config_chooser('in_title', 'intitle')
         self.daterange = config_chooser('date_range', 'daterange')
         self.top_level_domains = config_chooser('top_level_domains', 'topLevelDomains')
+        self.linked_from_page = config_chooser('linked_from_page', 'linkedFromPage')
 
 
     def check_topics(self):
@@ -151,6 +155,17 @@ class SearchQueryTemplate(object):
             check_if_has_newlines(self.search_engine, "top_level_domains", top_level_domain)
             check_if_has_spaces(self.search_engine, "top_level_domains", top_level_domain)
 
+    def check_linked_from_page(self):
+        '''`in_title` must be a non-empty string and cannot have newlines or spaces; only letters, hyphens, periods and underscores are permitted.
+        Throws a InvalidSearchParameterException if these rules are not followed.
+        '''
+        linked_from_page = self.linked_from_page
+        check_if_type_string(self.search_engine, "linked_from_page", linked_from_page)
+        in_title = linked_from_page.strip()
+        check_if_empty_string(self.search_engine, "linked_from_page", linked_from_page)
+        check_if_has_newlines(self.search_engine, "linked_from_page", linked_from_page)
+        check_if_has_spaces(self.search_engine, "linked_from_page", linked_from_page)
+
 
     def generate_query(self, random_shuffle=True, random_spaces=True):
         ## Each subclass MUST implement this in order to call generate_query()
@@ -239,6 +254,10 @@ class GoogleSearchQuery(SearchQueryTemplate):
         if self.in_title is not None:
             self.check_in_title()
             query_parts.append("intitle:%s"%self.in_title.strip())
+
+        if self.linked_from_page is not None:
+            self.check_linked_from_page()
+            query_parts.append("link:%s" % self.linked_from_page.strip())
 
         if self.daterange is not None:
             self.check_daterange()
