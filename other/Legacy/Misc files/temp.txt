@@ -1,0 +1,16 @@
+drop table if exists articleUrls2;
+Create table if not exists ArticleUrls2(
+		ArticleTopic 		TEXT,
+		StartDate 			INTEGER,
+		EndDate 			INTEGER,
+		ResultPageNumber 	INTEGER,
+		URL 				TEXT,
+		ResultNumber	INTEGER,
+		PRIMARY KEY(ArticleTopic, URL)
+	);
+
+insert into articleUrls2 (ArticleTopic, StartDate, EndDate, ResultPageNumber, URL, ResultNumber)
+select ArticleTopic, StartDate, EndDate, ResultPageNumber, URL, ResultNumber from articleUrls;
+
+drop table articleUrls;
+alter table articleUrls2 rename to articleUrls;

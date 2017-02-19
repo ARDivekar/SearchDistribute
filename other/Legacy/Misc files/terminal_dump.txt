@@ -1,0 +1,1792 @@
+Script started on Tuesday 29 December 2015 05:49:58 PM IST
+]0;ardivekar@ardivekar-HP: /media/ardivekar/Data/Workspaces/Python/Text_Extraction/meetardivekar@ardivekar-HP:/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet$ exitpython google_extract.py [Ksubl terminal_dump.txtpython[K google_extract.py 
+
+
+
+		Opened connection successfully
+	Resuming from last_extracted_date=2456546, will get further 16 time_period of articles.
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456486-2456546
+
+==> at https://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 32.4374866623 seconds between searches.
+
+==> at https://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456486-2456546&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=lXqCVoyHJsqXuATB2KmoBA&start=10&sa=N
+
+
+		WAITING 66.8832488017 seconds between searches.
+
+==> at https://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456486-2456546&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=unqCVtOLMtCfuQSz_Lx4&start=0&sa=N
+
+
+		WAITING 25.5377082449 seconds between searches.
+
+==> at https://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456486-2456546&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=AnuCVtWhFIjnuQTuqoiQAg&start=10&sa=N
+
+
+		WAITING 86.2256263117 seconds between searches.
+
+==> at https://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456486-2456546&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=IHuCVoH0MMGfuQSd_amQBg&start=0&sa=N
+
+
+		WAITING 70.7324119737 seconds between searches.
+
+==> at https://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456486-2456546&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=gXuCVvrgDMGFuwS7yJPYAQ&start=10&sa=N
+
+
+		WAITING 56.0551547883 seconds between searches.
+
+==> at https://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456486-2456546&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=0XuCVqSBPcudugT66bSoDw&start=0&sa=N
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456486-2456546':
+
+
+	PAGE NUMBER : 1
+		http://articles.economictimes.indiatimes.com/2013-09-03/news/41726705_1_jubilant-foodworks-supply-chain-cent-inflation
+		http://articles.economictimes.indiatimes.com/2013-08-26/news/41455294_1_jubilant-foodworks-ltd-dunkin-donuts-new-outlets
+		http://www.livemint.com/Companies/jS9q7UpZYP8OXUMsZFQeEL/India-likely-to-become-second-largest-market-for-Dominos.html
+		http://www.livemint.com/Companies/z1gE24GjEJ6nTTA4Uanp5K/Jubilant-Foodworks-Q1-net-up-5.html
+		http://articles.economictimes.indiatimes.com/2013-08-05/news/41093523_1_new-stores-long-term-growth-story-ajay-kaul
+		http://articles.economictimes.indiatimes.com/2013-08-27/news/41499081_1_domino-india-business-same-store-sales-growth
+		http://www.business-standard.com/article/companies/pe-deal-values-mcdonald-s-franchisee-at-rs-5-187-crore-113072300835_1.html
+		http://www.business-standard.com/article/companies/tata-brews-new-beverages-plan-113081500953_1.html
+		http://timesofindia.indiatimes.com/business/india-business/South-Africas-Debonairs-Pizza-returns/articleshow/21293250.cms
+		http://timesofindia.indiatimes.com/business/india-business/Force-Motors-plans-premium-SUV/articleshow/21593696.cms
+
+	PAGE NUMBER : 2
+		http://articles.economictimes.indiatimes.com/2013-08-15/news/41413676_1_yum-restaurants-india-kfc-store-pizza-hut
+		http://www.livemint.com/Companies/BzwZkaLyeO1DpOElp7MJ5H/Pizza-Hut-to-scale-up-its-delivery-business.html
+		http://articles.economictimes.indiatimes.com/2013-08-02/news/41008513_1_factory-activity-500-index-hang-seng-index
+		http://timesofindia.indiatimes.com/business/india-business/BIFR-approves-BHPV-BHEL-merger/articleshow/22161811.cms
+
+	PAGE NUMBER : 3
+		http://articles.economictimes.indiatimes.com/2013-09-03/news/41726705_1_jubilant-foodworks-supply-chain-cent-inflation
+		http://articles.economictimes.indiatimes.com/2013-08-26/news/41455294_1_jubilant-foodworks-ltd-dunkin-donuts-new-outlets
+		http://www.livemint.com/Companies/jS9q7UpZYP8OXUMsZFQeEL/India-likely-to-become-second-largest-market-for-Dominos.html
+		http://www.livemint.com/Companies/z1gE24GjEJ6nTTA4Uanp5K/Jubilant-Foodworks-Q1-net-up-5.html
+		http://articles.economictimes.indiatimes.com/2013-08-05/news/41093523_1_new-stores-long-term-growth-story-ajay-kaul
+		http://articles.economictimes.indiatimes.com/2013-08-27/news/41499081_1_domino-india-business-same-store-sales-growth
+		http://www.business-standard.com/article/companies/pe-deal-values-mcdonald-s-franchisee-at-rs-5-187-crore-113072300835_1.html
+		http://www.business-standard.com/article/companies/tata-brews-new-beverages-plan-113081500953_1.html
+		http://timesofindia.indiatimes.com/business/india-business/South-Africas-Debonairs-Pizza-returns/articleshow/21293250.cms
+		http://timesofindia.indiatimes.com/business/india-business/Force-Motors-plans-premium-SUV/articleshow/21593696.cms
+
+	PAGE NUMBER : 4
+		http://articles.economictimes.indiatimes.com/2013-08-15/news/41413676_1_yum-restaurants-india-kfc-store-pizza-hut
+		http://www.livemint.com/Companies/BzwZkaLyeO1DpOElp7MJ5H/Pizza-Hut-to-scale-up-its-delivery-business.html
+		http://articles.economictimes.indiatimes.com/2013-08-02/news/41008513_1_factory-activity-500-index-hang-seng-index
+		http://timesofindia.indiatimes.com/business/india-business/BIFR-approves-BHPV-BHEL-merger/articleshow/22161811.cms
+
+	PAGE NUMBER : 5
+		http://articles.economictimes.indiatimes.com/2013-09-03/news/41726705_1_jubilant-foodworks-supply-chain-cent-inflation
+		http://articles.economictimes.indiatimes.com/2013-08-26/news/41455294_1_jubilant-foodworks-ltd-dunkin-donuts-new-outlets
+		http://www.livemint.com/Companies/jS9q7UpZYP8OXUMsZFQeEL/India-likely-to-become-second-largest-market-for-Dominos.html
+		http://www.livemint.com/Companies/z1gE24GjEJ6nTTA4Uanp5K/Jubilant-Foodworks-Q1-net-up-5.html
+		http://articles.economictimes.indiatimes.com/2013-08-05/news/41093523_1_new-stores-long-term-growth-story-ajay-kaul
+		http://articles.economictimes.indiatimes.com/2013-08-27/news/41499081_1_domino-india-business-same-store-sales-growth
+		http://www.business-standard.com/article/companies/pe-deal-values-mcdonald-s-franchisee-at-rs-5-187-crore-113072300835_1.html
+		http://www.business-standard.com/article/companies/tata-brews-new-beverages-plan-113081500953_1.html
+		http://timesofindia.indiatimes.com/business/india-business/South-Africas-Debonairs-Pizza-returns/articleshow/21293250.cms
+		http://timesofindia.indiatimes.com/business/india-business/Force-Motors-plans-premium-SUV/articleshow/21593696.cms
+
+	PAGE NUMBER : 6
+		http://articles.economictimes.indiatimes.com/2013-08-15/news/41413676_1_yum-restaurants-india-kfc-store-pizza-hut
+		http://www.livemint.com/Companies/BzwZkaLyeO1DpOElp7MJ5H/Pizza-Hut-to-scale-up-its-delivery-business.html
+		http://articles.economictimes.indiatimes.com/2013-08-02/news/41008513_1_factory-activity-500-index-hang-seng-index
+		http://timesofindia.indiatimes.com/business/india-business/BIFR-approves-BHPV-BHEL-merger/articleshow/22161811.cms
+
+	PAGE NUMBER : 7
+		http://articles.economictimes.indiatimes.com/2013-09-03/news/41726705_1_jubilant-foodworks-supply-chain-cent-inflation
+		http://articles.economictimes.indiatimes.com/2013-08-26/news/41455294_1_jubilant-foodworks-ltd-dunkin-donuts-new-outlets
+		http://www.livemint.com/Companies/jS9q7UpZYP8OXUMsZFQeEL/India-likely-to-become-second-largest-market-for-Dominos.html
+
+
+
+	Inserting results into database:
+
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-09-03/news/41726705_1_jubilant-foodworks-supply-chain-cent-inflation ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-08-26/news/41455294_1_jubilant-foodworks-ltd-dunkin-donuts-new-outlets ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/jS9q7UpZYP8OXUMsZFQeEL/India-likely-to-become-second-largest-market-for-Dominos.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/z1gE24GjEJ6nTTA4Uanp5K/Jubilant-Foodworks-Q1-net-up-5.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-08-05/news/41093523_1_new-stores-long-term-growth-story-ajay-kaul ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-08-27/news/41499081_1_domino-india-business-same-store-sales-growth ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/pe-deal-values-mcdonald-s-franchisee-at-rs-5-187-crore-113072300835_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/tata-brews-new-beverages-plan-113081500953_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/South-Africas-Debonairs-Pizza-returns/articleshow/21293250.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/Force-Motors-plans-premium-SUV/articleshow/21593696.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-08-15/news/41413676_1_yum-restaurants-india-kfc-store-pizza-hut ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/BzwZkaLyeO1DpOElp7MJ5H/Pizza-Hut-to-scale-up-its-delivery-business.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-08-02/news/41008513_1_factory-activity-500-index-hang-seng-index ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/BIFR-approves-BHPV-BHEL-merger/articleshow/22161811.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-09-03/news/41726705_1_jubilant-foodworks-supply-chain-cent-inflation ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-08-26/news/41455294_1_jubilant-foodworks-ltd-dunkin-donuts-new-outlets ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/jS9q7UpZYP8OXUMsZFQeEL/India-likely-to-become-second-largest-market-for-Dominos.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/z1gE24GjEJ6nTTA4Uanp5K/Jubilant-Foodworks-Q1-net-up-5.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-08-05/news/41093523_1_new-stores-long-term-growth-story-ajay-kaul ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-08-27/news/41499081_1_domino-india-business-same-store-sales-growth ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/pe-deal-values-mcdonald-s-franchisee-at-rs-5-187-crore-113072300835_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/tata-brews-new-beverages-plan-113081500953_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/South-Africas-Debonairs-Pizza-returns/articleshow/21293250.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/Force-Motors-plans-premium-SUV/articleshow/21593696.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-08-15/news/41413676_1_yum-restaurants-india-kfc-store-pizza-hut ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/BzwZkaLyeO1DpOElp7MJ5H/Pizza-Hut-to-scale-up-its-delivery-business.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-08-02/news/41008513_1_factory-activity-500-index-hang-seng-index ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/BIFR-approves-BHPV-BHEL-merger/articleshow/22161811.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-09-03/news/41726705_1_jubilant-foodworks-supply-chain-cent-inflation ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-08-26/news/41455294_1_jubilant-foodworks-ltd-dunkin-donuts-new-outlets ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/jS9q7UpZYP8OXUMsZFQeEL/India-likely-to-become-second-largest-market-for-Dominos.html ), possible duplicate
+
+
+	Number of URLs repeated in this search = 31
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 338.30535902 seconds between searches.
+
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456426-2456486
+
+==> at https://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 70.3500517341 seconds between searches.
+
+
+
+
+	AN ERROR OCCURED WHILE EXTRACTING URLS
+]0;ardivekar@ardivekar-HP: /media/ardivekar/Data/Workspaces/Python/Text_Extraction/meetardivekar@ardivekar-HP:/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet$ python google_extract.py 
+
+
+
+		Opened connection successfully
+	Resuming from last_extracted_date=2456486, will get further 15 time_period of articles.
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456426-2456486
+
+^CTraceback (most recent call last):
+  File "google_extract.py", line 90, in <module>
+    waiting=waiting, wait=wait_between_pages)
+  File "/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet/googlesearch.py", line 252, in get_google_search_results
+    first_results_page_html = perform_initial_google_search(query, google_domain)
+  File "/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet/googlesearch.py", line 201, in perform_initial_google_search
+    t_brw.go(url)						## open the url 
+  File "/usr/lib/python2.7/dist-packages/twill/browser.py", line 114, in go
+    self._journey('open', u)
+  File "/usr/lib/python2.7/dist-packages/twill/browser.py", line 524, in _journey
+    r = func(*args, **kwargs)
+  File "/usr/lib/python2.7/dist-packages/mechanize/_mechanize.py", line 203, in open
+    return self._mech_open(url, data, timeout=timeout)
+  File "/usr/lib/python2.7/dist-packages/mechanize/_mechanize.py", line 249, in _mech_open
+    self._set_response(response, False)
+  File "/usr/lib/python2.7/dist-packages/mechanize/_mechanize.py", line 308, in _set_response
+    self._factory.set_response(response)
+  File "/usr/lib/python2.7/dist-packages/twill/utils.py", line 325, in set_response
+    cleaned_response = self._cleanup_html(response)
+  File "/usr/lib/python2.7/dist-packages/twill/utils.py", line 352, in _cleanup_html
+    self._orig_html = response.read()
+  File "/usr/lib/python2.7/dist-packages/mechanize/_response.py", line 190, in read
+    self.__cache.write(self.wrapped.read())
+  File "/usr/lib/python2.7/socket.py", line 355, in read
+    data = self._sock.recv(rbufsize)
+  File "/usr/lib/python2.7/httplib.py", line 611, in read
+    s = self.fp.read(amt)
+  File "/usr/lib/python2.7/socket.py", line 384, in read
+    data = self._sock.recv(left)
+  File "/usr/lib/python2.7/ssl.py", line 734, in recv
+    return self.read(buflen)
+  File "/usr/lib/python2.7/ssl.py", line 621, in read
+    v = self._sslobj.read(len or 1024)
+KeyboardInterrupt
+]0;ardivekar@ardivekar-HP: /media/ardivekar/Data/Workspaces/Python/Text_Extraction/meetardivekar@ardivekar-HP:/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet$ python google_extract.py 
+
+
+
+		Opened connection successfully
+	Resuming from last_extracted_date=2456486, will get further 15 time_period of articles.
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456426-2456486
+
+==> at https://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 42.950747332 seconds between searches.
+
+
+
+
+	AN ERROR OCCURED WHILE EXTRACTING URLS
+]0;ardivekar@ardivekar-HP: /media/ardivekar/Data/Workspaces/Python/Text_Extraction/meetardivekar@ardivekar-HP:/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet$ python google_extract.py 
+
+
+
+		Opened connection successfully
+	Resuming from last_extracted_date=2456486, will get further 15 time_period of articles.
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456426-2456486
+
+
+
+
+	AN ERROR OCCURED WHILE EXTRACTING URLS
+]0;ardivekar@ardivekar-HP: /media/ardivekar/Data/Workspaces/Python/Text_Extraction/meetardivekar@ardivekar-HP:/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet$ python google_extract.py 
+
+
+
+		Opened connection successfully
+	Resuming from last_extracted_date=2456486, will get further 15 time_period of articles.
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456426-2456486
+
+Traceback (most recent call last):
+  File "google_extract.py", line 90, in <module>
+    waiting=waiting, wait=wait_between_pages)
+  File "/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet/googlesearch.py", line 252, in get_google_search_results
+    first_results_page_html = perform_initial_google_search(query, google_domain)
+  File "/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet/googlesearch.py", line 201, in perform_initial_google_search
+    t_brw.go(url)						## open the url 
+  File "/usr/lib/python2.7/dist-packages/twill/browser.py", line 114, in go
+    self._journey('open', u)
+  File "/usr/lib/python2.7/dist-packages/twill/browser.py", line 524, in _journey
+    r = func(*args, **kwargs)
+  File "/usr/lib/python2.7/dist-packages/mechanize/_mechanize.py", line 203, in open
+    return self._mech_open(url, data, timeout=timeout)
+  File "/usr/lib/python2.7/dist-packages/mechanize/_mechanize.py", line 216, in _mech_open
+    "can't fetch relative reference: "
+mechanize._mechanize.BrowserStateError: can't fetch relative reference: not viewing any document
+]0;ardivekar@ardivekar-HP: /media/ardivekar/Data/Workspaces/Python/Text_Extraction/meetardivekar@ardivekar-HP:/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet$ python google_extract.py 
+
+
+
+		Opened connection successfully
+	Resuming from last_extracted_date=2456486, will get further 15 time_period of articles.
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456426-2456486
+
+==> at https://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 67.4458812769 seconds between searches.
+
+^CTraceback (most recent call last):
+  File "google_extract.py", line 90, in <module>
+    waiting=waiting, wait=wait_between_pages)
+  File "/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet/googlesearch.py", line 287, in get_google_search_results
+    do_some_waiting(wait, printing=printing)
+  File "/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet/googlesearch.py", line 224, in do_some_waiting
+    time.sleep(wait_time)
+KeyboardInterrupt
+]0;ardivekar@ardivekar-HP: /media/ardivekar/Data/Workspaces/Python/Text_Extraction/meetardivekar@ardivekar-HP:/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet$ python google_extract.py 
+
+
+
+		Opened connection successfully
+	Resuming from last_extracted_date=2456486, will get further 15 time_period of articles.
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456426-2456486
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 82.938607207 seconds between searches.
+
+
+
+
+	AN ERROR OCCURED WHILE EXTRACTING URLS
+]0;ardivekar@ardivekar-HP: /media/ardivekar/Data/Workspaces/Python/Text_Extraction/meetardivekar@ardivekar-HP:/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet$ python google_extract.py 
+
+
+
+		Opened connection successfully
+	Resuming from last_extracted_date=2456486, will get further 15 time_period of articles.
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456426-2456486
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 42.5575609633 seconds between searches.
+
+^CTraceback (most recent call last):
+  File "google_extract.py", line 90, in <module>
+    waiting=waiting, wait=wait_between_pages)
+  File "/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet/googlesearch.py", line 287, in get_google_search_results
+    do_some_waiting(wait, printing=printing)
+  File "/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet/googlesearch.py", line 224, in do_some_waiting
+    time.sleep(wait_time)
+KeyboardInterrupt
+]0;ardivekar@ardivekar-HP: /media/ardivekar/Data/Workspaces/Python/Text_Extraction/meetardivekar@ardivekar-HP:/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet$ python google_extract.py 
+
+
+
+		Opened connection successfully
+	Resuming from last_extracted_date=2456486, will get further 15 time_period of articles.
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456426-2456486
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 19.5794299856 seconds between searches.
+
+
+
+
+	AN ERROR OCCURED WHILE EXTRACTING URLS:
+
+list index out of range
+
+
+
+Traceback (most recent call last):
+  File "google_extract.py", line 91, in <module>
+    waiting=waiting, wait=wait_between_pages)
+  File "/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet/googlesearch.py", line 294, in get_google_search_results
+    next_page_url = extract_next_google_search_results_link(bs, google_domain, printing_debug)	## 'next_page_url' stores the url of the next page
+  File "/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet/googlesearch.py", line 145, in extract_next_google_search_results_link
+    nav_html=(bs.findAll(attrs={"id":"nav"}))[0]	## There should be only one.
+IndexError: list index out of range
+]0;ardivekar@ardivekar-HP: /media/ardivekar/Data/Workspaces/Python/Text_Extraction/meetardivekar@ardivekar-HP:/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet$ python google_extract.py 
+
+
+
+		Opened connection successfully
+	Resuming from last_extracted_date=2456486, will get further 15 time_period of articles.
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456426-2456486
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 30.3829977566 seconds between searches.
+
+
+
+	get_google_search_results(): your query,
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456426-2456486
+	..only had 6 results, not 40 as you requested.
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456426-2456486':
+
+
+	PAGE NUMBER : 1
+		http://articles.economictimes.indiatimes.com/2013-05-28/news/39580254_1_dunkin-donuts-ajay-kaul-dunkaccino
+		http://www.business-standard.com/article/markets/jubilant-s-dough-refusing-to-rise-113061400235_1.html
+		http://timesofindia.indiatimes.com/business/india-business/SAIL-NTPC-defer-bond-issues/articleshow/20692832.cms
+		http://articles.economictimes.indiatimes.com/2013-06-06/news/39788581_1_equity-shares-prior-approval-trigger-limit
+		http://timesofindia.indiatimes.com/business/india-business/Biryani-entrepreneurs-stir-quick-service-pot/articleshow/21012265.cms
+		http://www.business-standard.com/article/economy-policy/pm-sets-up-project-monitoring-group-to-track-large-investment-projects-113061300656_1.html
+
+
+
+	Inserting results into database:
+
+
+
+	Number of URLs repeated in this search = 0
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 256.561507362 seconds between searches.
+
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456366-2456426
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 45.8939295922 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456366-2456426&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=cIOCVv7zHMKdugSDl5KQBA&start=10&sa=N
+
+
+		WAITING 48.1595319092 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456366-2456426&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=oYOCVsbGNNOfugSt5L24CQ&start=0&sa=N
+
+
+		WAITING 65.7454631334 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456366-2456426&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=34OCVqCwJYPVuQTsnKTwDQ&start=10&sa=N
+
+
+		WAITING 48.1929351933 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456366-2456426&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=JYSCVv37MseauQSluLawDg&start=0&sa=N
+
+
+		WAITING 22.8647334765 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456366-2456426&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=WYSCVsmXHY3guQTCnaSIBQ&start=10&sa=N
+
+
+		WAITING 19.5194403708 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456366-2456426&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=eYSCVtzyMY7nuQTNvY-YCA&start=0&sa=N
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456366-2456426':
+
+
+	PAGE NUMBER : 1
+		http://articles.economictimes.indiatimes.com/2013-04-10/news/38434125_1_commissary-dunkin-donuts-domino
+		http://articles.economictimes.indiatimes.com/2013-05-09/news/39143835_1_domino-crore-march-31
+		http://articles.economictimes.indiatimes.com/2013-04-16/news/38586797_1_titan-industries-ltd-jubilant-foodworks-ltd-gold-futures-prices
+		http://articles.economictimes.indiatimes.com/2013-03-22/news/37904259_1_domino-s-pizza-india-pizza-maker-pizza-store
+		http://articles.economictimes.indiatimes.com/2013-05-12/news/39203727_1_jubilant-foodworks-ltd-bajaj-auto-ltd-tech-mahindra-ltd
+		http://articles.economictimes.indiatimes.com/2013-05-10/news/39168913_1_gdp-growth-store-growth-indian-economy
+		http://articles.economictimes.indiatimes.com/2013-03-21/news/37903583_1_fmcg-stocks-fmcg-business-bse-fmcg-index
+		http://articles.economictimes.indiatimes.com/2013-03-15/news/37744653_1_jagdish-malkani-psu-banks-pharma-pack
+		http://articles.economictimes.indiatimes.com/2013-04-16/news/38586604_1_indiabulls-power-koutons-retail-adani-power
+		http://timesofindia.indiatimes.com/business/india-business/Sweet-Chariot-Cafe-Noir-look-at-stake-sales/articleshow/19588979.cms
+
+	PAGE NUMBER : 2
+		http://articles.economictimes.indiatimes.com/articles_2013_02_00000.xml
+		http://articles.economictimes.indiatimes.com/2013-05-09/news/39143967_1_crore-rs-year-ago-period
+		http://timesofindia.indiatimes.com/business/india-business/RBI-asks-banks-to-issue-debit-credit-cards-with-photo/articleshow/18989608.cms
+
+	PAGE NUMBER : 3
+		http://articles.economictimes.indiatimes.com/2013-04-10/news/38434125_1_commissary-dunkin-donuts-domino
+		http://articles.economictimes.indiatimes.com/2013-05-09/news/39143835_1_domino-crore-march-31
+		http://articles.economictimes.indiatimes.com/2013-04-16/news/38586797_1_titan-industries-ltd-jubilant-foodworks-ltd-gold-futures-prices
+		http://articles.economictimes.indiatimes.com/2013-03-22/news/37904259_1_domino-s-pizza-india-pizza-maker-pizza-store
+		http://articles.economictimes.indiatimes.com/2013-05-12/news/39203727_1_jubilant-foodworks-ltd-bajaj-auto-ltd-tech-mahindra-ltd
+		http://articles.economictimes.indiatimes.com/2013-05-10/news/39168913_1_gdp-growth-store-growth-indian-economy
+		http://articles.economictimes.indiatimes.com/2013-03-21/news/37903583_1_fmcg-stocks-fmcg-business-bse-fmcg-index
+		http://articles.economictimes.indiatimes.com/2013-03-15/news/37744653_1_jagdish-malkani-psu-banks-pharma-pack
+		http://articles.economictimes.indiatimes.com/2013-04-16/news/38586604_1_indiabulls-power-koutons-retail-adani-power
+		http://timesofindia.indiatimes.com/business/india-business/Sweet-Chariot-Cafe-Noir-look-at-stake-sales/articleshow/19588979.cms
+
+	PAGE NUMBER : 4
+		http://articles.economictimes.indiatimes.com/articles_2013_02_00000.xml
+		http://articles.economictimes.indiatimes.com/2013-05-09/news/39143967_1_crore-rs-year-ago-period
+		http://timesofindia.indiatimes.com/business/india-business/RBI-asks-banks-to-issue-debit-credit-cards-with-photo/articleshow/18989608.cms
+
+	PAGE NUMBER : 5
+		http://articles.economictimes.indiatimes.com/2013-04-10/news/38434125_1_commissary-dunkin-donuts-domino
+		http://articles.economictimes.indiatimes.com/2013-05-09/news/39143835_1_domino-crore-march-31
+		http://articles.economictimes.indiatimes.com/2013-04-16/news/38586797_1_titan-industries-ltd-jubilant-foodworks-ltd-gold-futures-prices
+		http://articles.economictimes.indiatimes.com/2013-03-22/news/37904259_1_domino-s-pizza-india-pizza-maker-pizza-store
+		http://articles.economictimes.indiatimes.com/2013-05-12/news/39203727_1_jubilant-foodworks-ltd-bajaj-auto-ltd-tech-mahindra-ltd
+		http://articles.economictimes.indiatimes.com/2013-05-10/news/39168913_1_gdp-growth-store-growth-indian-economy
+		http://articles.economictimes.indiatimes.com/2013-03-21/news/37903583_1_fmcg-stocks-fmcg-business-bse-fmcg-index
+		http://articles.economictimes.indiatimes.com/2013-03-15/news/37744653_1_jagdish-malkani-psu-banks-pharma-pack
+		http://articles.economictimes.indiatimes.com/2013-04-16/news/38586604_1_indiabulls-power-koutons-retail-adani-power
+		http://timesofindia.indiatimes.com/business/india-business/Sweet-Chariot-Cafe-Noir-look-at-stake-sales/articleshow/19588979.cms
+
+	PAGE NUMBER : 6
+		http://articles.economictimes.indiatimes.com/articles_2013_02_00000.xml
+		http://articles.economictimes.indiatimes.com/2013-05-09/news/39143967_1_crore-rs-year-ago-period
+		http://timesofindia.indiatimes.com/business/india-business/RBI-asks-banks-to-issue-debit-credit-cards-with-photo/articleshow/18989608.cms
+
+	PAGE NUMBER : 7
+		http://articles.economictimes.indiatimes.com/2013-04-10/news/38434125_1_commissary-dunkin-donuts-domino
+
+
+
+	Inserting results into database:
+
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-04-10/news/38434125_1_commissary-dunkin-donuts-domino ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-05-09/news/39143835_1_domino-crore-march-31 ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-04-16/news/38586797_1_titan-industries-ltd-jubilant-foodworks-ltd-gold-futures-prices ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-03-22/news/37904259_1_domino-s-pizza-india-pizza-maker-pizza-store ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-05-12/news/39203727_1_jubilant-foodworks-ltd-bajaj-auto-ltd-tech-mahindra-ltd ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-05-10/news/39168913_1_gdp-growth-store-growth-indian-economy ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-03-21/news/37903583_1_fmcg-stocks-fmcg-business-bse-fmcg-index ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-03-15/news/37744653_1_jagdish-malkani-psu-banks-pharma-pack ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-04-16/news/38586604_1_indiabulls-power-koutons-retail-adani-power ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/Sweet-Chariot-Cafe-Noir-look-at-stake-sales/articleshow/19588979.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/articles_2013_02_00000.xml ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-05-09/news/39143967_1_crore-rs-year-ago-period ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/RBI-asks-banks-to-issue-debit-credit-cards-with-photo/articleshow/18989608.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-04-10/news/38434125_1_commissary-dunkin-donuts-domino ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-05-09/news/39143835_1_domino-crore-march-31 ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-04-16/news/38586797_1_titan-industries-ltd-jubilant-foodworks-ltd-gold-futures-prices ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-03-22/news/37904259_1_domino-s-pizza-india-pizza-maker-pizza-store ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-05-12/news/39203727_1_jubilant-foodworks-ltd-bajaj-auto-ltd-tech-mahindra-ltd ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-05-10/news/39168913_1_gdp-growth-store-growth-indian-economy ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-03-21/news/37903583_1_fmcg-stocks-fmcg-business-bse-fmcg-index ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-03-15/news/37744653_1_jagdish-malkani-psu-banks-pharma-pack ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-04-16/news/38586604_1_indiabulls-power-koutons-retail-adani-power ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/Sweet-Chariot-Cafe-Noir-look-at-stake-sales/articleshow/19588979.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/articles_2013_02_00000.xml ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-05-09/news/39143967_1_crore-rs-year-ago-period ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/RBI-asks-banks-to-issue-debit-credit-cards-with-photo/articleshow/18989608.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-04-10/news/38434125_1_commissary-dunkin-donuts-domino ), possible duplicate
+
+
+	Number of URLs repeated in this search = 27
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 245.379466828 seconds between searches.
+
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456306-2456366
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 59.3789450705 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456306-2456366&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=nIWCVqWJGYG0uQSNg5vgBw&start=10&sa=N
+
+
+		WAITING 24.0810305115 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456306-2456366&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=24WCVpKbBZOouwTr2p_QAw&start=20&sa=N
+
+
+		WAITING 85.0831924731 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456306-2456366&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=AIaCVs3dHIq8ugTBq7v4CA&start=10&sa=N
+
+
+		WAITING 46.9321013688 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456306-2456366&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=XYaCVv28ENiHuASRs5X4AQ&start=20&sa=N
+
+
+		WAITING 48.2611418347 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456306-2456366&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=lYaCVqavK8XvugS9-oSQAQ&start=10&sa=N
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456306-2456366':
+
+
+	PAGE NUMBER : 1
+		http://www.livemint.com/Companies/dVg0afTJ2hA5j98eEY3wpI/Deutsche-Bank-upgrades-Jubilant-Foodworks-to-buy-from-hol.html
+		http://www.livemint.com/Companies/JLmZnnEajPdklUSF0U9Q3M/Jubilant-Foodworks-same-store-sales-growth-continue-to-decli.html
+		http://articles.economictimes.indiatimes.com/2013-03-02/news/37390362_1_ac-restaurants-air-conditioned-restaurants-service-tax
+		http://articles.economictimes.indiatimes.com/2013-02-01/news/36684614_1_franchise-model-franchisee-franchise-india
+		http://articles.economictimes.indiatimes.com/2013-02-06/news/36949643_1_gaurang-shah-bnp-paribas-financial-services-asst-vp
+		http://articles.economictimes.indiatimes.com/2013-02-25/news/37289272_1_deliveries-copper-chimney-spaghetti-kitchen
+		http://www.business-standard.com/article/companies/foreign-retail-chains-to-heat-up-real-estate-by-store-expansion-113022600024_1.html
+		http://articles.economictimes.indiatimes.com/2013-02-05/news/36764851_1_ofs-oil-india-india-or-sebi
+		http://articles.economictimes.indiatimes.com/2013-02-09/news/37007749_1_pathik-gandotra-indian-markets-global-markets
+		http://articles.economictimes.indiatimes.com/2013-02-18/news/37160287_1_new-silk-route-private-equity-vasudev-adiga
+
+	PAGE NUMBER : 2
+		http://www.livemint.com/Companies/F1Y9gKGxUdEKtoGFJvBeHJ/Economic-slump-greater-choices-put-pressure-on-brands-reta.html
+		http://www.business-standard.com/article/management/like-that-only-113022400276_1.html
+		http://timesofindia.indiatimes.com/business/india-business/Burger-King-in-talks-to-revive-India-plans/articleshow/18265811.cms
+		http://articles.economictimes.indiatimes.com/2013-02-04/news/36743116_1_price-band-new-stores-issue-expenses
+		http://www.business-standard.com/article/markets/exclusive-f-o-trading-strategies-113021100603_1.html
+		http://articles.economictimes.indiatimes.com/articles_2013_01_00000.xml
+		http://articles.economictimes.indiatimes.com/articles_2013_02_00000.xml
+		http://www.business-standard.com/article/companies/chemists-play-larger-role-in-fmcg-firms-sales-strategy-113020701290_1.html
+		http://www.business-standard.com/article/companies/pre-engineered-steel-buildings-mkt-to-grow-at-11-by-2016-113020600119_1.html
+		http://www.business-standard.com/article/markets/mid-cap-performance-to-remain-stock-specific-ravi-shenoy-113021500165_1.html
+
+	PAGE NUMBER : 3
+		http://timesofindia.indiatimes.com/business/india-business/Chiller-segment-poised-for-growth-in-India/articleshow/18794609.cms
+
+	PAGE NUMBER : 4
+		http://www.livemint.com/Companies/F1Y9gKGxUdEKtoGFJvBeHJ/Economic-slump-greater-choices-put-pressure-on-brands-reta.html
+		http://www.business-standard.com/article/management/like-that-only-113022400276_1.html
+		http://timesofindia.indiatimes.com/business/india-business/Burger-King-in-talks-to-revive-India-plans/articleshow/18265811.cms
+		http://articles.economictimes.indiatimes.com/2013-02-04/news/36743116_1_price-band-new-stores-issue-expenses
+		http://www.business-standard.com/article/markets/exclusive-f-o-trading-strategies-113021100603_1.html
+		http://articles.economictimes.indiatimes.com/articles_2013_01_00000.xml
+		http://articles.economictimes.indiatimes.com/articles_2013_02_00000.xml
+		http://www.business-standard.com/article/companies/chemists-play-larger-role-in-fmcg-firms-sales-strategy-113020701290_1.html
+		http://www.business-standard.com/article/companies/pre-engineered-steel-buildings-mkt-to-grow-at-11-by-2016-113020600119_1.html
+		http://www.business-standard.com/article/markets/mid-cap-performance-to-remain-stock-specific-ravi-shenoy-113021500165_1.html
+
+	PAGE NUMBER : 5
+		http://timesofindia.indiatimes.com/business/india-business/Chiller-segment-poised-for-growth-in-India/articleshow/18794609.cms
+
+	PAGE NUMBER : 6
+		http://www.livemint.com/Companies/F1Y9gKGxUdEKtoGFJvBeHJ/Economic-slump-greater-choices-put-pressure-on-brands-reta.html
+		http://www.business-standard.com/article/management/like-that-only-113022400276_1.html
+		http://timesofindia.indiatimes.com/business/india-business/Burger-King-in-talks-to-revive-India-plans/articleshow/18265811.cms
+		http://articles.economictimes.indiatimes.com/2013-02-04/news/36743116_1_price-band-new-stores-issue-expenses
+		http://www.business-standard.com/article/markets/exclusive-f-o-trading-strategies-113021100603_1.html
+		http://articles.economictimes.indiatimes.com/articles_2013_01_00000.xml
+		http://articles.economictimes.indiatimes.com/articles_2013_02_00000.xml
+		http://www.business-standard.com/article/companies/chemists-play-larger-role-in-fmcg-firms-sales-strategy-113020701290_1.html
+
+
+
+	Inserting results into database:
+
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/articles_2013_02_00000.xml ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/F1Y9gKGxUdEKtoGFJvBeHJ/Economic-slump-greater-choices-put-pressure-on-brands-reta.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/management/like-that-only-113022400276_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/Burger-King-in-talks-to-revive-India-plans/articleshow/18265811.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-02-04/news/36743116_1_price-band-new-stores-issue-expenses ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/markets/exclusive-f-o-trading-strategies-113021100603_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/articles_2013_01_00000.xml ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/articles_2013_02_00000.xml ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/chemists-play-larger-role-in-fmcg-firms-sales-strategy-113020701290_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/pre-engineered-steel-buildings-mkt-to-grow-at-11-by-2016-113020600119_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/markets/mid-cap-performance-to-remain-stock-specific-ravi-shenoy-113021500165_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/Chiller-segment-poised-for-growth-in-India/articleshow/18794609.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/F1Y9gKGxUdEKtoGFJvBeHJ/Economic-slump-greater-choices-put-pressure-on-brands-reta.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/management/like-that-only-113022400276_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/Burger-King-in-talks-to-revive-India-plans/articleshow/18265811.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-02-04/news/36743116_1_price-band-new-stores-issue-expenses ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/markets/exclusive-f-o-trading-strategies-113021100603_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/articles_2013_01_00000.xml ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/articles_2013_02_00000.xml ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/chemists-play-larger-role-in-fmcg-firms-sales-strategy-113020701290_1.html ), possible duplicate
+
+
+	Number of URLs repeated in this search = 20
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 304.327921052 seconds between searches.
+
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456246-2456306
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 20.7785980051 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456246-2456306&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=CIiCVsHvBIOIuATR7r6QCw&start=10&sa=N
+
+
+		WAITING 35.5021193894 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456246-2456306&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=I4iCVvvUJ8ajugSjqJuYDg&start=0&sa=N
+
+
+		WAITING 86.473198828 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456246-2456306&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=SoiCVrjtGoT8uATHzpvgCA&start=10&sa=N
+
+
+		WAITING 36.3591897703 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456246-2456306&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=o4iCVtbZMtHiuQT5w6Ew&start=0&sa=N
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456246-2456306':
+
+
+	PAGE NUMBER : 1
+		http://articles.economictimes.indiatimes.com/2012-11-20/news/35226097_1_jubilant-foodworks-post-q2-ebidta-margins
+		http://articles.economictimes.indiatimes.com/2012-12-13/news/35796999_1_hardcastle-restaurants-mcdonalds-market-cap
+		http://timesofindia.indiatimes.com/business/india-business/McDonalds-franchisee-Hardcastle-Restaurants-merges-with-BSE-listed-group-company/articleshow/17525421.cms
+		http://articles.economictimes.indiatimes.com/2012-12-03/news/35568631_1_quick-service-kaati-zone-food-chain
+		http://www.business-standard.com/article/companies/restaurateur-jiggs-kalra-in-new-jv-after-exiting-punjab-grill-112121200113_1.html
+		http://articles.economictimes.indiatimes.com/2012-12-27/news/36022208_1_godrej-consumer-consumer-products-consumer-companies
+		http://articles.economictimes.indiatimes.com/2012-12-10/news/35726498_1_short-term-vinay-khattar-stock
+		http://articles.economictimes.indiatimes.com/2012-12-31/news/36079435_1_fmcg-index-bse-fmcg-defensive-sector
+		http://articles.economictimes.indiatimes.com/2013-01-02/news/36111598_1_small-cap-category-mid-cap-sbi-mf
+		http://articles.economictimes.indiatimes.com/2012-12-10/news/35726428_1_indian-consumer-consumer-staples-consumer-stocks
+
+	PAGE NUMBER : 2
+		http://www.business-standard.com/article/markets/good-run-of-mid-cap-stocks-to-continue-in-2013-113011100043_1.html
+		http://www.livemint.com/Companies/T4G3Va6DAMM9OBjP4QFpuK/Pizza-Corner-owner-exits-PE-talks-steps-up-India-expansion.html
+		http://articles.economictimes.indiatimes.com/articles_2012_11_00000.xml
+		http://articles.economictimes.indiatimes.com/articles_2012_12_00000.xml
+		http://timesofindia.indiatimes.com/business/india-business/Mumbais-Washington-House-goes-for-Rs-342-crore/articleshow/17577603.cms
+
+	PAGE NUMBER : 3
+		http://articles.economictimes.indiatimes.com/2012-11-20/news/35226097_1_jubilant-foodworks-post-q2-ebidta-margins
+		http://articles.economictimes.indiatimes.com/2012-12-13/news/35796999_1_hardcastle-restaurants-mcdonalds-market-cap
+		http://timesofindia.indiatimes.com/business/india-business/McDonalds-franchisee-Hardcastle-Restaurants-merges-with-BSE-listed-group-company/articleshow/17525421.cms
+		http://articles.economictimes.indiatimes.com/2012-12-03/news/35568631_1_quick-service-kaati-zone-food-chain
+		http://www.business-standard.com/article/companies/restaurateur-jiggs-kalra-in-new-jv-after-exiting-punjab-grill-112121200113_1.html
+		http://articles.economictimes.indiatimes.com/2012-12-27/news/36022208_1_godrej-consumer-consumer-products-consumer-companies
+		http://articles.economictimes.indiatimes.com/2012-12-10/news/35726498_1_short-term-vinay-khattar-stock
+		http://articles.economictimes.indiatimes.com/2012-12-31/news/36079435_1_fmcg-index-bse-fmcg-defensive-sector
+		http://articles.economictimes.indiatimes.com/2013-01-02/news/36111598_1_small-cap-category-mid-cap-sbi-mf
+		http://articles.economictimes.indiatimes.com/2012-12-10/news/35726428_1_indian-consumer-consumer-staples-consumer-stocks
+
+	PAGE NUMBER : 4
+		http://www.business-standard.com/article/markets/good-run-of-mid-cap-stocks-to-continue-in-2013-113011100043_1.html
+		http://www.livemint.com/Companies/T4G3Va6DAMM9OBjP4QFpuK/Pizza-Corner-owner-exits-PE-talks-steps-up-India-expansion.html
+		http://articles.economictimes.indiatimes.com/articles_2012_11_00000.xml
+		http://articles.economictimes.indiatimes.com/articles_2012_12_00000.xml
+		http://timesofindia.indiatimes.com/business/india-business/Mumbais-Washington-House-goes-for-Rs-342-crore/articleshow/17577603.cms
+
+	PAGE NUMBER : 5
+		http://articles.economictimes.indiatimes.com/2012-11-20/news/35226097_1_jubilant-foodworks-post-q2-ebidta-margins
+		http://articles.economictimes.indiatimes.com/2012-12-13/news/35796999_1_hardcastle-restaurants-mcdonalds-market-cap
+		http://timesofindia.indiatimes.com/business/india-business/McDonalds-franchisee-Hardcastle-Restaurants-merges-with-BSE-listed-group-company/articleshow/17525421.cms
+		http://articles.economictimes.indiatimes.com/2012-12-03/news/35568631_1_quick-service-kaati-zone-food-chain
+		http://www.business-standard.com/article/companies/restaurateur-jiggs-kalra-in-new-jv-after-exiting-punjab-grill-112121200113_1.html
+		http://articles.economictimes.indiatimes.com/2012-12-27/news/36022208_1_godrej-consumer-consumer-products-consumer-companies
+		http://articles.economictimes.indiatimes.com/2012-12-10/news/35726498_1_short-term-vinay-khattar-stock
+		http://articles.economictimes.indiatimes.com/2012-12-31/news/36079435_1_fmcg-index-bse-fmcg-defensive-sector
+		http://articles.economictimes.indiatimes.com/2013-01-02/news/36111598_1_small-cap-category-mid-cap-sbi-mf
+		http://articles.economictimes.indiatimes.com/2012-12-10/news/35726428_1_indian-consumer-consumer-staples-consumer-stocks
+
+
+
+	Inserting results into database:
+
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-11-20/news/35226097_1_jubilant-foodworks-post-q2-ebidta-margins ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-12-13/news/35796999_1_hardcastle-restaurants-mcdonalds-market-cap ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/McDonalds-franchisee-Hardcastle-Restaurants-merges-with-BSE-listed-group-company/articleshow/17525421.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-12-03/news/35568631_1_quick-service-kaati-zone-food-chain ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/restaurateur-jiggs-kalra-in-new-jv-after-exiting-punjab-grill-112121200113_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-12-27/news/36022208_1_godrej-consumer-consumer-products-consumer-companies ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-12-10/news/35726498_1_short-term-vinay-khattar-stock ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-12-31/news/36079435_1_fmcg-index-bse-fmcg-defensive-sector ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-01-02/news/36111598_1_small-cap-category-mid-cap-sbi-mf ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-12-10/news/35726428_1_indian-consumer-consumer-staples-consumer-stocks ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/markets/good-run-of-mid-cap-stocks-to-continue-in-2013-113011100043_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/T4G3Va6DAMM9OBjP4QFpuK/Pizza-Corner-owner-exits-PE-talks-steps-up-India-expansion.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/articles_2012_11_00000.xml ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/articles_2012_12_00000.xml ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/Mumbais-Washington-House-goes-for-Rs-342-crore/articleshow/17577603.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-11-20/news/35226097_1_jubilant-foodworks-post-q2-ebidta-margins ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-12-13/news/35796999_1_hardcastle-restaurants-mcdonalds-market-cap ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/McDonalds-franchisee-Hardcastle-Restaurants-merges-with-BSE-listed-group-company/articleshow/17525421.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-12-03/news/35568631_1_quick-service-kaati-zone-food-chain ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/restaurateur-jiggs-kalra-in-new-jv-after-exiting-punjab-grill-112121200113_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-12-27/news/36022208_1_godrej-consumer-consumer-products-consumer-companies ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-12-10/news/35726498_1_short-term-vinay-khattar-stock ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-12-31/news/36079435_1_fmcg-index-bse-fmcg-defensive-sector ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2013-01-02/news/36111598_1_small-cap-category-mid-cap-sbi-mf ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-12-10/news/35726428_1_indian-consumer-consumer-staples-consumer-stocks ), possible duplicate
+
+
+	Number of URLs repeated in this search = 25
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 438.083672163 seconds between searches.
+
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456186-2456246
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 31.2990086637 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456186-2456246&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=joqCVsGOGdaWuASMn7-QCw&start=10&sa=N
+
+
+		WAITING 43.5973736592 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456186-2456246&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=sYqCVuG0HMaVuASW8bK4Cg&start=0&sa=N
+
+
+		WAITING 40.6046798776 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456186-2456246&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=4YqCVtC0FYKXuAT-2reIAw&start=10&sa=N
+
+
+		WAITING 84.7976802663 seconds between searches.
+
+==> at http://ipv4.google.com/sorry/IndexRedirect?continue=http://www.google.co.in/search%3Fq%3D%2522jubilant%2Bfoodworks%2522%2B%2Bsite:financialexpress.com/article/%2B%257C%2Bsite:business-standard.com/article/%2B%257C%2Bsite:livemint.com/companies%2B%257C%2Bsite:timesofindia.indiatimes.com/business/india-business/%2B%257C%2Bsite:articles.economictimes.indiatimes.com/%2B%257C%2Bsite:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/%2Bdaterange:2456186-2456246%26hl%3Den-IN%26gbv%3D1%26ie%3DUTF-8%26prmd%3Divnsz%26ei%3DDYuCVqmAD86wuQS2vYlw%26start%3D0%26sa%3DN&q=CGMSBNWr3csY7JaKtAUiGQDxp4NLKtZIxoHakcouanaildsVBJxfbME
+
+
+	get_google_search_results(): your query,
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456186-2456246
+	..only had 28 results, not 40 as you requested.
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456186-2456246':
+
+
+	PAGE NUMBER : 1
+		http://articles.economictimes.indiatimes.com/2012-09-19/news/33952579_1_jubilant-foodworks-jubilant-foodworks-ajay-kaul
+		http://articles.economictimes.indiatimes.com/2012-11-07/news/34971094_1_largest-doughnut-chain-localisation-jubilant-foodworks
+		http://articles.economictimes.indiatimes.com/2012-10-14/news/34448988_1_ajay-kaul-jubilant-foodworks-domino-s-pizza
+		http://articles.economictimes.indiatimes.com/2012-10-11/news/34387306_1_hike-prices-domino-s-pizza-jubilant-foodworks
+		http://articles.economictimes.indiatimes.com/2012-10-01/news/34198074_1_domino-s-pizza-pizza-brand-expansion-plan
+		http://articles.economictimes.indiatimes.com/2012-11-11/news/35048417_1_ajay-kaul-domino-s-pizza-stores
+		http://www.business-standard.com/article/markets/speciality-restaurants-attracting-investor-attention-112091800098_1.html
+		http://www.business-standard.com/article/companies/billion-dollar-club-gets-22-new-companies-112102800059_1.html
+		http://articles.economictimes.indiatimes.com/articles_2012_09_00000.xml
+		http://articles.economictimes.indiatimes.com/2012-10-10/news/34363627_1_dine-in-stores-yum-restaurants-pizza-hut
+
+	PAGE NUMBER : 2
+		http://articles.economictimes.indiatimes.com/2012-11-09/news/35014674_1_net-profit-q2-financial-year
+		http://articles.economictimes.indiatimes.com/2012-09-19/news/33952685_1_hindustan-zinc-chanda-kochhar-jury
+		http://timesofindia.indiatimes.com/business/india-business/Anil-Agarwal-is-ETs-Business-Leader-of-Year/articleshow/16458137.cms
+		http://timesofindia.indiatimes.com/business/india-business/Indegene-to-acquire-Canada-based-company-for-4-million/articleshow/17133296.cms
+
+	PAGE NUMBER : 3
+		http://articles.economictimes.indiatimes.com/2012-09-19/news/33952579_1_jubilant-foodworks-jubilant-foodworks-ajay-kaul
+		http://articles.economictimes.indiatimes.com/2012-11-07/news/34971094_1_largest-doughnut-chain-localisation-jubilant-foodworks
+		http://articles.economictimes.indiatimes.com/2012-10-14/news/34448988_1_ajay-kaul-jubilant-foodworks-domino-s-pizza
+		http://articles.economictimes.indiatimes.com/2012-10-11/news/34387306_1_hike-prices-domino-s-pizza-jubilant-foodworks
+		http://articles.economictimes.indiatimes.com/2012-10-01/news/34198074_1_domino-s-pizza-pizza-brand-expansion-plan
+		http://articles.economictimes.indiatimes.com/2012-11-11/news/35048417_1_ajay-kaul-domino-s-pizza-stores
+		http://www.business-standard.com/article/markets/speciality-restaurants-attracting-investor-attention-112091800098_1.html
+		http://www.business-standard.com/article/companies/billion-dollar-club-gets-22-new-companies-112102800059_1.html
+		http://articles.economictimes.indiatimes.com/articles_2012_09_00000.xml
+		http://articles.economictimes.indiatimes.com/2012-10-10/news/34363627_1_dine-in-stores-yum-restaurants-pizza-hut
+
+	PAGE NUMBER : 4
+		http://articles.economictimes.indiatimes.com/2012-11-09/news/35014674_1_net-profit-q2-financial-year
+		http://articles.economictimes.indiatimes.com/2012-09-19/news/33952685_1_hindustan-zinc-chanda-kochhar-jury
+		http://timesofindia.indiatimes.com/business/india-business/Anil-Agarwal-is-ETs-Business-Leader-of-Year/articleshow/16458137.cms
+		http://timesofindia.indiatimes.com/business/india-business/Indegene-to-acquire-Canada-based-company-for-4-million/articleshow/17133296.cms
+
+
+
+	Inserting results into database:
+
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-09-19/news/33952579_1_jubilant-foodworks-jubilant-foodworks-ajay-kaul ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-11-07/news/34971094_1_largest-doughnut-chain-localisation-jubilant-foodworks ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-10-14/news/34448988_1_ajay-kaul-jubilant-foodworks-domino-s-pizza ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-10-11/news/34387306_1_hike-prices-domino-s-pizza-jubilant-foodworks ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-10-01/news/34198074_1_domino-s-pizza-pizza-brand-expansion-plan ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-11-11/news/35048417_1_ajay-kaul-domino-s-pizza-stores ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/markets/speciality-restaurants-attracting-investor-attention-112091800098_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/billion-dollar-club-gets-22-new-companies-112102800059_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/articles_2012_09_00000.xml ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-10-10/news/34363627_1_dine-in-stores-yum-restaurants-pizza-hut ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-11-09/news/35014674_1_net-profit-q2-financial-year ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-09-19/news/33952685_1_hindustan-zinc-chanda-kochhar-jury ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/Anil-Agarwal-is-ETs-Business-Leader-of-Year/articleshow/16458137.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/Indegene-to-acquire-Canada-based-company-for-4-million/articleshow/17133296.cms ), possible duplicate
+
+
+	Number of URLs repeated in this search = 14
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 177.065565993 seconds between searches.
+
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456126-2456186
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+	get_google_search_results(): your query,
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456126-2456186
+	...returned no results.
+
+
+...please try again later, possibly with a different IP.
+
+]0;ardivekar@ardivekar-HP: /media/ardivekar/Data/Workspaces/Python/Text_Extraction/meetardivekar@ardivekar-HP:/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet$ python google_extract.py 
+
+
+
+		Opened connection successfully
+	Resuming from last_extracted_date=2456186, will get further 10 time_period of articles.
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456126-2456186
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 43.6887220798 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456126-2456186&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=iZCCVvHuIsyyuATt5IToDQ&start=10&sa=N
+
+
+		WAITING 71.7877021006 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456126-2456186&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=xJCCVo_lH8eQuATCiJzgAw&start=0&sa=N
+
+
+		WAITING 55.7107388936 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456126-2456186&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=EJGCVvXhMNSKuATpqRk&start=10&sa=N
+
+
+		WAITING 45.7627193665 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456126-2456186&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=TZGCVuvODMOuuQT4gZqYDA&start=0&sa=N
+
+
+		WAITING 49.1630838082 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456126-2456186&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=gZGCVurFItG1uASWv4SIBA&start=10&sa=N
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456126-2456186':
+
+
+	PAGE NUMBER : 1
+		http://articles.economictimes.indiatimes.com/2012-07-25/news/32848456_1_jubilant-foodworks-chain-in-india-today-dominos-pizza-chain
+		http://articles.economictimes.indiatimes.com/2012-09-05/news/33615962_1_hypermarkets-jubilant-foods-clsa
+		http://articles.economictimes.indiatimes.com/2012-08-23/news/33342237_1_low-debt-crore-debt-bata-india
+		http://www.business-standard.com/article/companies/domino-s-to-drop-pizza-in-global-re-branding-112083100005_1.html
+		http://articles.economictimes.indiatimes.com/2012-07-21/news/32764550_1_fmcg-companies-tata-global-beverages-hul
+		http://www.livemint.com/Companies/dLjcwV9uawP8pNLZFkJPaL/Fast-food-chains-resort-to-price-cuts-as-consumers-reduce-sp.html
+		http://articles.economictimes.indiatimes.com/2012-09-07/news/33677053_1_balance-sheet-stress-companies-investment-bank
+		http://articles.economictimes.indiatimes.com/2012-07-26/news/32869698_1_yum-restaurants-india-service-restaurant-chains-net-profit
+		http://www.business-standard.com/article/technology/dominos-india-website-hacked-customer-info-leaked-112091100021_1.html
+		http://articles.economictimes.indiatimes.com/2012-09-05/news/33615985_1_target-price-clsa-fy14
+
+	PAGE NUMBER : 2
+		http://www.business-standard.com/article/management/deliver-like-domino-s-pizza-112091000044_1.html
+		http://articles.economictimes.indiatimes.com/2012-08-21/news/33303056_1_fmcg-stocks-bse-fmcg-index-fmcg-sector
+		http://articles.economictimes.indiatimes.com/articles_2012_07_00000.xml
+		http://articles.economictimes.indiatimes.com/articles_2012_08_00000.xml
+
+	PAGE NUMBER : 3
+		http://articles.economictimes.indiatimes.com/2012-07-25/news/32848456_1_jubilant-foodworks-chain-in-india-today-dominos-pizza-chain
+		http://articles.economictimes.indiatimes.com/2012-09-05/news/33615962_1_hypermarkets-jubilant-foods-clsa
+		http://articles.economictimes.indiatimes.com/2012-08-23/news/33342237_1_low-debt-crore-debt-bata-india
+		http://www.business-standard.com/article/companies/domino-s-to-drop-pizza-in-global-re-branding-112083100005_1.html
+		http://articles.economictimes.indiatimes.com/2012-07-21/news/32764550_1_fmcg-companies-tata-global-beverages-hul
+		http://www.livemint.com/Companies/dLjcwV9uawP8pNLZFkJPaL/Fast-food-chains-resort-to-price-cuts-as-consumers-reduce-sp.html
+		http://articles.economictimes.indiatimes.com/2012-09-07/news/33677053_1_balance-sheet-stress-companies-investment-bank
+		http://articles.economictimes.indiatimes.com/2012-07-26/news/32869698_1_yum-restaurants-india-service-restaurant-chains-net-profit
+		http://www.business-standard.com/article/technology/dominos-india-website-hacked-customer-info-leaked-112091100021_1.html
+		http://articles.economictimes.indiatimes.com/2012-09-05/news/33615985_1_target-price-clsa-fy14
+
+	PAGE NUMBER : 4
+		http://www.business-standard.com/article/management/deliver-like-domino-s-pizza-112091000044_1.html
+		http://articles.economictimes.indiatimes.com/2012-08-21/news/33303056_1_fmcg-stocks-bse-fmcg-index-fmcg-sector
+		http://articles.economictimes.indiatimes.com/articles_2012_07_00000.xml
+		http://articles.economictimes.indiatimes.com/articles_2012_08_00000.xml
+
+	PAGE NUMBER : 5
+		http://articles.economictimes.indiatimes.com/2012-07-25/news/32848456_1_jubilant-foodworks-chain-in-india-today-dominos-pizza-chain
+		http://articles.economictimes.indiatimes.com/2012-09-05/news/33615962_1_hypermarkets-jubilant-foods-clsa
+		http://articles.economictimes.indiatimes.com/2012-08-23/news/33342237_1_low-debt-crore-debt-bata-india
+		http://www.business-standard.com/article/companies/domino-s-to-drop-pizza-in-global-re-branding-112083100005_1.html
+		http://articles.economictimes.indiatimes.com/2012-07-21/news/32764550_1_fmcg-companies-tata-global-beverages-hul
+		http://www.livemint.com/Companies/dLjcwV9uawP8pNLZFkJPaL/Fast-food-chains-resort-to-price-cuts-as-consumers-reduce-sp.html
+		http://articles.economictimes.indiatimes.com/2012-09-07/news/33677053_1_balance-sheet-stress-companies-investment-bank
+		http://articles.economictimes.indiatimes.com/2012-07-26/news/32869698_1_yum-restaurants-india-service-restaurant-chains-net-profit
+		http://www.business-standard.com/article/technology/dominos-india-website-hacked-customer-info-leaked-112091100021_1.html
+		http://articles.economictimes.indiatimes.com/2012-09-05/news/33615985_1_target-price-clsa-fy14
+
+	PAGE NUMBER : 6
+		http://www.business-standard.com/article/management/deliver-like-domino-s-pizza-112091000044_1.html
+		http://articles.economictimes.indiatimes.com/2012-08-21/news/33303056_1_fmcg-stocks-bse-fmcg-index-fmcg-sector
+
+
+
+	Inserting results into database:
+
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-07-25/news/32848456_1_jubilant-foodworks-chain-in-india-today-dominos-pizza-chain ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-09-05/news/33615962_1_hypermarkets-jubilant-foods-clsa ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-08-23/news/33342237_1_low-debt-crore-debt-bata-india ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/domino-s-to-drop-pizza-in-global-re-branding-112083100005_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-07-21/news/32764550_1_fmcg-companies-tata-global-beverages-hul ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/dLjcwV9uawP8pNLZFkJPaL/Fast-food-chains-resort-to-price-cuts-as-consumers-reduce-sp.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-09-07/news/33677053_1_balance-sheet-stress-companies-investment-bank ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-07-26/news/32869698_1_yum-restaurants-india-service-restaurant-chains-net-profit ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/technology/dominos-india-website-hacked-customer-info-leaked-112091100021_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-09-05/news/33615985_1_target-price-clsa-fy14 ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/management/deliver-like-domino-s-pizza-112091000044_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-08-21/news/33303056_1_fmcg-stocks-bse-fmcg-index-fmcg-sector ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/articles_2012_07_00000.xml ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/articles_2012_08_00000.xml ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-07-25/news/32848456_1_jubilant-foodworks-chain-in-india-today-dominos-pizza-chain ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-09-05/news/33615962_1_hypermarkets-jubilant-foods-clsa ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-08-23/news/33342237_1_low-debt-crore-debt-bata-india ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/domino-s-to-drop-pizza-in-global-re-branding-112083100005_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-07-21/news/32764550_1_fmcg-companies-tata-global-beverages-hul ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/dLjcwV9uawP8pNLZFkJPaL/Fast-food-chains-resort-to-price-cuts-as-consumers-reduce-sp.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-09-07/news/33677053_1_balance-sheet-stress-companies-investment-bank ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-07-26/news/32869698_1_yum-restaurants-india-service-restaurant-chains-net-profit ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/technology/dominos-india-website-hacked-customer-info-leaked-112091100021_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-09-05/news/33615985_1_target-price-clsa-fy14 ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/management/deliver-like-domino-s-pizza-112091000044_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-08-21/news/33303056_1_fmcg-stocks-bse-fmcg-index-fmcg-sector ), possible duplicate
+
+
+	Number of URLs repeated in this search = 26
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 188.934683593 seconds between searches.
+
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456066-2456126
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 36.3796960954 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456066-2456126&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=kZKCVtKcN9CVuQT08JOwAg&start=10&sa=N
+
+
+		WAITING 34.0827015745 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456066-2456126&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=u5KCVufuBdDjuQT_uaSoBA&start=20&sa=N
+
+
+		WAITING 72.5641946435 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456066-2456126&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=4JKCVrjAOYKguQS455SoAQ&start=10&sa=N
+
+
+		WAITING 35.347574315 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456066-2456126&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=LZOCVvzcHcKiugSbsoWIDQ&start=20&sa=N
+
+
+		WAITING 36.4136988621 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456066-2456126&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=VZOCVtjNK9HhuQSVo5zIAQ&start=10&sa=N
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456066-2456126':
+
+
+	PAGE NUMBER : 1
+		http://articles.economictimes.indiatimes.com/2012-06-11/news/32174973_1_jubilant-foodworks-sales-growth-pizza-hut
+		http://www.business-standard.com/article/finance/restaurants-turn-hot-after-speciality-s-listing-112062100029_1.html
+		http://articles.economictimes.indiatimes.com/2012-05-23/news/31826455_1_krispy-kreme-doughnuts-global-franchise-architects-jubilant-foodworks
+		http://articles.economictimes.indiatimes.com/2012-05-22/news/31814356_1_fmcg-companies-value-growth-volume-growth
+		http://articles.economictimes.indiatimes.com/2012-07-16/news/32698283_1_employees-gender-ratio-staff-room/6
+		http://articles.economictimes.indiatimes.com/2012-06-14/news/32235742_1_krispy-kreme-original-glazed-doughnut
+		http://articles.economictimes.indiatimes.com/2012-06-25/news/32409291_1_coal-india-valuations-peer
+		http://timesofindia.indiatimes.com/business/india-business/India-could-be-among-our-top-3-markets-Dunkin-Donuts/articleshow/13679193.cms
+		http://articles.economictimes.indiatimes.com/2012-06-15/news/32254811_1_delhi-ncr-brands-yogurt
+		http://articles.economictimes.indiatimes.com/2012-07-16/news/32698656_1_vodafone-india-lodha-group-hcl-infosystems
+
+	PAGE NUMBER : 2
+		http://articles.economictimes.indiatimes.com/2012-05-31/news/31921932_1_higher-sales-nigel-travis-restaurants
+		http://articles.economictimes.indiatimes.com/2012-06-15/news/32254606_1_bistro-hospitality-rohan-jetley-kfc
+		http://articles.economictimes.indiatimes.com/2012-06-27/news/32441258_1_global-franchise-architects-gfa-pizza-corner
+		http://www.livemint.com/Companies/NzP8FI8uTYBkUSdSQxhWNO/Speciality-Restaurants-IPO-gives-a-breather-to-PE-investors.html
+		http://articles.economictimes.indiatimes.com/2012-06-03/news/32006542_1_bse-mid-cap-small-cap-index-mid-cap-index
+		http://timesofindia.indiatimes.com/business/india-business/India-fifth-most-attractive-retail-market/articleshow/14410923.cms
+		http://timesofindia.indiatimes.com/business/india-business/Quick-service-restaurants-buck-slowdown/articleshow/14450052.cms
+		http://www.business-standard.com/article/companies/as-starbucks-launch-nears-rival-coffee-chains-get-active-112071500007_1.html
+		http://articles.economictimes.indiatimes.com/2012-07-09/news/32604959_1_oil-prices-base-oil-castrol-india
+		http://www.business-standard.com/article/companies/warburg-pincus-to-buy-majority-stake-in-future-capital-112060500044_1.html
+
+	PAGE NUMBER : 3
+		http://articles.economictimes.indiatimes.com/articles_2012_06_00000.xml
+
+	PAGE NUMBER : 4
+		http://articles.economictimes.indiatimes.com/2012-05-31/news/31921932_1_higher-sales-nigel-travis-restaurants
+		http://articles.economictimes.indiatimes.com/2012-06-15/news/32254606_1_bistro-hospitality-rohan-jetley-kfc
+		http://articles.economictimes.indiatimes.com/2012-06-27/news/32441258_1_global-franchise-architects-gfa-pizza-corner
+		http://www.livemint.com/Companies/NzP8FI8uTYBkUSdSQxhWNO/Speciality-Restaurants-IPO-gives-a-breather-to-PE-investors.html
+		http://articles.economictimes.indiatimes.com/2012-06-03/news/32006542_1_bse-mid-cap-small-cap-index-mid-cap-index
+		http://timesofindia.indiatimes.com/business/india-business/India-fifth-most-attractive-retail-market/articleshow/14410923.cms
+		http://timesofindia.indiatimes.com/business/india-business/Quick-service-restaurants-buck-slowdown/articleshow/14450052.cms
+		http://www.business-standard.com/article/companies/as-starbucks-launch-nears-rival-coffee-chains-get-active-112071500007_1.html
+		http://articles.economictimes.indiatimes.com/2012-07-09/news/32604959_1_oil-prices-base-oil-castrol-india
+		http://www.business-standard.com/article/companies/warburg-pincus-to-buy-majority-stake-in-future-capital-112060500044_1.html
+
+	PAGE NUMBER : 5
+		http://articles.economictimes.indiatimes.com/articles_2012_06_00000.xml
+
+	PAGE NUMBER : 6
+		http://articles.economictimes.indiatimes.com/2012-05-31/news/31921932_1_higher-sales-nigel-travis-restaurants
+		http://articles.economictimes.indiatimes.com/2012-06-15/news/32254606_1_bistro-hospitality-rohan-jetley-kfc
+		http://articles.economictimes.indiatimes.com/2012-06-27/news/32441258_1_global-franchise-architects-gfa-pizza-corner
+		http://www.livemint.com/Companies/NzP8FI8uTYBkUSdSQxhWNO/Speciality-Restaurants-IPO-gives-a-breather-to-PE-investors.html
+		http://articles.economictimes.indiatimes.com/2012-06-03/news/32006542_1_bse-mid-cap-small-cap-index-mid-cap-index
+		http://timesofindia.indiatimes.com/business/india-business/India-fifth-most-attractive-retail-market/articleshow/14410923.cms
+		http://timesofindia.indiatimes.com/business/india-business/Quick-service-restaurants-buck-slowdown/articleshow/14450052.cms
+		http://www.business-standard.com/article/companies/as-starbucks-launch-nears-rival-coffee-chains-get-active-112071500007_1.html
+
+
+
+	Inserting results into database:
+
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-05-31/news/31921932_1_higher-sales-nigel-travis-restaurants ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-06-15/news/32254606_1_bistro-hospitality-rohan-jetley-kfc ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-06-27/news/32441258_1_global-franchise-architects-gfa-pizza-corner ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/NzP8FI8uTYBkUSdSQxhWNO/Speciality-Restaurants-IPO-gives-a-breather-to-PE-investors.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-06-03/news/32006542_1_bse-mid-cap-small-cap-index-mid-cap-index ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/India-fifth-most-attractive-retail-market/articleshow/14410923.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/Quick-service-restaurants-buck-slowdown/articleshow/14450052.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/as-starbucks-launch-nears-rival-coffee-chains-get-active-112071500007_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-07-09/news/32604959_1_oil-prices-base-oil-castrol-india ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/warburg-pincus-to-buy-majority-stake-in-future-capital-112060500044_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/articles_2012_06_00000.xml ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-05-31/news/31921932_1_higher-sales-nigel-travis-restaurants ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-06-15/news/32254606_1_bistro-hospitality-rohan-jetley-kfc ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-06-27/news/32441258_1_global-franchise-architects-gfa-pizza-corner ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/NzP8FI8uTYBkUSdSQxhWNO/Speciality-Restaurants-IPO-gives-a-breather-to-PE-investors.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-06-03/news/32006542_1_bse-mid-cap-small-cap-index-mid-cap-index ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/India-fifth-most-attractive-retail-market/articleshow/14410923.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/Quick-service-restaurants-buck-slowdown/articleshow/14450052.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/as-starbucks-launch-nears-rival-coffee-chains-get-active-112071500007_1.html ), possible duplicate
+
+
+	Number of URLs repeated in this search = 19
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 449.583510822 seconds between searches.
+
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456006-2456066
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 86.4006240148 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456006-2456066&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=TJWCVrPDMYedugTUjbDoAw&start=10&sa=N
+
+
+		WAITING 86.3442919572 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456006-2456066&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=ppWCVrDANsf-ugTjmpiwBw&start=0&sa=N
+
+
+		WAITING 89.4976893847 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456006-2456066&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=CJaCVrfoGJeNuATloKCIDA&start=10&sa=N
+
+
+		WAITING 87.9347328627 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2456006-2456066&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=h5aCVv2uNdifugT4u6GgDg&start=0&sa=N
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2456006-2456066':
+
+
+	PAGE NUMBER : 1
+		http://articles.economictimes.indiatimes.com/2012-05-09/news/31641540_1_jubilant-foodworks-first-store-cafe-coffee-day
+		http://articles.economictimes.indiatimes.com/2012-05-12/news/31679833_1_ssg-jubilant-foodworks-growth
+		http://articles.economictimes.indiatimes.com/2012-04-10/news/31318869_1_stress-jubilant-foodworks-stick
+		http://articles.economictimes.indiatimes.com/2012-04-30/news/31508319_1_pizza-corner-domino-s-pizza-pizza-makers
+		http://www.livemint.com/Companies/NHlYevueb1tRfKoLqtagqM/Ten-Dunkin8217-Donuts-outlets-in-one-year.html
+		http://articles.economictimes.indiatimes.com/2012-05-17/news/31749335_1_speciality-restaurants-sigree-price-band
+		http://www.livemint.com/Companies/P2yBVBKd20OOd89pLtTAhP/PE-firms-target-growth-sectors-via-holding-firms.html
+		http://www.business-standard.com/article/opinion/page-industries-stitching-up-a-growth-story-112041200036_1.html
+		http://articles.economictimes.indiatimes.com/2012-05-07/news/31610801_1_sunrise-sectors-long-term-investment-long-term
+		http://www.business-standard.com/article/companies/dunkin-donuts-enters-india-112050900069_1.html
+
+	PAGE NUMBER : 2
+		http://www.business-standard.com/article/markets/book-your-table-112051600030_1.html
+		http://articles.economictimes.indiatimes.com/articles_2012_03_00000.xml
+		http://timesofindia.indiatimes.com/business/india-business/Mukesh-Ambani-forgoes-Rs-23-82-crore-from-his-pay-package/articleshow/13064719.cms
+		http://timesofindia.indiatimes.com/business/india-business/Genesis-Luxury-to-bring-Italian-Brand-Furla-to-India/articleshow/13064368.cms
+		http://www.business-standard.com/article/companies/lupin-q4-net-dips-29-at-rs-161-crm-sales-up-25-112051000557_1.html
+		http://www.business-standard.com/article/companies/ntpc-q4-net-down-7-at-rs-2-593-cr-112051000556_1.html
+
+	PAGE NUMBER : 3
+		http://articles.economictimes.indiatimes.com/2012-05-09/news/31641540_1_jubilant-foodworks-first-store-cafe-coffee-day
+		http://articles.economictimes.indiatimes.com/2012-05-12/news/31679833_1_ssg-jubilant-foodworks-growth
+		http://articles.economictimes.indiatimes.com/2012-04-10/news/31318869_1_stress-jubilant-foodworks-stick
+		http://articles.economictimes.indiatimes.com/2012-04-30/news/31508319_1_pizza-corner-domino-s-pizza-pizza-makers
+		http://www.livemint.com/Companies/NHlYevueb1tRfKoLqtagqM/Ten-Dunkin8217-Donuts-outlets-in-one-year.html
+		http://articles.economictimes.indiatimes.com/2012-05-17/news/31749335_1_speciality-restaurants-sigree-price-band
+		http://www.livemint.com/Companies/P2yBVBKd20OOd89pLtTAhP/PE-firms-target-growth-sectors-via-holding-firms.html
+		http://www.business-standard.com/article/opinion/page-industries-stitching-up-a-growth-story-112041200036_1.html
+		http://articles.economictimes.indiatimes.com/2012-05-07/news/31610801_1_sunrise-sectors-long-term-investment-long-term
+		http://www.business-standard.com/article/companies/dunkin-donuts-enters-india-112050900069_1.html
+
+	PAGE NUMBER : 4
+		http://www.business-standard.com/article/markets/book-your-table-112051600030_1.html
+		http://articles.economictimes.indiatimes.com/articles_2012_03_00000.xml
+		http://timesofindia.indiatimes.com/business/india-business/Mukesh-Ambani-forgoes-Rs-23-82-crore-from-his-pay-package/articleshow/13064719.cms
+		http://timesofindia.indiatimes.com/business/india-business/Genesis-Luxury-to-bring-Italian-Brand-Furla-to-India/articleshow/13064368.cms
+		http://www.business-standard.com/article/companies/lupin-q4-net-dips-29-at-rs-161-crm-sales-up-25-112051000557_1.html
+		http://www.business-standard.com/article/companies/ntpc-q4-net-down-7-at-rs-2-593-cr-112051000556_1.html
+
+	PAGE NUMBER : 5
+		http://articles.economictimes.indiatimes.com/2012-05-09/news/31641540_1_jubilant-foodworks-first-store-cafe-coffee-day
+		http://articles.economictimes.indiatimes.com/2012-05-12/news/31679833_1_ssg-jubilant-foodworks-growth
+		http://articles.economictimes.indiatimes.com/2012-04-10/news/31318869_1_stress-jubilant-foodworks-stick
+		http://articles.economictimes.indiatimes.com/2012-04-30/news/31508319_1_pizza-corner-domino-s-pizza-pizza-makers
+		http://www.livemint.com/Companies/NHlYevueb1tRfKoLqtagqM/Ten-Dunkin8217-Donuts-outlets-in-one-year.html
+		http://articles.economictimes.indiatimes.com/2012-05-17/news/31749335_1_speciality-restaurants-sigree-price-band
+		http://www.livemint.com/Companies/P2yBVBKd20OOd89pLtTAhP/PE-firms-target-growth-sectors-via-holding-firms.html
+		http://www.business-standard.com/article/opinion/page-industries-stitching-up-a-growth-story-112041200036_1.html
+
+
+
+	Inserting results into database:
+
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-05-09/news/31641540_1_jubilant-foodworks-first-store-cafe-coffee-day ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-05-12/news/31679833_1_ssg-jubilant-foodworks-growth ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-04-10/news/31318869_1_stress-jubilant-foodworks-stick ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-04-30/news/31508319_1_pizza-corner-domino-s-pizza-pizza-makers ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/NHlYevueb1tRfKoLqtagqM/Ten-Dunkin8217-Donuts-outlets-in-one-year.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-05-17/news/31749335_1_speciality-restaurants-sigree-price-band ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/P2yBVBKd20OOd89pLtTAhP/PE-firms-target-growth-sectors-via-holding-firms.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/opinion/page-industries-stitching-up-a-growth-story-112041200036_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-05-07/news/31610801_1_sunrise-sectors-long-term-investment-long-term ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/dunkin-donuts-enters-india-112050900069_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/markets/book-your-table-112051600030_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/articles_2012_03_00000.xml ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/Mukesh-Ambani-forgoes-Rs-23-82-crore-from-his-pay-package/articleshow/13064719.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://timesofindia.indiatimes.com/business/india-business/Genesis-Luxury-to-bring-Italian-Brand-Furla-to-India/articleshow/13064368.cms ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/lupin-q4-net-dips-29-at-rs-161-crm-sales-up-25-112051000557_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/companies/ntpc-q4-net-down-7-at-rs-2-593-cr-112051000556_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-05-09/news/31641540_1_jubilant-foodworks-first-store-cafe-coffee-day ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-05-12/news/31679833_1_ssg-jubilant-foodworks-growth ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-04-10/news/31318869_1_stress-jubilant-foodworks-stick ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-04-30/news/31508319_1_pizza-corner-domino-s-pizza-pizza-makers ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/NHlYevueb1tRfKoLqtagqM/Ten-Dunkin8217-Donuts-outlets-in-one-year.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2012-05-17/news/31749335_1_speciality-restaurants-sigree-price-band ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/P2yBVBKd20OOd89pLtTAhP/PE-firms-target-growth-sectors-via-holding-firms.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/opinion/page-industries-stitching-up-a-growth-story-112041200036_1.html ), possible duplicate
+
+
+	Number of URLs repeated in this search = 24
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 354.122730325 seconds between searches.
+
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455946-2456006
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 48.2192035282 seconds between searches.
+
+
+
+	get_google_search_results(): your query,
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455946-2456006
+	..only had 9 results, not 40 as you requested.
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455946-2456006':
+
+
+	PAGE NUMBER : 1
+		http://articles.economictimes.indiatimes.com/2012-02-22/news/31086943_1_coffee-consumption-jubilant-foodworks-starbucks
+		http://articles.economictimes.indiatimes.com/2012-02-22/news/31087042_1_jubilant-foodworks-jubilant-foodworks-jubilant-food-works
+		http://www.livemint.com/Companies/tTf6qkmgC3OgjvwGS66reP/Hard-Rock-Cafe-franchisee-looks-for-Rs150-cr-PE-funding.html
+		http://articles.economictimes.indiatimes.com/2012-03-12/news/31153336_1_intermediate-uptrend-index-stocks-intermediate-trend
+		http://www.business-standard.com/article/companies/finally-tata-coffee-to-bring-starbucks-to-india-112012000016_1.html
+		http://www.business-standard.com/article/companies/spanish-fashion-brand-kelme-to-enter-india-112012500131_1.html
+		http://articles.economictimes.indiatimes.com/articles_2012_02_00000.xml
+		http://www.business-standard.com/article/international/yum-brands-banks-on-young-india-to-repeat-china-success-112030500103_1.html
+		http://articles.economictimes.indiatimes.com/articles_2012_01_00000.xml
+
+
+
+	Inserting results into database:
+
+
+
+	Number of URLs repeated in this search = 0
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 305.79195638 seconds between searches.
+
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455886-2455946
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 74.0113155437 seconds between searches.
+
+
+
+	get_google_search_results(): your query,
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455886-2455946
+	..only had 7 results, not 40 as you requested.
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455886-2455946':
+
+
+	PAGE NUMBER : 1
+		http://articles.economictimes.indiatimes.com/2012-01-16/news/30631891_1_ajay-kaul-dominos-jubilant-foodworks
+		http://www.business-standard.com/article/companies/fdi-in-multi-brand-retail-so-near-yet-so-far-in-2011-111122500048_1.html
+		http://www.livemint.com/Companies/zyjHHi9qBICxcR2Gv7kmLN/Jubilant-to-invest-80-million-in-Myanmar-oil-and-gas-block.html
+		http://articles.economictimes.indiatimes.com/2011-12-20/news/30538117_1_blue-foods-pf-chang-s-china-bistro-krispy-kreme-doughnuts
+		http://www.business-standard.com/article/markets/more-companies-increase-fii-limits-112011800033_1.html
+		http://www.business-standard.com/article/markets/penny-stocks-gain-even-as-indices-fall-111120200070_1.html
+		http://articles.economictimes.indiatimes.com/articles_2011_12_00000.xml
+
+
+
+	Inserting results into database:
+
+
+
+	Number of URLs repeated in this search = 0
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 225.714956789 seconds between searches.
+
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455826-2455886
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 88.4114782235 seconds between searches.
+
+
+
+	get_google_search_results(): your query,
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455826-2455886
+	..only had 10 results, not 40 as you requested.
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455826-2455886':
+
+
+	PAGE NUMBER : 1
+		http://www.business-standard.com/article/opinion/jubilant-foodworks-not-so-hungry-111092100064_1.html
+		http://articles.economictimes.indiatimes.com/2011-11-17/news/30410196_1_domino-s-pizza-inc-s-million-pizzas-pizza-chain
+		http://www.business-standard.com/article/economy-policy/q-a-shyam-s-bhartia-cmd-jubilant-bhartia-group-111111400086_1.html
+		http://articles.economictimes.indiatimes.com/2011-10-03/news/30238338_1_fmcg-stocks-bse-fmcg-index-fmcg-companies
+		http://articles.economictimes.indiatimes.com/2011-10-12/news/30270949_1_gv-ravishankar-sequoia-capital-india-paneer
+		http://articles.economictimes.indiatimes.com/2011-10-10/news/30263350_1_tata-coffee-starbucks-coffee-consumption
+		http://articles.economictimes.indiatimes.com/2011-10-28/news/30332531_1_joint-venture-mittal-family-sunil-mittal
+		http://www.business-standard.com/article/companies/moving-forward-on-tata-coffee-alliance-talks-starbucks-111101000160_1.html
+		http://articles.economictimes.indiatimes.com/2011-11-13/news/30391479_1_entrepreneurs-middle-class-ajay-kaul/4
+		http://articles.economictimes.indiatimes.com/articles_2011_09_00000.xml
+
+
+
+	Inserting results into database:
+
+
+
+	Number of URLs repeated in this search = 0
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 395.431565774 seconds between searches.
+
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455766-2455826
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 81.5577796406 seconds between searches.
+
+
+
+	get_google_search_results(): your query,
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455766-2455826
+	..only had 9 results, not 40 as you requested.
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455766-2455826':
+
+
+	PAGE NUMBER : 1
+		http://www.business-standard.com/article/opinion/jubilant-foodworks-not-so-hungry-111092100064_1.html
+		http://articles.economictimes.indiatimes.com/2011-08-11/news/29876332_1_india-equity-partners-saif-partners-speciality-restaurants
+		http://articles.economictimes.indiatimes.com/2011-08-03/news/29846386_1_indian-food-tvs-capital-restaurants
+		http://articles.economictimes.indiatimes.com/2011-08-29/news/29941505_1_ventureast-chain-brand-building
+		http://articles.economictimes.indiatimes.com/2011-09-12/news/30145301_1_index-stocks-intermediate-uptrend-intermediate-downtrend
+		http://www.business-standard.com/article/markets/high-valuations-take-shine-off-consumption-stocks-111080500036_1.html
+		http://articles.economictimes.indiatimes.com/2011-09-02/news/30105865_1_restaurant-chains-cke-restaurants-chinese-chain
+		http://www.business-standard.com/article/companies/panasonic-home-appliances-to-widen-product-portfolio-111090800094_1.html
+		http://articles.economictimes.indiatimes.com/articles_2011_07_00000.xml
+
+
+
+	Inserting results into database:
+
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/opinion/jubilant-foodworks-not-so-hungry-111092100064_1.html ), possible duplicate
+
+
+	Number of URLs repeated in this search = 1
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 328.200444819 seconds between searches.
+
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455706-2455766
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 81.0934034773 seconds between searches.
+
+
+
+	get_google_search_results(): your query,
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455706-2455766
+	..only had 6 results, not 40 as you requested.
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455706-2455766':
+
+
+	PAGE NUMBER : 1
+		http://articles.economictimes.indiatimes.com/2011-07-06/news/29739402_1_jubilant-foodworks-domino-s-pizza-market-value
+		http://articles.economictimes.indiatimes.com/2011-06-27/news/29709757_1_retail-sector-52-week-highs-multibrand-retailing
+		http://articles.economictimes.indiatimes.com/2011-06-24/news/29699036_1_hr-corbus-gifts
+		http://articles.economictimes.indiatimes.com/2011-07-22/news/29803470_1_gs-bhalla-private-equity-outlets
+		http://articles.economictimes.indiatimes.com/2011-07-02/news/29736442_1_cairn-and-ongc-new-highs-smaller-profits
+		http://www.business-standard.com/article/markets/markets-pare-gains-realty-index-slips-1-111071900135_1.html
+
+
+
+	Inserting results into database:
+
+
+
+	Number of URLs repeated in this search = 0
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 392.631003749 seconds between searches.
+
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455646-2455706
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 55.000884222 seconds between searches.
+
+
+
+	get_google_search_results(): your query,
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455646-2455706
+	..only had 6 results, not 40 as you requested.
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455646-2455706':
+
+
+	PAGE NUMBER : 1
+		http://articles.economictimes.indiatimes.com/2011-05-12/news/29536340_1_new-stores-domino-s-pizza-jubilant-foodworks
+		http://www.business-standard.com/article/companies/icici-venture-to-pick-up-equity-in-devyani-international-111051200108_1.html
+		http://www.business-standard.com/article/press-releases/no-cash-no-problem-domino-8217s-now-accepts-credit-card-for-delivery-111050500126_1.html
+		http://www.business-standard.com/article/markets/bse-to-revise-a-group-securities-list-from-april-11-111040600240_1.html
+		http://www.business-standard.com/article/companies/vakrangee-gets-uid-enrolment-order-from-ubi-aims-1-500-cr-111051900244_1.html
+		http://www.business-standard.com/article/management/costa-coffee-brews-mass-market-plan-111041500031_1.html
+
+
+
+	Inserting results into database:
+
+
+
+	Number of URLs repeated in this search = 0
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 287.926756777 seconds between searches.
+
+
+
+
+RUNNING QUERY:
+	"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455586-2455646
+
+==> at http://www.google.co.in
+Note: submit is using submit button: name="btnG", value="Google Search"
+
+
+
+		WAITING 35.5263067114 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2455586-2455646&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=_aGCVvaiFNaPuAS5-LCIBg&start=10&sa=N
+
+
+		WAITING 85.0108503795 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2455586-2455646&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=MaKCVvqpA8ifugSnlJ3oCQ&start=0&sa=N
+
+
+		WAITING 84.8397615174 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2455586-2455646&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=iqKCVp-EEcLnuQTUuZCIDA&start=10&sa=N
+
+
+		WAITING 77.1848125632 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2455586-2455646&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=4qKCVpbCONKOuATD-LL4AQ&start=0&sa=N
+
+
+		WAITING 24.8516505037 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2455586-2455646&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=M6OCVrT0OsG-uASOjre4BA&start=10&sa=N
+
+
+		WAITING 30.5044039178 seconds between searches.
+
+==> at http://www.google.co.in/search?q=%22jubilant+foodworks%22++site:financialexpress.com/article/+%7C+site:business-standard.com/article/+%7C+site:livemint.com/companies+%7C+site:timesofindia.indiatimes.com/business/india-business/+%7C+site:articles.economictimes.indiatimes.com/+%7C+site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/+daterange:2455586-2455646&hl=en-IN&gbv=1&ie=UTF-8&prmd=ivnsz&ei=UKOCVvXvKdWjugTV9rmIBw&start=0&sa=N
+
+
+	Results for query 
+		'"jubilant foodworks"  site:financialexpress.com/article/ | site:business-standard.com/article/ | site:livemint.com/companies | site:timesofindia.indiatimes.com/business/india-business/ | site:articles.economictimes.indiatimes.com/ | site:economictimes.indiatimes.com/markets/stocks/news/thehindubusinessline.com/markets/stock-markets/ daterange:2455586-2455646':
+
+
+	PAGE NUMBER : 1
+		http://www.livemint.com/Companies/EbcdisaWdwSD98O6Cnp8WK/Jubilant-FoodWorks-to-diversify-into-nonfood-business.html
+		http://articles.economictimes.indiatimes.com/2011-02-24/news/28627965_1_cafe-coffee-day-source-coffee-coffee-chain
+		http://www.livemint.com/Companies/SMRzxSPEmovhayJQZc4tTO/Dunkin8217-Donuts-to-enter-India-with-Jubilant-Foodworks.html
+		http://www.livemint.com/Companies/8bizeBxL7n0sFawX5Zbc4O/Jubilant-FoodWorks-ties-up-with-Dunkin.html
+		http://www.livemint.com/Companies/MZdpzyeNhQ5ytpXLXK8vwL/Yum-to-turn-profitable-this-year-says-MD.html
+		http://articles.economictimes.indiatimes.com/2011-03-06/news/28660109_1_coffee-houses-drinking-coffee-coffee-companies
+		http://www.business-standard.com/article/finance/restaurant-chains-turn-hot-picks-for-pe-investors-111022400014_1.html
+		http://articles.economictimes.indiatimes.com/2011-02-21/news/28617880_1_vikram-bakshi-mcdonald-s-india-jatia
+		http://articles.economictimes.indiatimes.com/2011-03-22/news/29174609_1_coffee-chain-outlets-caf-coffee-day
+		http://articles.economictimes.indiatimes.com/2011-02-01/news/28432496_1_nivea-india-india-today-indian-market
+
+	PAGE NUMBER : 2
+		http://articles.economictimes.indiatimes.com/2011-01-31/news/28425480_1_lifetime-achievement-award-year-award-finalists
+		http://www.business-standard.com/article/press-releases/rakshit-hargave-joins-nivea-india-as-the-managing-director-111020100133_1.html
+		http://articles.economictimes.indiatimes.com/2011-03-14/news/28688245_1_high-pe-karvy-stock-broking-offer-good-returns
+
+	PAGE NUMBER : 3
+		http://www.livemint.com/Companies/EbcdisaWdwSD98O6Cnp8WK/Jubilant-FoodWorks-to-diversify-into-nonfood-business.html
+		http://articles.economictimes.indiatimes.com/2011-02-24/news/28627965_1_cafe-coffee-day-source-coffee-coffee-chain
+		http://www.livemint.com/Companies/SMRzxSPEmovhayJQZc4tTO/Dunkin8217-Donuts-to-enter-India-with-Jubilant-Foodworks.html
+		http://www.livemint.com/Companies/8bizeBxL7n0sFawX5Zbc4O/Jubilant-FoodWorks-ties-up-with-Dunkin.html
+		http://www.livemint.com/Companies/MZdpzyeNhQ5ytpXLXK8vwL/Yum-to-turn-profitable-this-year-says-MD.html
+		http://articles.economictimes.indiatimes.com/2011-03-06/news/28660109_1_coffee-houses-drinking-coffee-coffee-companies
+		http://www.business-standard.com/article/finance/restaurant-chains-turn-hot-picks-for-pe-investors-111022400014_1.html
+		http://articles.economictimes.indiatimes.com/2011-02-21/news/28617880_1_vikram-bakshi-mcdonald-s-india-jatia
+		http://articles.economictimes.indiatimes.com/2011-03-22/news/29174609_1_coffee-chain-outlets-caf-coffee-day
+		http://articles.economictimes.indiatimes.com/2011-02-01/news/28432496_1_nivea-india-india-today-indian-market
+
+	PAGE NUMBER : 4
+		http://articles.economictimes.indiatimes.com/2011-01-31/news/28425480_1_lifetime-achievement-award-year-award-finalists
+		http://www.business-standard.com/article/press-releases/rakshit-hargave-joins-nivea-india-as-the-managing-director-111020100133_1.html
+		http://articles.economictimes.indiatimes.com/2011-03-14/news/28688245_1_high-pe-karvy-stock-broking-offer-good-returns
+
+	PAGE NUMBER : 5
+		http://www.livemint.com/Companies/EbcdisaWdwSD98O6Cnp8WK/Jubilant-FoodWorks-to-diversify-into-nonfood-business.html
+		http://articles.economictimes.indiatimes.com/2011-02-24/news/28627965_1_cafe-coffee-day-source-coffee-coffee-chain
+		http://www.livemint.com/Companies/SMRzxSPEmovhayJQZc4tTO/Dunkin8217-Donuts-to-enter-India-with-Jubilant-Foodworks.html
+		http://www.livemint.com/Companies/8bizeBxL7n0sFawX5Zbc4O/Jubilant-FoodWorks-ties-up-with-Dunkin.html
+		http://www.livemint.com/Companies/MZdpzyeNhQ5ytpXLXK8vwL/Yum-to-turn-profitable-this-year-says-MD.html
+		http://articles.economictimes.indiatimes.com/2011-03-06/news/28660109_1_coffee-houses-drinking-coffee-coffee-companies
+		http://www.business-standard.com/article/finance/restaurant-chains-turn-hot-picks-for-pe-investors-111022400014_1.html
+		http://articles.economictimes.indiatimes.com/2011-02-21/news/28617880_1_vikram-bakshi-mcdonald-s-india-jatia
+		http://articles.economictimes.indiatimes.com/2011-03-22/news/29174609_1_coffee-chain-outlets-caf-coffee-day
+		http://articles.economictimes.indiatimes.com/2011-02-01/news/28432496_1_nivea-india-india-today-indian-market
+
+	PAGE NUMBER : 6
+		http://articles.economictimes.indiatimes.com/2011-01-31/news/28425480_1_lifetime-achievement-award-year-award-finalists
+		http://www.business-standard.com/article/press-releases/rakshit-hargave-joins-nivea-india-as-the-managing-director-111020100133_1.html
+		http://articles.economictimes.indiatimes.com/2011-03-14/news/28688245_1_high-pe-karvy-stock-broking-offer-good-returns
+
+	PAGE NUMBER : 7
+		http://www.livemint.com/Companies/EbcdisaWdwSD98O6Cnp8WK/Jubilant-FoodWorks-to-diversify-into-nonfood-business.html
+
+
+
+	Inserting results into database:
+
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/EbcdisaWdwSD98O6Cnp8WK/Jubilant-FoodWorks-to-diversify-into-nonfood-business.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2011-02-24/news/28627965_1_cafe-coffee-day-source-coffee-coffee-chain ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/SMRzxSPEmovhayJQZc4tTO/Dunkin8217-Donuts-to-enter-India-with-Jubilant-Foodworks.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/8bizeBxL7n0sFawX5Zbc4O/Jubilant-FoodWorks-ties-up-with-Dunkin.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/MZdpzyeNhQ5ytpXLXK8vwL/Yum-to-turn-profitable-this-year-says-MD.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2011-03-06/news/28660109_1_coffee-houses-drinking-coffee-coffee-companies ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/finance/restaurant-chains-turn-hot-picks-for-pe-investors-111022400014_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2011-02-21/news/28617880_1_vikram-bakshi-mcdonald-s-india-jatia ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2011-03-22/news/29174609_1_coffee-chain-outlets-caf-coffee-day ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2011-02-01/news/28432496_1_nivea-india-india-today-indian-market ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2011-01-31/news/28425480_1_lifetime-achievement-award-year-award-finalists ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/press-releases/rakshit-hargave-joins-nivea-india-as-the-managing-director-111020100133_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2011-03-14/news/28688245_1_high-pe-karvy-stock-broking-offer-good-returns ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/EbcdisaWdwSD98O6Cnp8WK/Jubilant-FoodWorks-to-diversify-into-nonfood-business.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2011-02-24/news/28627965_1_cafe-coffee-day-source-coffee-coffee-chain ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/SMRzxSPEmovhayJQZc4tTO/Dunkin8217-Donuts-to-enter-India-with-Jubilant-Foodworks.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/8bizeBxL7n0sFawX5Zbc4O/Jubilant-FoodWorks-ties-up-with-Dunkin.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/MZdpzyeNhQ5ytpXLXK8vwL/Yum-to-turn-profitable-this-year-says-MD.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2011-03-06/news/28660109_1_coffee-houses-drinking-coffee-coffee-companies ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/finance/restaurant-chains-turn-hot-picks-for-pe-investors-111022400014_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2011-02-21/news/28617880_1_vikram-bakshi-mcdonald-s-india-jatia ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2011-03-22/news/29174609_1_coffee-chain-outlets-caf-coffee-day ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2011-02-01/news/28432496_1_nivea-india-india-today-indian-market ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2011-01-31/news/28425480_1_lifetime-achievement-award-year-award-finalists ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.business-standard.com/article/press-releases/rakshit-hargave-joins-nivea-india-as-the-managing-director-111020100133_1.html ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://articles.economictimes.indiatimes.com/2011-03-14/news/28688245_1_high-pe-karvy-stock-broking-offer-good-returns ), possible duplicate
+		Could not insert topic-url pair ( jubilant foodworks  ,  http://www.livemint.com/Companies/EbcdisaWdwSD98O6Cnp8WK/Jubilant-FoodWorks-to-diversify-into-nonfood-business.html ), possible duplicate
+
+
+	Number of URLs repeated in this search = 27
+
+
+	WAITING BEFORE NEXT SEARCH QUERY IS FIRED...
+
+
+		WAITING 114.779726758 seconds between searches.
+
+]0;ardivekar@ardivekar-HP: /media/ardivekar/Data/Workspaces/Python/Text_Extraction/meetardivekar@ardivekar-HP:/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet$ python google_extract.py 
+
+
+
+		Opened connection successfully
+
+
+
+	DONE GETTING RESULTS FOR TOPIC 'jubilant foodworks'
+
+
+]0;ardivekar@ardivekar-HP: /media/ardivekar/Data/Workspaces/Python/Text_Extraction/meetardivekar@ardivekar-HP:/media/ardivekar/Data/Workspaces/Python/Text_Extraction/meet$ exit
+exit
+
+Script done on Tuesday 29 December 2015 08:47:34 PM IST
