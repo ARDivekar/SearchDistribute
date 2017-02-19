@@ -1,12 +1,9 @@
-import sys
-from Enums import Enum
-import traceback
-import time
-import random
-import os
-from SearchExtractorErrors import *
 import platform
+import random
+import time
 
+from SearchDistribute.Enums import Enum
+from SearchDistribute.SearchExtractorErrors import *
 
 phantomjs_path = None
 if platform.system() == "Windows":

@@ -1,8 +1,11 @@
-import sys
-import random
 import datetime
+import random
+import sys
+
 from jdcal import gcal2jd
-from SearchExtractorErrors import print_error
+
+from SearchDistribute.SearchExtractorErrors import print_error
+
 
 class GoogleSearchQuery:
 	config = {}

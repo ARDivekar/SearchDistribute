@@ -3,19 +3,20 @@ DISCLAIMER: This code document is for personal use only. Any violation of the Go
 	...Just so you know, this sort of thing does violate the Google ToS. We (the authors) personally did not use it in production code, only as an experiment. We hope that you do the same.
 '''
 from __future__ import print_function	## Source: http://stackoverflow.com/questions/19185338/cython-error-compiling-with-print-function-parameters
+
 import datetime
-import traceback
 import random
-from SearchExtractorErrors import *
-from SearchDBHandler import SearchDBHandler
-from GoogleSearchQuery import GoogleSearchQuery
-from GoogleWebsiteParser import GoogleWebsiteParser
-from Browsers import twillBrowser
-from Browsers import splinterBrowser
-from Browsers import splinterBrowserPhantomJS
-from Browsers import availableBrowsers
-from Enums import Enum
-import sys
+import traceback
+
+from SearchDistribute.Browsers import availableBrowsers
+from SearchDistribute.Browsers import splinterBrowser
+from SearchDistribute.Browsers import splinterBrowserPhantomJS
+from SearchDistribute.Browsers import twillBrowser
+from SearchDistribute.Enums import Enum
+from SearchDistribute.GoogleSearchQuery import GoogleSearchQuery
+from SearchDistribute.GoogleWebsiteParser import GoogleWebsiteParser
+from SearchDistribute.SearchDBHandler import SearchDBHandler
+from SearchDistribute.SearchExtractorErrors import *
 
 pythonVersionNumber = sys.version_info.major 	##tells us if it is Python 2 or 3.
 

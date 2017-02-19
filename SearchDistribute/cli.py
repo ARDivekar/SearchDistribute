@@ -1,8 +1,10 @@
+import datetime
 import os
 import sys
-from GoogleSearch import GoogleSearch
-from GoogleSearchQuery import GoogleSearchQuery
-import datetime
+
+from SearchDistribute.GoogleSearch import GoogleSearch
+from SearchDistribute.GoogleSearchQuery import GoogleSearchQuery
+
 
 def print_cli_help_message():
 	x = os.system("clear; clear;")
