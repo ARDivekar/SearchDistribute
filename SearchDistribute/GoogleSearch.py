@@ -8,10 +8,10 @@ import datetime
 import random
 import traceback
 
-from SearchDistribute.Browsers import availableBrowsers
-from SearchDistribute.Browsers import splinterBrowser
-from SearchDistribute.Browsers import splinterBrowserPhantomJS
-from SearchDistribute.Browsers import twillBrowser
+from SearchDistribute.ProxyBrowser import availableBrowsers
+from SearchDistribute.ProxyBrowser import splinterBrowser
+from SearchDistribute.ProxyBrowser import splinterBrowserPhantomJS
+from SearchDistribute.ProxyBrowser import twillBrowser
 from SearchDistribute.Enums import Enum
 from SearchDistribute.GoogleSearchQuery import GoogleSearchQuery
 from SearchDistribute.GoogleWebsiteParser import GoogleWebsiteParser

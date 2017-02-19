@@ -321,7 +321,7 @@ def print_cli_help_message():
             If you have multiple browsers, you should preferably go for a VPN service that provides its 
             own desktop application, since it's not guaranteed that this application will use a 
             particular browser.
-            [If you really want, you can hack a few lines in the file Browsers.py, to force it to
+            [If you really want, you can hack a few lines in the file ProxyBrowser.py, to force it to
             use a particular user agent (check for your browser at http://whatsmyuseragent.com/)].
 
 

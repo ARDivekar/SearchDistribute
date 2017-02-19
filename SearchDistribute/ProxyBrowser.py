@@ -18,7 +18,7 @@ try:
 	availableBrowsers.SPLINTER="SPLINTER"
 	availableBrowsers.SPLINTER_PHANTOMJS="SPLINTER_PHANTOMJS"
 except Exception, e:
-	make_error("Browsers.py", "__main__", "Could not import splinter and splinter phantomjs",e)
+	make_error("ProxyBrowser.py", "__main__", "Could not import splinter and splinter phantomjs",e)
 
 
 
