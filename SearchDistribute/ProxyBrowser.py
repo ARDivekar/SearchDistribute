@@ -2,6 +2,9 @@ import platform
 import random
 import time
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
+from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
 import datetime
 
 from SearchDistribute.Enums import Enum
@@ -219,6 +222,16 @@ class PhantomJS():
 	def switch_proxy(self):
 		self.webdriver.close()
 		self.webdriver = webdriver.PhantomJS(service_args = self.service_args)
+
+	## Source: http://stackoverflow.com/questions/24053671/webdriver-wait-for-ajax-request-in-python/24053891#24053891
+	def wait_for_element_to_load_ajax(self, timeout, element_id):
+		try:
+			## Wait for the AJAX to load.
+			WebDriverWait(self.browser.webdriver, timeout).until(EC.presence_of_element_located((By.ID, element_id)))
+			return True
+		except Exception:  ## The WebDriverWait timed out.
+			return False
+
 
 # print("\n\tSplinter is the default headless client of this package as it is more reliable.")
 

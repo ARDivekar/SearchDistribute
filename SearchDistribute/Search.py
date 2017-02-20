@@ -5,9 +5,6 @@ from SearchDistribute.SearchExtractorErrors import *
 from SearchDistribute import ProxyBrowser
 
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
-from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
 
 class SearchTemplate(object):
     search_engine = ""
@@ -236,24 +233,37 @@ class GoogleSearch(SearchTemplate):
         elif str(self.country) in ['Zimbabwe', 'ZW', 'ZWE', '716']: domain = 'google.co.zw'
         else:
             domain = 'google.com'
-        domain = "https://www."+domain+"/?gws_rd=ssl"
+        domain = "https://www."+domain
 
     def perform_search_from_main_page(self, search_query):
         ## Takes as input a search query string
-        self.browser.visit(self.get_country_domain(self.country))
+        self.disable_google_instant()
         self.browser.webdriver.find_element_by_name('q').send_keys(search_query)
         self.browser.webdriver.find_element_by_name('q').send_keys(Keys.RETURN)     ## Press Enter while focused on the search box.
-        ## Source: http://stackoverflow.com/questions/24053671/webdriver-wait-for-ajax-request-in-python/24053891#24053891
-        try:
-            ## Wait for the AJAX to load.
-            WebDriverWait(self.browser.webdriver, 15).until(EC.presence_of_element_located((By.ID, "search")))
-            return True
-        except Exception: ## The WebDriverWait timed out.
+        if self.browser.wait_for_element_to_load_ajax(15, "search") == False:
             return False
+        return True
 
 
 
-
+    def disable_google_instant(self):
+        ## This allows you to get more than ten results per page.
+        self.browser.visit(self.get_country_domain(self.country)+("/preferences"))
+        if self.browser.wait_for_element_to_load_ajax(15, "instant-radio") == False:
+            return False
+        ## Click the 'disable' <div>:
+        self.browser.webdriver.find_element_by_id('instant-radio').find_elements_by_class_name('jfk-radiobutton')[-1].click()
+        ## Save the results:
+        if self.browser.webdriver.find_element_by_id('form-buttons').find_elements_by_class_name('jfk-button')[0].text == "Save":
+            self.browser.webdriver.find_element_by_id('form-buttons').find_elements_by_class_name('jfk-button')[0].click()
+        elif self.browser.webdriver.find_element_by_id('form-buttons').find_elements_by_class_name('jfk-button')[1].text == "Save":
+            self.browser.webdriver.find_element_by_id('form-buttons').find_elements_by_class_name('jfk-button')[1].click()
+        ## Press 'ok' on the resulting alert:
+        try:
+            self.browser.webdriver.switch_to_alert().accept()
+        except Exception:
+            pass
+        return True
 
 
 
