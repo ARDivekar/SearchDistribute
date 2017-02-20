@@ -19,8 +19,8 @@ try:
 	import splinter
 	availableBrowsers.SPLINTER="SPLINTER"
 	availableBrowsers.SPLINTER_PHANTOMJS="SPLINTER_PHANTOMJS"
-except Exception, e:
-	make_error("ProxyBrowser.py", "__main__", "Could not import splinter and splinter phantomjs",e)
+except Exception:
+	make_error("ProxyBrowser.py", "__main__", "Could not import splinter and splinter phantomjs")
 
 
 
@@ -88,8 +88,8 @@ class BrowserTemplate(object):
 				if printing:
 					print("\tClose time: %s seconds"%(time.time()-close_time))
 
-		except Exception, e:
-			print_fatal_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Browser could not complete the test.", e)
+		except Exception:
+			print_fatal_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Browser could not complete the test.")
 
 		if printing:
 			if performed_full_test:
@@ -244,8 +244,8 @@ class splinterBrowser(BrowserTemplate):
 			if self.isAvailable():
 				self.browser = splinter.Browser()
 				return True
-		except Exception, e:
-			print_error(errorPrinting, self.__class__.__name__, sys._getframe().f_code.co_name,"Cannot start splinter browser.",e)
+		except Exception:
+			print_error(errorPrinting, self.__class__.__name__, sys._getframe().f_code.co_name,"Cannot start splinter browser.")
 		return False
 
 	def closeBrowser(self, printing=False):
@@ -254,8 +254,8 @@ class splinterBrowser(BrowserTemplate):
 				self.browser.quit()
 				if printing: print("\nSuccessfully closed Splinter browser window.")
 				return True
-			except Exception,e:
-				print_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Unable to close Splinter browser window.",e)
+			except Exception:
+				print_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Unable to close Splinter browser window.")
 		return False
 
 
@@ -364,8 +364,8 @@ class splinterBrowserPhantomJS(splinterBrowser):
 			if self.isAvailable():
 				self.browser = splinter.Browser("phantomjs", executable_path=phantomjs_path)
 				return True
-		except Exception, e:
-			print_error(errorPrinting, self.__class__.__name__, sys._getframe().f_code.co_name,"Cannot create phantomjs process.",e)
+		except Exception:
+			print_error(errorPrinting, self.__class__.__name__, sys._getframe().f_code.co_name,"Cannot create phantomjs process.")
 		return False
 
 
@@ -376,8 +376,8 @@ class splinterBrowserPhantomJS(splinterBrowser):
 				if printing:
 					print("\nSuccessfully closed Splinter browser window.")
 				return True			## this line has been added as code belpw has been commented out.
-			except Exception, e:
-				print_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Unable to close Splinter phantomjs browser instance.",e)
+			except Exception:
+				print_error(printing, self.__class__.__name__, sys._getframe().f_code.co_name,"Unable to close Splinter phantomjs browser instance.")
 
 		## The following code has become redundant with the inclusion of phantomJS executables in the project itself, which allows self.browser.quit() to work perfectly well:
 		# try:
@@ -559,10 +559,10 @@ class twillBrowser(BrowserTemplate):
 # print(len(html))
 # html = x.getHtml("www.google.com")
 # print(len(html))
-sb=splinterBrowser()
-sb.test(printing=True)
-sbJS = splinterBrowserPhantomJS()
-sbJS.test(printing=True)
+# sb=splinterBrowser()
+# sb.test(printing=True)
+# sbJS = splinterBrowserPhantomJS()
+# sbJS.test(printing=True)
 
 
 
