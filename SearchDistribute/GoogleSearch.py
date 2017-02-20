@@ -14,7 +14,7 @@ from SearchDistribute.ProxyBrowser import splinterBrowserPhantomJS
 from SearchDistribute.ProxyBrowser import twillBrowser
 from SearchDistribute.Enums import Enum
 from SearchDistribute.GoogleSearchQuery import GoogleSearchQuery
-from SearchDistribute.GoogleWebsiteParser import GoogleWebsiteParser
+from SearchDistribute.SERPParser import GoogleWebsiteParser
 from SearchDistribute.SearchDBHandler import SearchDBHandler
 from SearchDistribute.SearchExtractorErrors import *
 
