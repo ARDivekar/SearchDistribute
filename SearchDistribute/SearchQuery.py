@@ -8,6 +8,11 @@ def _convert_to_julian_date(d):
     julian_day = jd_tuple[0] + jd_tuple[1] + 0.5
     return int(julian_day)
 
+def convert_to_list_of_strings_if_string(x):
+    if type(x) == type("") and len(x)>0:
+        return [x]
+    return x
+
 
 class SearchQueryTemplate(object):
     search_engine = ""          ## The search engine which we are working on.
@@ -39,16 +44,16 @@ class SearchQueryTemplate(object):
         config_chooser = lambda x, y: config.get(x) if config.get(x) is not None else config.get(y)
         ## This function looks for two alternative spellings of a field in the dictionary. It prefers the one with underscores.
         ## If neither exist, the self.* value becomes None, and must be handled.
-        self.topics = config_chooser('topics', 'Topics')
-        self.necessary_topics = config_chooser('necessary_topics', 'necessaryTopics')
-        self.excluded_topics = config_chooser('excluded_topics', 'excludedTopics')
-        self.necessary_sites = config_chooser('necessary_sites', 'necessarySites')
-        self.excluded_sites = config_chooser('excluded_sites', 'excludedSites')
-        self.in_url = config_chooser('in_url', 'inurl')
-        self.in_title = config_chooser('in_title', 'intitle')
-        self.daterange = config_chooser('date_range', 'daterange')
-        self.top_level_domains = config_chooser('top_level_domains', 'topLevelDomains')
-        self.linked_from_page = config_chooser('linked_from_page', 'linkedFromPage')
+        self.topics = convert_to_list_of_strings_if_string(config_chooser('topics', 'Topics'))
+        self.necessary_topics = convert_to_list_of_strings_if_string(config_chooser('necessary_topics', 'necessaryTopics'))
+        self.excluded_topics = convert_to_list_of_strings_if_string(config_chooser('excluded_topics', 'excludedTopics'))
+        self.necessary_sites = convert_to_list_of_strings_if_string(config_chooser('necessary_sites', 'necessarySites'))
+        self.excluded_sites = convert_to_list_of_strings_if_string(config_chooser('excluded_sites', 'excludedSites'))
+        self.in_url = convert_to_list_of_strings_if_string(config_chooser('in_url', 'inurl'))
+        self.in_title = convert_to_list_of_strings_if_string(config_chooser('in_title', 'intitle'))
+        self.daterange = convert_to_list_of_strings_if_string(config_chooser('date_range', 'daterange'))
+        self.top_level_domains = convert_to_list_of_strings_if_string(config_chooser('top_level_domains', 'topLevelDomains'))
+        self.linked_from_page = convert_to_list_of_strings_if_string(config_chooser('linked_from_page', 'linkedFromPage'))
 
 
     def check_topics(self):
@@ -114,25 +119,30 @@ class SearchQueryTemplate(object):
             check_if_has_spaces(self.search_engine, "excluded_sites", excluded_site)
 
     def check_in_url(self):
-        '''`in_url` must be a non-empty string and cannot have newlines or spaces; only letters, hyphens, periods and underscores are permitted.
+        '''`in_url` must be a non-empty list of strings, each string must not be empty and cannot have newlines or spaces; only letters, hyphens, periods and underscores are permitted.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
-        in_url = self.in_url
-        check_if_type_string(self.search_engine, "in_url", in_url)
-        in_url = in_url.strip()
-        check_if_empty_string(self.search_engine, "in_url", in_url)
-        check_if_has_newlines(self.search_engine, "in_url", in_url)
-        check_if_has_spaces(self.search_engine, "in_url", in_url)
+        check_if_type_list(self.search_engine, "in_url", self.in_url)   ## Must be a list because we may random.shuffle(...) it later.
+        check_if_empty_list_or_tuple_or_dict(self.search_engine, "in_url", self.in_url)
+        for in_url in self.in_url:
+            check_if_type_string(self.search_engine, "in_url", in_url)
+            in_url = in_url.strip()
+            check_if_empty_string(self.search_engine, "in_url", in_url)
+            check_if_has_newlines(self.search_engine, "in_url", in_url)
+            check_if_has_spaces(self.search_engine, "in_url", in_url)
 
     def check_in_title(self):
-        '''`in_title` must be a non-empty string and cannot have newlines or spaces; only letters, hyphens, periods and underscores are permitted.
+        '''`in_title` must be a non-empty list of strings, each string must not be empty and cannot have newlines.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
-        in_title = self.in_title
-        check_if_type_string(self.search_engine, "in_title", in_title)
-        in_title = in_title.strip()
-        check_if_empty_string(self.search_engine, "in_title", in_title)
-        check_if_has_newlines(self.search_engine, "in_title", in_title)
+        check_if_type_list(self.search_engine, "in_title", self.in_title)   ## Must be a list because we may random.shuffle(...) it later.
+        check_if_empty_list_or_tuple_or_dict(self.search_engine, "in_title", self.in_title)
+        for in_title in self.in_title:
+            check_if_type_string(self.search_engine, "in_title", in_title)
+            in_title = in_title.strip()
+            check_if_empty_string(self.search_engine, "in_title", in_title)
+            check_if_has_newlines(self.search_engine, "in_title", in_title)
+
 
     def check_daterange(self):
         '''`daterange` must be a 2-tuple of datetime.datetime or datetime.date objects.
@@ -250,15 +260,32 @@ class GoogleSearchQuery(SearchQueryTemplate):
             query_parts += ['-"%s"'%excluded_site.strip() for excluded_site in self.excluded_sites]
 
         if self.in_url is not None:
+            if random_shuffle:
+                random.shuffle(self.in_url)
             self.check_in_url()
-            query_parts.append("inurl:%s"%self.in_url.strip())
+            in_url_str = ""
+            for i in range(0, len(self.in_url)):
+                in_url = self.in_url[i].strip()
+                if i==0:
+                    in_url_str += "inurl:%s" % in_url.strip()
+                else:
+                    in_url_str += " | inurl:%s" % in_url.strip()
+            query_parts.append(in_url_str.strip())
 
         if self.in_title is not None:
+            if random_shuffle:
+                random.shuffle(self.in_title)
             self.check_in_title()
-            if self.in_title.strip().find(" ") != -1:
-                ## Put quotes around the word
-                query_parts.append('intitle:"%s"'%self.in_title.strip())
-            else: query_parts.append('intitle:%s'%self.in_title.strip())
+            in_title_str = ""
+            for i in range(0, len(self.in_title)):
+                in_title = self.in_title[i].strip()
+                if in_title.strip().find(" ") != -1:
+                    in_title = '"%s"'%in_title.strip()
+                if i==0:
+                    in_title_str += "intitle:%s" % in_title.strip()
+                else:
+                    in_title_str += " | intitle:%s" % in_title.strip()
+            query_parts.append(in_title_str.strip())
 
         if self.linked_from_page is not None:
             self.check_linked_from_page()
