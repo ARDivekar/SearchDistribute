@@ -37,9 +37,8 @@ class Enum(set):	## Source: http://stackoverflow.com/a/2182437/4900327
 
 
 
+SearchEngines = Enum(["Google"])
 
-class SearchEngine(Enum):
-    Google = "Google"
+ProxyTypes = Enum(["Socks5"])
 
-class ProxyBrowser(Enum):
-	PhantomJS = "PhantomJS"
+ProxyBrowsers = Enum(["PhantomJS"])

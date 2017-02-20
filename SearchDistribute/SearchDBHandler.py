@@ -67,7 +67,7 @@ class SearchDBHandler:
 		try:
 			self.conn.execute('''CREATE TABLE IF NOT EXISTS `%s`(
 				resultNumberInSearch 	INTEGER,
-				SearchEngine			TEXT,
+				SearchEngines			TEXT,
 				Topic 					TEXT 	NOT NULL,
 				URL 					TEXT 	NOT NULL,
 				ResultPageNumber 		INTEGER NOT NULL,
@@ -77,7 +77,7 @@ class SearchDBHandler:
 				SearchedOnDate 			DATE,
 				ObtainedFromQuery 		TEXT 	NOT NULL,
 				QueryPageURL			TEXT,
-				PRIMARY KEY(SearchEngine, Topic, URL)
+				PRIMARY KEY(SearchEngines, Topic, URL)
 			);
 			'''%dbTableName)
 			self.conn.commit()
