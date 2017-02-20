@@ -38,9 +38,9 @@ class SearchQueryTemplate(object):
     ##  - SearchExtractorErrors.py : UnsupportedFeatureException.__init__(...)
 
     def __init__(self, config={}):
-        check_if_empty_list_or_tuple_or_dict(self.search_engine, "config", config)
-        check_if_type_dictionary(self.search_engine, "config", config)
-        check_if_type_none(self.search_engine, "config", config)
+        check_if_empty_list_or_tuple_or_dict_SearchQuery(self.search_engine, "config", config)
+        check_if_type_dictionary_SearchQuery(self.search_engine, "config", config)
+        check_if_type_none_SearchQuery(self.search_engine, "config", config)
 
         config_chooser = lambda x, y: config.get(x) if config.get(x) is not None else config.get(y)
         ## This function looks for two alternative spellings of a field in the dictionary. It prefers the one with underscores.
@@ -61,88 +61,88 @@ class SearchQueryTemplate(object):
         '''`topics` must be a non-empty list of strings, each string must not be empty and cannot have newlines.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
-        check_if_type_list(self.search_engine, "topics", self.topics)   ## Must be a list because we may random.shuffle(...) it later.
-        check_if_empty_list_or_tuple_or_dict(self.search_engine, "topics", self.topics)
+        check_if_type_list_SearchQuery(self.search_engine, "topics", self.topics)   ## Must be a list because we may random.shuffle(...) it later.
+        check_if_empty_list_or_tuple_or_dict_SearchQuery(self.search_engine, "topics", self.topics)
         for topic in self.topics:
-            check_if_type_string(self.search_engine, "topics", topic)
+            check_if_type_string_SearchQuery(self.search_engine, "topics", topic)
             topic = topic.strip()
-            check_if_empty_string(self.search_engine, "topics", topic)
-            check_if_has_newlines(self.search_engine, "topics", topic)
+            check_if_empty_string_SearchQuery(self.search_engine, "topics", topic)
+            check_if_has_newlines_SearchQuery(self.search_engine, "topics", topic)
 
     def check_necessary_topics(self):
         '''`necessary_topics` must be a non-empty list of strings, each string must not be empty and cannot have newlines.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
-        check_if_type_list(self.search_engine, "necessary_topics", self.necessary_topics)   ## Must be a list because we may random.shuffle(...) it later.
-        check_if_empty_list_or_tuple_or_dict(self.search_engine, "necessary_topics", self.necessary_topics)
+        check_if_type_list_SearchQuery(self.search_engine, "necessary_topics", self.necessary_topics)   ## Must be a list because we may random.shuffle(...) it later.
+        check_if_empty_list_or_tuple_or_dict_SearchQuery(self.search_engine, "necessary_topics", self.necessary_topics)
         for necessary_topic in self.necessary_topics:
-            check_if_type_string(self.search_engine, "necessary_topics", necessary_topic)
+            check_if_type_string_SearchQuery(self.search_engine, "necessary_topics", necessary_topic)
             necessary_topic = necessary_topic.strip()
-            check_if_empty_string(self.search_engine, "necessary_topics", necessary_topic)
-            check_if_has_newlines(self.search_engine, "necessary_topics", necessary_topic)
+            check_if_empty_string_SearchQuery(self.search_engine, "necessary_topics", necessary_topic)
+            check_if_has_newlines_SearchQuery(self.search_engine, "necessary_topics", necessary_topic)
 
     def check_excluded_topics(self):
         '''`excluded_topics` must be a non-empty list of strings, each string must not be empty and cannot have newlines.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
-        check_if_type_list(self.search_engine, "excluded_topics", self.excluded_topics)   ## Must be a list because we may random.shuffle(...) it later.
-        check_if_empty_list_or_tuple_or_dict(self.search_engine, "excluded_topics", self.excluded_topics)
+        check_if_type_list_SearchQuery(self.search_engine, "excluded_topics", self.excluded_topics)   ## Must be a list because we may random.shuffle(...) it later.
+        check_if_empty_list_or_tuple_or_dict_SearchQuery(self.search_engine, "excluded_topics", self.excluded_topics)
         for excluded_topic in self.excluded_topics:
-            check_if_type_string(self.search_engine, "excluded_topics", excluded_topic)
+            check_if_type_string_SearchQuery(self.search_engine, "excluded_topics", excluded_topic)
             excluded_topic = excluded_topic.strip()
-            check_if_empty_string(self.search_engine, "excluded_topics", excluded_topic)
-            check_if_has_newlines(self.search_engine, "excluded_topics", excluded_topic)
+            check_if_empty_string_SearchQuery(self.search_engine, "excluded_topics", excluded_topic)
+            check_if_has_newlines_SearchQuery(self.search_engine, "excluded_topics", excluded_topic)
 
     def check_necessary_sites(self):
         '''`necessary_sites` must be a non-empty list of strings, each string must not be empty and cannot have newlines or spaces; only letters, hyphens, periods and underscores are permitted.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
-        check_if_type_list(self.search_engine, "necessary_sites", self.necessary_sites)   ## Must be a list because we may random.shuffle(...) it later.
-        check_if_empty_list_or_tuple_or_dict(self.search_engine, "necessary_sites", self.necessary_sites)
+        check_if_type_list_SearchQuery(self.search_engine, "necessary_sites", self.necessary_sites)   ## Must be a list because we may random.shuffle(...) it later.
+        check_if_empty_list_or_tuple_or_dict_SearchQuery(self.search_engine, "necessary_sites", self.necessary_sites)
         for necessary_site in self.necessary_sites:
-            check_if_type_string(self.search_engine, "necessary_sites", necessary_site)
+            check_if_type_string_SearchQuery(self.search_engine, "necessary_sites", necessary_site)
             necessary_site = necessary_site.strip()
-            check_if_empty_string(self.search_engine, "necessary_sites", necessary_site)
-            check_if_has_newlines(self.search_engine, "necessary_sites", necessary_site)
-            check_if_has_spaces(self.search_engine, "necessary_sites", necessary_site)
+            check_if_empty_string_SearchQuery(self.search_engine, "necessary_sites", necessary_site)
+            check_if_has_newlines_SearchQuery(self.search_engine, "necessary_sites", necessary_site)
+            check_if_has_spaces_SearchQuery(self.search_engine, "necessary_sites", necessary_site)
 
     def check_excluded_sites(self):
         '''`excluded_sites` must be a non-empty list of strings, each string must not be empty and cannot have newlines or spaces; only letters, hyphens, periods and underscores are permitted.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
-        check_if_type_list(self.search_engine, "excluded_sites", self.excluded_sites)   ## Must be a list because we may random.shuffle(...) it later.
-        check_if_empty_list_or_tuple_or_dict(self.search_engine, "excluded_sites", self.excluded_sites)
+        check_if_type_list_SearchQuery(self.search_engine, "excluded_sites", self.excluded_sites)   ## Must be a list because we may random.shuffle(...) it later.
+        check_if_empty_list_or_tuple_or_dict_SearchQuery(self.search_engine, "excluded_sites", self.excluded_sites)
         for excluded_site in self.excluded_sites:
-            check_if_type_string(self.search_engine, "excluded_sites", excluded_site)
+            check_if_type_string_SearchQuery(self.search_engine, "excluded_sites", excluded_site)
             excluded_site = excluded_site.strip()
-            check_if_empty_string(self.search_engine, "excluded_sites", excluded_site)
-            check_if_has_newlines(self.search_engine, "excluded_sites", excluded_site)
-            check_if_has_spaces(self.search_engine, "excluded_sites", excluded_site)
+            check_if_empty_string_SearchQuery(self.search_engine, "excluded_sites", excluded_site)
+            check_if_has_newlines_SearchQuery(self.search_engine, "excluded_sites", excluded_site)
+            check_if_has_spaces_SearchQuery(self.search_engine, "excluded_sites", excluded_site)
 
     def check_in_url(self):
         '''`in_url` must be a non-empty list of strings, each string must not be empty and cannot have newlines or spaces; only letters, hyphens, periods and underscores are permitted.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
-        check_if_type_list(self.search_engine, "in_url", self.in_url)   ## Must be a list because we may random.shuffle(...) it later.
-        check_if_empty_list_or_tuple_or_dict(self.search_engine, "in_url", self.in_url)
+        check_if_type_list_SearchQuery(self.search_engine, "in_url", self.in_url)   ## Must be a list because we may random.shuffle(...) it later.
+        check_if_empty_list_or_tuple_or_dict_SearchQuery(self.search_engine, "in_url", self.in_url)
         for in_url in self.in_url:
-            check_if_type_string(self.search_engine, "in_url", in_url)
+            check_if_type_string_SearchQuery(self.search_engine, "in_url", in_url)
             in_url = in_url.strip()
-            check_if_empty_string(self.search_engine, "in_url", in_url)
-            check_if_has_newlines(self.search_engine, "in_url", in_url)
-            check_if_has_spaces(self.search_engine, "in_url", in_url)
+            check_if_empty_string_SearchQuery(self.search_engine, "in_url", in_url)
+            check_if_has_newlines_SearchQuery(self.search_engine, "in_url", in_url)
+            check_if_has_spaces_SearchQuery(self.search_engine, "in_url", in_url)
 
     def check_in_title(self):
         '''`in_title` must be a non-empty list of strings, each string must not be empty and cannot have newlines.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
-        check_if_type_list(self.search_engine, "in_title", self.in_title)   ## Must be a list because we may random.shuffle(...) it later.
-        check_if_empty_list_or_tuple_or_dict(self.search_engine, "in_title", self.in_title)
+        check_if_type_list_SearchQuery(self.search_engine, "in_title", self.in_title)   ## Must be a list because we may random.shuffle(...) it later.
+        check_if_empty_list_or_tuple_or_dict_SearchQuery(self.search_engine, "in_title", self.in_title)
         for in_title in self.in_title:
-            check_if_type_string(self.search_engine, "in_title", in_title)
+            check_if_type_string_SearchQuery(self.search_engine, "in_title", in_title)
             in_title = in_title.strip()
-            check_if_empty_string(self.search_engine, "in_title", in_title)
-            check_if_has_newlines(self.search_engine, "in_title", in_title)
+            check_if_empty_string_SearchQuery(self.search_engine, "in_title", in_title)
+            check_if_has_newlines_SearchQuery(self.search_engine, "in_title", in_title)
 
 
     def check_daterange(self):
@@ -150,32 +150,32 @@ class SearchQueryTemplate(object):
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
         daterange = self.daterange
-        check_if_type_list_or_tuple(self.search_engine, "daterange", daterange)
-        check_if_empty_list_or_tuple_or_dict(self.search_engine, "daterange", daterange)
-        check_if_date_or_datetime(self.search_engine, "daterange[0]", daterange[0])
-        check_if_date_or_datetime(self.search_engine, "daterange[1]", daterange[1])
+        check_if_type_list_or_tuple_SearchQuery(self.search_engine, "daterange", daterange)
+        check_if_empty_list_or_tuple_or_dict_SearchQuery(self.search_engine, "daterange", daterange)
+        check_if_date_or_datetime_SearchQuery(self.search_engine, "daterange[0]", daterange[0])
+        check_if_date_or_datetime_SearchQuery(self.search_engine, "daterange[1]", daterange[1])
 
     def check_top_level_domains(self):
         '''`top_level_domains` must be a non-empty list of strings, each string must not be empty and cannot have newlines or spaces; only letters, hyphens, periods and underscores are permitted.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
-        check_if_type_list(self.search_engine, "top_level_domains", self.top_level_domains)   ## Must be a list because we may random.shuffle(...) it later.
-        check_if_empty_list_or_tuple_or_dict(self.search_engine, "top_level_domains", self.top_level_domains)
+        check_if_type_list_SearchQuery(self.search_engine, "top_level_domains", self.top_level_domains)   ## Must be a list because we may random.shuffle(...) it later.
+        check_if_empty_list_or_tuple_or_dict_SearchQuery(self.search_engine, "top_level_domains", self.top_level_domains)
         for top_level_domain in self.top_level_domains:
-            check_if_empty_string(self.search_engine, "top_level_domains", top_level_domain)
-            check_if_has_newlines(self.search_engine, "top_level_domains", top_level_domain)
-            check_if_has_spaces(self.search_engine, "top_level_domains", top_level_domain)
+            check_if_empty_string_SearchQuery(self.search_engine, "top_level_domains", top_level_domain)
+            check_if_has_newlines_SearchQuery(self.search_engine, "top_level_domains", top_level_domain)
+            check_if_has_spaces_SearchQuery(self.search_engine, "top_level_domains", top_level_domain)
 
     def check_linked_from_page(self):
         '''`in_title` must be a non-empty string and cannot have newlines or spaces; only letters, hyphens, periods and underscores are permitted.
         Throws a InvalidSearchParameterException if these rules are not followed.
         '''
         linked_from_page = self.linked_from_page
-        check_if_type_string(self.search_engine, "linked_from_page", linked_from_page)
+        check_if_type_string_SearchQuery(self.search_engine, "linked_from_page", linked_from_page)
         in_title = linked_from_page.strip()
-        check_if_empty_string(self.search_engine, "linked_from_page", linked_from_page)
-        check_if_has_newlines(self.search_engine, "linked_from_page", linked_from_page)
-        check_if_has_spaces(self.search_engine, "linked_from_page", linked_from_page)
+        check_if_empty_string_SearchQuery(self.search_engine, "linked_from_page", linked_from_page)
+        check_if_has_newlines_SearchQuery(self.search_engine, "linked_from_page", linked_from_page)
+        check_if_has_spaces_SearchQuery(self.search_engine, "linked_from_page", linked_from_page)
 
 
     def generate_query(self, random_shuffle=True, random_spaces=True):

@@ -2,6 +2,8 @@ import sys
 import datetime
 
 
+
+
 class UnsupportedFeatureException(Exception):   ## Source: https://www.codementor.io/sheena/how-to-write-python-custom-exceptions-du107ufv9#subclassing-exceptions-and-other-fancy-things
     def __init__(self, search_engine, param_name):
         error_message = "%s search engine does not support the `%s` feature (%s)"
@@ -40,11 +42,10 @@ class InvalidSearchParameterException(Exception):   ## Source: https://www.codem
         self.reason = reason
 
 
-
 ## The following functions are used to check arguments passed to `config` in the constructor of *SearchQuery objects,
 ## They raise InvalidSearchParameterExceptions for inputs which do not match cetain basic criterion.
 
-def check_if_type_none(search_engine, param_name, param_value):
+def check_if_type_none_SearchQuery(search_engine, param_name, param_value):
     ## Checks if the input is of type dict, raises an exception if it is not
     if param_value is None:
         raise InvalidSearchParameterException(
@@ -53,7 +54,7 @@ def check_if_type_none(search_engine, param_name, param_value):
             param_value=param_value,
             reason="must not be None.")
 
-def check_if_type_dictionary(search_engine, param_name, param_value):
+def check_if_type_dictionary_SearchQuery(search_engine, param_name, param_value):
     ## Checks if the input is of type dict, raises an exception if it is not
     if type(param_value) != type({}):
         raise InvalidSearchParameterException(
@@ -62,7 +63,7 @@ def check_if_type_dictionary(search_engine, param_name, param_value):
             param_value=param_value,
             reason="must be a dictionary.")
 
-def check_if_type_list(search_engine, param_name, param_value):
+def check_if_type_list_SearchQuery(search_engine, param_name, param_value):
     ## Checks if the input is of type list, raises an exception if it is not
     if type(param_value) != type([]):
         raise InvalidSearchParameterException(
@@ -71,7 +72,7 @@ def check_if_type_list(search_engine, param_name, param_value):
             param_value=param_value,
             reason="must be a list.")
 
-def check_if_type_list_or_tuple(search_engine, param_name, param_value):
+def check_if_type_list_or_tuple_SearchQuery(search_engine, param_name, param_value):
     ## Checks if the input is of type list, raises an exception if it is not
     if type(param_value) != type([]) and type(param_value) != type(()):
         raise InvalidSearchParameterException(
@@ -80,7 +81,7 @@ def check_if_type_list_or_tuple(search_engine, param_name, param_value):
             param_value=param_value,
             reason="must be a list or a tuple.")
 
-def check_if_empty_list_or_tuple_or_dict(search_engine, param_name, param_value):
+def check_if_empty_list_or_tuple_or_dict_SearchQuery(search_engine, param_name, param_value):
     ## Checks if the input is an empty list, raises an exception if it is not
     if len(param_value) == 0:
         raise InvalidSearchParameterException(
@@ -89,7 +90,7 @@ def check_if_empty_list_or_tuple_or_dict(search_engine, param_name, param_value)
             param_value=param_value,
             reason="must not be an empty.")
 
-def check_if_type_string(search_engine, param_name, param_value):
+def check_if_type_string_SearchQuery(search_engine, param_name, param_value):
     ## Checks if the input is of type string, raises an exception if it is not
     if type(param_value) != type(""):
         raise InvalidSearchParameterException(
@@ -98,7 +99,7 @@ def check_if_type_string(search_engine, param_name, param_value):
             param_value=param_value,
             reason="must be a string.")
 
-def check_if_empty_string(search_engine, param_name, param_value):
+def check_if_empty_string_SearchQuery(search_engine, param_name, param_value):
     ## Checks if the input is an empty string, raises an exception if it is not
     if len(param_value) == 0:
         raise InvalidSearchParameterException(
@@ -107,7 +108,7 @@ def check_if_empty_string(search_engine, param_name, param_value):
             param_value=param_value,
             reason="must not be an empty string.")
 
-def check_if_has_spaces(search_engine, param_name, param_value):
+def check_if_has_spaces_SearchQuery(search_engine, param_name, param_value):
     ## Checks if the input has spaces, raises an exception if it does
     if param_value.find(" ") != -1:
         raise InvalidSearchParameterException(
@@ -116,7 +117,7 @@ def check_if_has_spaces(search_engine, param_name, param_value):
             param_value=param_value,
             reason="cannot have spaces: only alphabets, numbers, hyphens, underscores and periods are permitted.")
 
-def check_if_has_newlines(search_engine, param_name, param_value):
+def check_if_has_newlines_SearchQuery(search_engine, param_name, param_value):
     ## Checks if the input has newlines, raises an exception if it does
     if param_value.find("\n") != -1:
         raise InvalidSearchParameterException(
@@ -125,7 +126,7 @@ def check_if_has_newlines(search_engine, param_name, param_value):
             param_value=param_value,
             reason="cannot have newlines ('\\n'): only alphabets, numbers, hyphens, underscores and periods are permitted.")
 
-def check_if_date_or_datetime(search_engine, param_name, param_value):
+def check_if_date_or_datetime_SearchQuery(search_engine, param_name, param_value):
     ## Checks if the input is of type datetime.datetime or datetime.date, raises an exception if it is not
     if type(param_value) != type(datetime.datetime.now()) and type(param_value) != type(datetime.datetime.now().date()):
         raise InvalidSearchParameterException(
