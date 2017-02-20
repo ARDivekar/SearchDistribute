@@ -3,7 +3,9 @@ from SearchDistribute.Enums import SearchEngines
 from SearchDistribute.Enums import ProxyBrowsers
 from SearchDistribute.SearchExtractorErrors import *
 from SearchDistribute import ProxyBrowser
+from SearchDistribute.SERPParser import GoogleParser
 
+import re
 from selenium.webdriver.common.keys import Keys
 import urllib
 
@@ -254,6 +256,23 @@ class GoogleSearch(SearchTemplate):
         return self.browser.get_url()
 
 
+    def get_SERP_results(self, old_url, start, num_results_per_page, save_to_db = True):
+        ## Get a search engine results page from url
+        url = old_url
+        url = self.update_url_start(url, start)
+        url = self.update_url_number_of_results_per_page(url, num_results_per_page)
+        self.browser.visit(url)
+        if self.browser.wait_for_element_to_load_ajax(timeout=30, element_id="search") == False:
+            return None
+        parsed_page = GoogleParser(self.browser.get_html(), url)
+        if save_to_db:
+            self.save_serp_to_db(parsed_page)
+
+
+
+    def save_serp_to_db(self, parsed_page):
+        pass
+
 
     def disable_google_instant(self):
         ## This allows you to get more than ten results per page.
@@ -284,6 +303,25 @@ class GoogleSearch(SearchTemplate):
         return out
 
 
+    def update_url_start(self, url, new_start):
+        if new_start == 0:
+            url = re.sub('&start=\d{1,}', '' % new_start, url)
+            return url
+        if url.find('&start=') == -1:
+            url += "&start=%s" % new_start
+        else:
+            url = re.sub('&start=\d{1,}', '&start=%s'%new_start, url)
+        return url
+
+    def update_url_number_of_results_per_page(self, url, new_num_results_per_page):
+        if new_num_results_per_page == 0:
+            url = re.sub('&num=\d{1,}', '' % new_num_results_per_page, url)
+            return url
+        if url.find('&num=') == -1:
+            url += "&num=%s" % new_num_results_per_page
+        else:
+            url = re.sub('&start=\d{1,}', '&num=%s'%new_num_results_per_page, url)
+        return url
 
 
 
