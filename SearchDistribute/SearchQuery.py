@@ -1,4 +1,5 @@
 from SearchDistribute.SearchExtractorErrors import *
+from SearchDistribute.Enums import SearchEngines
 from jdcal import gcal2jd
 import random
 
@@ -189,7 +190,7 @@ class SearchQueryTemplate(object):
 
 
 class GoogleSearchQuery(SearchQueryTemplate):
-    search_engine = "Google"
+    search_engine = SearchEngines.Google
 
     ## this function returns a string from the query object parameters.
     ## This must be implemented separatelty for each search engine as the name of the fields differs between search engines.
