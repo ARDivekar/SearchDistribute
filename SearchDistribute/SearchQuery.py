@@ -2,7 +2,7 @@ from SearchDistribute.SearchExtractorErrors import *
 from jdcal import gcal2jd
 import random
 
-def _convert_to_julian_date(self, d):
+def _convert_to_julian_date(d):
     ## takes as input a datetime.datetime or datetime.date object
     jd_tuple = gcal2jd(d.year, d.month, d.day)
     julian_day = jd_tuple[0] + jd_tuple[1] + 0.5
@@ -26,6 +26,7 @@ class SearchQueryTemplate(object):
     ## IMPORTANT: When a new field is added to the list above, we must also correspondingly add it to:
     ##  - SearchQuery.py : SearchQueryTemplate.__init__(...)
     ##  - GoogleSearchQuery.generate_query(), BingSearchQuery.generate_query(), etc.
+    ##  - ../tests/SearchQueryTests.py
     ##  - (Maybe) GoogleSearchQuery.__init__(), BingSearchQuery.__init__(), etc.
     ##  and
     ##  - SearchExtractorErrors.py : UnsupportedFeatureException.__init__(...)
@@ -186,6 +187,9 @@ class GoogleSearchQuery(SearchQueryTemplate):
         config_chooser = lambda x, y: config.get(x) if config.get(x) is not None else config.get(y)
         super().__init__(config)
 
+    def __str__(self):
+        return self.generate_query(False, False)
+
 
     def generate_query(self, random_shuffle=True, random_spaces = True):
         query_parts = []
@@ -206,10 +210,10 @@ class GoogleSearchQuery(SearchQueryTemplate):
             if random_shuffle:
                 random.shuffle(self.excluded_topics)
             self.check_excluded_topics()
-            query_parts += ['-"%s"'%excluded_topic.strip() for excluded_topic in self.excluded_topics]
+            query_parts += ['-"%s"'%excluded_topic.strip() if excluded_topic.strip().find(" ")!=-1 else '-%s'%excluded_topic.strip() for excluded_topic in self.excluded_topics]
 
+        site_str = ""
         if self.necessary_sites is not None:
-            site_str = ""
             if random_shuffle:
                 random.shuffle(self.necessary_sites)
             self.check_necessary_sites()
@@ -219,10 +223,8 @@ class GoogleSearchQuery(SearchQueryTemplate):
                     site_str += "site:%s" % necessary_site
                 else:
                     site_str += " | site:%s" % necessary_site
-            query_parts.append(site_str.strip())
 
         if self.top_level_domains is not None:
-            domain_str = ""
             if random_shuffle:
                 random.shuffle(self.top_level_domains)
             self.check_top_level_domains()
@@ -234,11 +236,12 @@ class GoogleSearchQuery(SearchQueryTemplate):
                         param_name="top_level_domains",
                         param_value=top_level_domain,
                         reason="must be of the format .xyz or *.xyz  e.g. *.edu or .com")
-                if i==0:
-                    domain_str += "site:%s" % top_level_domain
+                if site_str == "":
+                    site_str += "site:%s" % top_level_domain.strip()
                 else:
-                    domain_str += " | site:%s" % top_level_domain
-            query_parts.append(domain_str.strip())
+                    site_str += " | site:%s" % top_level_domain.strip()
+        if site_str!="":
+            query_parts.append(site_str.strip())
 
         if self.excluded_sites is not None:
             if random_shuffle:
@@ -263,7 +266,7 @@ class GoogleSearchQuery(SearchQueryTemplate):
 
         if self.daterange is not None:
             self.check_daterange()
-            query_parts.append('daterange:%s-%s' % (_convert_to_julian_date(self.daterange[0]), _convert_to_julian_date(self.daterange[0])))
+            query_parts.append('daterange:%s-%s' % (_convert_to_julian_date(self.daterange[0]), _convert_to_julian_date(self.daterange[1])))
 
 
         if random_shuffle:

@@ -64,7 +64,7 @@ def check_if_type_dictionary(search_engine, param_name, param_value):
 
 def check_if_type_list(search_engine, param_name, param_value):
     ## Checks if the input is of type list, raises an exception if it is not
-    if type(param_value) != type([1]):
+    if type(param_value) != type([]):
         raise InvalidSearchParameterException(
             search_engine=search_engine,
             param_name=param_name,
@@ -73,7 +73,7 @@ def check_if_type_list(search_engine, param_name, param_value):
 
 def check_if_type_list_or_tuple(search_engine, param_name, param_value):
     ## Checks if the input is of type list, raises an exception if it is not
-    if type(param_value) != type([1]) and type(param_value) != type((1)):
+    if type(param_value) != type([]) and type(param_value) != type(()):
         raise InvalidSearchParameterException(
             search_engine=search_engine,
             param_name=param_name,
@@ -127,7 +127,7 @@ def check_if_has_newlines(search_engine, param_name, param_value):
 
 def check_if_date_or_datetime(search_engine, param_name, param_value):
     ## Checks if the input is of type datetime.datetime or datetime.date, raises an exception if it is not
-    if type(param_value) != type(datetime.datetime.now()) and type(param_value) != type(datetime.datetime.now().date):
+    if type(param_value) != type(datetime.datetime.now()) and type(param_value) != type(datetime.datetime.now().date()):
         raise InvalidSearchParameterException(
             search_engine=search_engine,
             param_name=param_name,

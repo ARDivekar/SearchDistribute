@@ -12,3 +12,5 @@ other/phantomjs_socks5_with_auth_whoer_ip1\.html
 other/phantomjs_socks5_with_auth_whoer_ip2\.html
 
 other/phantomjs_socks5_with_auth_whoer_ip3\.html
+
+tests/\.cache/v/cache/
