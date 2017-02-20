@@ -17,6 +17,7 @@ class SearchTemplate(object):
     def list_websites_with_top_level_domain(self, top_level_domain):
         query = GoogleSearchQuery(config={"top_level_domains": [top_level_domain], "necessary_topics":[" "]}).generate_query()
 
+
 ''' A *Search object (GoogleSearch, BingSearch etc.) offers an abstraction for retrieving search results for a particular query, and optionally saving them in a database.
     Each *Search object is a worker, waiting for the input query string, and it retrieves SERPs (Search Result Pages). Between searches, it idles in memory. It may be reused for multiple searches, with a sufficient cooldown period so as to not trigger IP blocking from the search engine.
     Rules:
@@ -235,7 +236,6 @@ class GoogleSearch(SearchTemplate):
         elif str(self.country) in ['Zimbabwe', 'ZW', 'ZWE', '716']: domain = 'google.co.zw'
         else:
             domain = 'google.com'
-
         domain = "https://www."+domain+"/?gws_rd=ssl"
 
     def perform_search_from_main_page(self, search_query):
@@ -246,9 +246,10 @@ class GoogleSearch(SearchTemplate):
         ## Source: http://stackoverflow.com/questions/24053671/webdriver-wait-for-ajax-request-in-python/24053891#24053891
         try:
             ## Wait for the AJAX to load.
-            WebDriverWait(self.browser.webdriver, 10).until(EC.presence_of_element_located((By.ID, "search")))
-        except Exception:
-            pass
+            WebDriverWait(self.browser.webdriver, 15).until(EC.presence_of_element_located((By.ID, "search")))
+            return True
+        except Exception: ## The WebDriverWait timed out.
+            return False
 
 
 
