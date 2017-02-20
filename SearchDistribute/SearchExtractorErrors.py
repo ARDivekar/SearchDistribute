@@ -1,6 +1,11 @@
 import sys
 import datetime
+from SearchDistribute.Enums import ProxyBrowsers
 
+class UnsupportedProxyBrowserException(Exception):
+    def __init__(self, proxy_browser_type):
+        Exception.__init__(self, "Invalid value %s entered for proxy_browser_type; value must from %s"%(proxy_browser_type, [x for x in ProxyBrowsers]))
+        self.proxy_browser_type = proxy_browser_type
 
 
 
