@@ -5,18 +5,25 @@ from SearchDistribute.Enums import SearchEngines
 import urllib
 
 class GoogleParser:
+	''' If any of the attributes are `None`, that attribute was not present on the SERP.
+	'''
 	current_url = ""
+	domain = ""
+	protocol = ""
 	results = []
-	total_num_results = -1
+	num_results = -1
 	total_num_results_for_query = -1
 	query_retrieval_time_in_seconds = -1.0
 	link_to_previous_page = ""
 	links_to_previous_pages = []
 	links_to_next_pages = []
 	link_to_next_page = ""
+	location = ""
 
 	def __init__(self, html, current_url):
 		self.current_url = current_url ## This must not be moved, as self._parse_navigation_links(...) uses it.
+		self.protocol = urllib.parse.urlparse(current_url).scheme
+		self.domain = urllib.parse.urlparse(current_url).netloc.replace("www.", "")
 
 		bs = BeautifulSoup(html)
 
@@ -24,7 +31,7 @@ class GoogleParser:
 		if results == None:
 			raise SERPParsingException(search_engine=SearchEngines.Google, parsing_stage="search result urls")
 		self.results = results
-		self.total_num_results = len(self.results)
+		self.num_results = len(self.results)
 
 		total_num_results_for_query = self._parse_total_number_of_results_for_query(bs)
 		if total_num_results_for_query == None:
@@ -37,9 +44,10 @@ class GoogleParser:
 		self.query_retrieval_time_in_seconds = query_retrieval_time_in_seconds
 
 		nav_links = self._parse_navigation_links(bs, current_url)
-		if nav_links == None:
-			raise SERPParsingException(search_engine=SearchEngines.Google, parsing_stage="navigation links to previous and next pages")
 		self.link_to_previous_page, self.links_to_previous_pages, temp, self.links_to_next_pages, self.link_to_next_page = nav_links
+
+		self.location = self._parse_location(bs)
+
 
 
 
@@ -142,7 +150,11 @@ class GoogleParser:
 			return None
 
 
-
+	def _parse_location(self, bs):
+		try:
+			return bs.find_all(id="swml_addr")[0].text.strip()
+		except Exception:
+			return None
 
 
 
