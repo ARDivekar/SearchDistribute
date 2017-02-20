@@ -3,6 +3,7 @@ from SearchDistribute.Enums import SearchEngines
 from SearchDistribute.Enums import ProxyBrowsers
 from SearchDistribute.SearchExtractorErrors import *
 from SearchDistribute import ProxyBrowser
+from selenium.webdriver.common.keys import Keys
 
 class SearchTemplate(object):
     search_engine = ""
@@ -46,7 +47,7 @@ class GoogleSearch(SearchTemplate):
             self.browser = ProxyBrowser.PhantomJS(config.get("proxy_type"), config.get("hostname"), config.get("port"), config.get("username"), config.get("password"))
         else:
             raise UnsupportedProxyBrowserException(self.proxy_browser_type)
-        self.country = "USA" if config.get("country")  ## Set to None if does not exist
+        self.country = config.get("country")  ## Set to None if does not exist, will default to the domain of google.com
 
 
     def get_country_domain(self):
@@ -236,9 +237,9 @@ class GoogleSearch(SearchTemplate):
     def perform_search_from_main_page(self, search_query):
         ## Takes as input a search query string
         self.browser.visit(self.get_country_domain(self.country))
-        self.browser.fill('q', search_query)
-        button = self.browser.find_by_name('btnG')  ## btnG was found by looking at google.com's HTML code.
-        button.click()
+        self.browser.webdriver.find_element_by_name('q').send_keys(search_query)
+        self.browser.webdriver.find_element_by_name('q').send_keys(Keys.RETURN)     ## Press Enter while focused on the search box.
+
 
 
 
