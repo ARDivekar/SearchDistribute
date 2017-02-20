@@ -3,7 +3,11 @@ from SearchDistribute.Enums import SearchEngines
 from SearchDistribute.Enums import ProxyBrowsers
 from SearchDistribute.SearchExtractorErrors import *
 from SearchDistribute import ProxyBrowser
+
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
+from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
 
 class SearchTemplate(object):
     search_engine = ""
@@ -239,6 +243,15 @@ class GoogleSearch(SearchTemplate):
         self.browser.visit(self.get_country_domain(self.country))
         self.browser.webdriver.find_element_by_name('q').send_keys(search_query)
         self.browser.webdriver.find_element_by_name('q').send_keys(Keys.RETURN)     ## Press Enter while focused on the search box.
+        ## Source: http://stackoverflow.com/questions/24053671/webdriver-wait-for-ajax-request-in-python/24053891#24053891
+        try:
+            ## Wait for the AJAX to load.
+            WebDriverWait(self.browser.webdriver, 10).until(EC.presence_of_element_located((By.ID, "search")))
+        except Exception:
+            pass
+
+
+
 
 
 
