@@ -5,6 +5,7 @@ from selenium import webdriver
 import datetime
 
 from SearchDistribute.Enums import Enum
+from SearchDistribute.Enums import ProxyTypes
 from SearchDistribute.SearchExtractorErrors import *
 
 phantomjs_path = None
@@ -181,46 +182,43 @@ socks5_proxies = {
 socks5_proxy_service_providers = socks5_proxies.keys()
 
 class PhantomJS():
-	browser = None
+	webdriver = None
 	headless = True
 	last_visit_time = None
 	service_args = []
 
-	def __init__(self, proxy_service_provider = "privateinternetaccess.com"):
+	def __init__(self, proxy_type, hostname, port, username=None, password=None):
 		## For PrivateInternetAccess.com : https://www.privateinternetaccess.com/forum/discussion/258/private-internet-access-proxy-now-available-now-open
+		## Source: http://stackoverflow.com/a/16353584/4900327
 		service_args = ['--load-images=no']
-		if proxy_service_provider in socks5_proxy_service_providers:
-			phantomjs_socks5_proxy_service_args = [
-				'--proxy=' + socks5_proxies[proxy_service_provider]["socks5_hostname_or_ip"] + ':' +
-				socks5_proxies[proxy_service_provider]["socks5_port"],
-				'--proxy-type=socks5',
-				'--proxy-auth=' + socks5_proxies[proxy_service_provider]["socks5_username"] + ':' +
-				socks5_proxies[proxy_service_provider]["socks5_password"]
-			]  ## Source: http://stackoverflow.com/a/16353584/4900327
+		if proxy_type == ProxyTypes.Socks5:
+			phantomjs_socks5_proxy_service_args = ['--proxy='+hostname+':'+port, '--proxy-type=socks5']
+			if username is not None and password is not None:
+				phantomjs_socks5_proxy_service_args += ['--proxy-auth=' + username + ':' + password]
 			service_args += phantomjs_socks5_proxy_service_args
+		self.webdriver = webdriver.PhantomJS(service_args = service_args)
 		self.service_args = service_args
-		self.browser = webdriver.PhantomJS(service_args = service_args)
 
 	def visit(self, url):
-		self.browser.get(url)
+		self.webdriver.get(url)
 		self.last_loaded_time = datetime.datetime.now()
 
 	def get_html(self):
-		return self.browser.page_source
+		return self.webdriver.page_source
 
 	def get_url(self):
-		return self.browser.current_url
+		return self.webdriver.current_url
 
 	def close(self):
-		'''This closes the current window. Note: browser.quit() kills the phantomjs executable, which means you cannot produce more phantomjs instances.
+		'''This closes the current window. Note: webdriver.quit() kills the phantomjs executable, which means you cannot produce more phantomjs instances.
 		The quit() functionality is hence not exposed.
 		'''
-		self.browser.close()
-		self.browser = None
+		self.webdriver.close()
+		self.webdriver = None
 
 	def switch_proxy(self):
-		self.browser.close()
-		self.browser = webdriver.PhantomJS(service_args = self.service_args)
+		self.webdriver.close()
+		self.webdriver = webdriver.PhantomJS(service_args = self.service_args)
 
 # print("\n\tSplinter is the default headless client of this package as it is more reliable.")
 
