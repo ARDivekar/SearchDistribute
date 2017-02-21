@@ -5,17 +5,19 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
+import SearchDistribute.Enums
 import datetime
 
 from SearchDistribute import Enums
 from SearchDistribute.SearchExtractorErrors import *
-'''
+
+
 phantomjs_path = None
 if platform.system() == "Windows":
-	phantomjs_path = "./ExternalLibs/PhantomJS/Windows/phantomjs.exe"
+	phantomjs_path = "./PhantomJS/Windows/phantomjs.exe"
 elif platform.system() == "Linux":
-	phantomjs_path = "./ExternalLibs/PhantomJS/Linux/phantomjs"
-
+	phantomjs_path = "/mnt/Data/Workspaces/Python/GoogleExtractor/SearchDistribute/PhantomJS/phantomjs-2.1.1-linux-x86_64/bin/phantomjs"
+'''
 
 availableBrowsers = Enum([]) #["SPLINTER", "TWILL0_9", "SPLINTER_PHANTOMJS"]
 try:
@@ -155,7 +157,7 @@ class BrowserTemplate(object):
 
 	@staticmethod
 	def _waitBeforeTypingQueryIntoSearchBox(self, searchQueryString, errorPrinting=True):
-		
+
 		searchQueryStringLen=len(searchQueryString)
 		waitTime = random.uniform(searchQueryStringLen/float(5), searchQueryStringLen/float(3))	## wait a random amount of time. This assumes that the average typing speed is between 3 and 5 characters per second.
 		if errorPrinting:
@@ -165,7 +167,6 @@ class BrowserTemplate(object):
 
 
 '''
-
 ''' Note that as of 19 Feb 2017, Firefox and Chrome do not support SOCKS5 authentication [1], but PhantomJS does [2].
 [1] https://www.privateinternetaccess.com/forum/discussion/2915/setting-up-the-socks5-proxy-on-chrome-firefox
 [2] http://stackoverflow.com/a/16353584/4900327  and  http://stackoverflow.com/a/26931933/4900327
@@ -223,7 +224,7 @@ class PhantomJS():
 						raise InvalidProxyParameterException(self.proxy_browser_type, 'password', password, "must be a non-empty string")
 					phantomjs_socks5_proxy_service_args += ['--proxy-auth=%s:%s'%(username, password)]
 				service_args += phantomjs_socks5_proxy_service_args
-		self.webdriver = webdriver.PhantomJS(service_args = service_args)
+		self.webdriver = webdriver.PhantomJS(service_args = service_args, executable_path=phantomjs_path)
 
 	def visit(self, url):
 		self.webdriver.get(url)

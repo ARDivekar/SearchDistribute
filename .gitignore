@@ -14,3 +14,7 @@ other/phantomjs_socks5_with_auth_whoer_ip2\.html
 other/phantomjs_socks5_with_auth_whoer_ip3\.html
 
 tests/\.cache/v/cache/
+
+SearchDistribute/PhantomJS/phantomjs-2\.1\.1-linux-x86_64/
+
+SearchDistribute/PhantomJS/phantomjs-2\.1\.1-linux-x86_64\.tar\.bz2
