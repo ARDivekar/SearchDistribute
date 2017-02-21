@@ -294,8 +294,9 @@ class GoogleSearch(SearchTemplate):
             self.browser.visit(self.get_country_domain(self.country))
         self.browser.webdriver.find_element_by_name('q').send_keys(search_query)
         self.browser.webdriver.find_element_by_name('q').send_keys(Keys.RETURN)     ## Press Enter while focused on the search box.
-        if self.browser.wait_for_element_to_load_ajax(15, "search") == False:
-            return None
+        # if self.browser.wait_for_element_to_load_ajax(15, "search") == False:
+        #     print("THIS CANNOT GO ON")
+        #     return None
         return self.browser.get_url()
 
 
@@ -350,7 +351,7 @@ class GoogleSearch(SearchTemplate):
 
     def update_url_start(self, url, new_start):
         if new_start == 0:
-            url = re.sub('&start=\d{1,}', '' % new_start, url)
+            url = re.sub(r'\&start=\d{1,}', '', url)
             return url
         if url.find('&start=') == -1:
             url += "&start=%s" % new_start

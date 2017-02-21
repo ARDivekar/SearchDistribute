@@ -150,7 +150,7 @@ class Distribute:
 
     ## Ready, set, GO!
     def start(self):
-        self.distribute_query(self.query, self.num_results, self.num_workers, self.num_results_per_page, self.cooldown_time, self.save_to_db)
+        return self.distribute_query(self.query, self.num_results, self.num_workers, self.num_results_per_page, self.cooldown_time, self.save_to_db)
 
     def distribute_query(self, query, num_results, num_workers, num_results_per_page, cooldown_time, save_to_db):
         parsed_serps = []  ## an array of parsed SERPs
@@ -164,7 +164,7 @@ class Distribute:
         workers.append(worker)
 
         start_offset_so_far = 0
-        for i in range(1, num_results):
+        for i in range(0, num_workers):
             worker = self.spawn_worker()
             parsed_serps.append(worker.get_SERP_results(basic_url, start_offset_so_far, num_results_per_page, save_to_db))
             start_offset_so_far += parsed_serps[-1].num_results
