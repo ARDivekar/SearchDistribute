@@ -171,18 +171,6 @@ class BrowserTemplate(object):
 [2] http://stackoverflow.com/a/16353584/4900327  and  http://stackoverflow.com/a/26931933/4900327
 '''
 
-
-socks5_proxies = {
-	"privateinternetaccess.com": {
-		"socks5_hostname_or_ip": "proxy-nl.privateinternetaccess.com",
-		"socks5_port": "1080",
-		"socks5_username": "x1237029",
-		"socks5_password": "3iV3za46xD"
-	}
-}
-
-socks5_proxy_service_providers = socks5_proxies.keys()
-
 class PhantomJS():
 	proxy_browser_type = Enums.ProxyBrowsers.PhantomJS
 	headless = True
