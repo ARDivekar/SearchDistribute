@@ -188,24 +188,27 @@ class PhantomJS():
 	webdriver = None
 	headless = True
 	last_visit_time = None
-	service_args = []
+	proxy_args = {}
 
-	def __init__(self, config):
-		proxy_type = config.get('proxy_type')
-		hostname = config.get('hostname')
-		port = config.get('port')
-		username = config.get('username')	## Can be None
-	   	password = config.get('password')	## Can be None
-		## For PrivateInternetAccess.com : https://www.privateinternetaccess.com/forum/discussion/258/private-internet-access-proxy-now-available-now-open
-		## Source: http://stackoverflow.com/a/16353584/4900327
+	def __init__(self, proxy_args):
+		'''	Here, proxy_args may be None. In that case, we must instantise the default browser.
+		'''
+		self.proxy_args = proxy_args	## Defaults to None
 		service_args = ['--load-images=no']
-		if proxy_type == ProxyTypes.Socks5:
-			phantomjs_socks5_proxy_service_args = ['--proxy='+hostname+':'+port, '--proxy-type=socks5']
-			if username is not None and password is not None:
-				phantomjs_socks5_proxy_service_args += ['--proxy-auth=' + username + ':' + password]
-			service_args += phantomjs_socks5_proxy_service_args
+		if proxy_args is not None:
+			proxy_type = proxy_args.get('proxy_type')
+			hostname = proxy_args.get('hostname')
+			port = proxy_args.get('port')
+			username = proxy_args.get('username')	## Can be None
+			password = proxy_args.get('password')	## Can be None
+			## For PrivateInternetAccess.com : https://www.privateinternetaccess.com/forum/discussion/258/private-internet-access-proxy-now-available-now-open
+			## Source: http://stackoverflow.com/a/16353584/4900327
+			if proxy_type == ProxyTypes.Socks5:
+				phantomjs_socks5_proxy_service_args = ['--proxy=%s:%s'%(hostname, port), '--proxy-type=socks5']
+				if username is not None and password is not None:
+					phantomjs_socks5_proxy_service_args += ['--proxy-auth=%s:%s'%(username, password)]
+				service_args += phantomjs_socks5_proxy_service_args
 		self.webdriver = webdriver.PhantomJS(service_args = service_args)
-		self.service_args = service_args
 
 	def visit(self, url):
 		self.webdriver.get(url)

@@ -1,6 +1,6 @@
 from SearchDistribute.SearchQuery import GoogleSearchQuery
 from SearchDistribute.Enums import SearchEngines
-from SearchDistribute.Enums import ProxyBrowsers
+from SearchDistribute import Enums
 from SearchDistribute.SearchExtractorErrors import *
 from SearchDistribute import ProxyBrowser
 from SearchDistribute.SERPParser import GoogleParser
@@ -27,7 +27,7 @@ class SearchTemplate(object):
      [2] Each *Search object is tied to a single browser instance for the duration of its existence (the browser instance may be refreshed).
 
      [3] It's `config` consists of fields which should not be modified during the object's lifetime:
-          (a) proxy_browser_type    : a string, taken from `SearchDistribute.Enums.ProxyBrowsers`
+          (a) proxy_browser_type    : a string, taken from `Enums.ProxyBrowsers`
           (b) (optional) proxy_args : a dictionary {'proxy_type':"xyz", 'hostname':"xyz", 'port':"xyz", 'username':"xyz", 'password':"xyz"}
               - proxy_type : a string e.g. "Socks5", "HTTP" taken from `SearchDistribute.Enums.ProxyTypes`.
               - hostname   : a string of the IP address or host url of the proxy server. e.g. "proxy-nl.privateinternetaccess.com"
@@ -42,210 +42,247 @@ class SearchTemplate(object):
 '''
 class GoogleSearch(SearchTemplate):
     search_engine = SearchEngines.Google    ## must be from SearchDistribute.Enums.SearchEngines
-    proxy_browser_type = ""                 ## must be from SearchDistribute.Enums.ProxyBrowsers
-    proxy_args = {}
-    browser = None
+    proxy_browser_type = "" ## The type of proxy browser, must be from Enums.ProxyBrowsers
+    proxy_args = {}         ## (optional, defaults to None) A hashtable with the following values: proxy_type, hostname, port, username, password. See ProxyBrowser.py to find out how they are handled.
+    country = ""            ## (optional, defaults to "USA") Either a Country Name,  ISO ALPHA-2 Code,  ISO ALPHA-3 Code, or ISO Numeric Code UN M49 Numerical Code
+    domain = ""             ## (defaults to 'https://www.google.com' when country is 'USA') The base domain on which we try to search, e.g. "https://www.google.com". This may not be the actual domain where the results are retrieved from, due to query forwarding etc.
+    db_config = {}          ## (optional, defaults to None) A hashtable with these fields: db_path, db_table.
+                            ##  - db_path : The path (relative or otherwise) to the SQLite database file.
+                            ##  - db_table : The table of the SQLite database in which to save the results.
     time_of_last_retrieved_query = 0        ## Seconds since UNIX epoch (float)
-    country = ""                            ## Either a Country Name,  ISO ALPHA-2 Code,  ISO ALPHA-3 Code, or ISO Numeric Code UN M49 Numerical Code
     possible_num_results_per_page = [10, 20, 30, 40, 50, 100]
+    browser = None
 
     def __init__(self, config={}):
-        self.proxy_browser_type = config.get("proxy_browser_type") ## Set to None if does not exist
-        self.proxy_args = config.get("proxy_args")
-        if self.proxy_browser_type == ProxyBrowsers.PhantomJS:  ## We are equating stings. See Enums.py and /tests/EnumTests.py
-            if type(self.proxy_args) == type({}) and len(self.proxy_args)>0:
-                self.browser = ProxyBrowser.PhantomJS(self.proxy_args)
-            else:
-                self.browser = ProxyBrowsers.PhantomJS()
-        else:
+        '''
+        The logic in this function is that: no parameter of the config should be None. Every parameter should have its default value, or a value passed by the user. It is upto this function to check whether the value passed is correct or not.
+
+        Example config with all parameters set:
+        {
+            "country" : "USA",
+            "proxy_browser_config" : {
+                "proxy_browser_type" : Enums.ProxyBrowsers.PhantomJS,
+                "proxy_args" : {
+                    "proxy_type" : ProxyTypes.Socks5,
+                    "hostname" : "proxy-nl.privateinternetaccess.com",
+                    "port" : "1080",
+                    "username" : "x1237029",
+                    "password" : "3iV3za46xD"
+                }
+            },
+            "save_to_db" : True,
+            "db_config" : {
+                "db_path" : "./SearchResults.db",
+                "db_table" : "GoogleSearchResults"
+            }
+        }
+        '''
+
+        ## Optional parameter `country`, will not be None, defaults to "USA":
+        self.country = config.get("country")
+        if type(self.country) != type("") or len(self.country) == 0:  ## will only run if the value is present, but in the wrong format.
+            raise InvalidSearchParameterException(self.search_engine, "country", self.country, "must be a non-empty string")
+
+        self.domain = self.get_country_domain(self.country)  ## defaults to 'https://www.google.com' when the country defaults to "USA"
+
+        ## Optional parameter `proxy_browser_config`, will not be None, defaults to {"proxy_browser_type" : Enums.ProxyBrowsers.PhantomJS}
+        proxy_browser_config = config.get("proxy_browser_config")
+
+        self.proxy_browser_type = proxy_browser_config.get("proxy_browser_type")    ## Defaults to Enums.ProxyBrowsers.PhantomJS
+        if self.proxy_browser_type not in Enums.ProxyBrowsers:
             raise UnsupportedProxyBrowserException(self.proxy_browser_type)
 
+        self.proxy_args = proxy_browser_config.get("proxy_args")                    ## Defaults to None
 
-        self.country = config.get("country")  ## Set to None if does not exist, will default to the domain of google.com
+        if self.proxy_browser_type == Enums.ProxyBrowsers.PhantomJS:  ## We are equating stings. See Enums.py and /tests/EnumTests.py
+            self.browser = ProxyBrowser.PhantomJS(self.proxy_args)
+
+        self.db_config = config.get("db_config")    ## Defaults to None
 
 
-    def get_country_domain(self):
+    def get_country_domain(self, country):
         domain = ""
         ## Source: https://www.wikiwand.com/en/List_of_Google_domains and http://www.nationsonline.org/oneworld/country_code_list.htm
         ## In order: [Country Name,  ISO ALPHA-2 CODE,  ISO ALPHA-3 CODE, ISO Numeric Code UN M49 Numerical Code]
-        if   str(self.country) in ['Afghanistan', 'AF', 'AFG', '004']: domain = 'google.com.af'
-        elif str(self.country) in ['Albania', 'AL', 'ALB', '008']: domain = 'google.al'
-        elif str(self.country) in ['Algeria', 'DZ', 'DZA', '012']: domain = 'google.dz'
-        elif str(self.country) in ['American Samoa', 'AS', 'ASM', '016']: domain = 'google.as'
-        elif str(self.country) in ['Andorra', 'AD', 'AND', '020']: domain = 'google.ad'
-        elif str(self.country) in ['Angola', 'AO', 'AGO', '024']: domain = 'google.co.ao'
-        elif str(self.country) in ['Anguilla', 'AI', 'AIA', '660']: domain = 'google.com.ai'
-        elif str(self.country) in ['Antigua and Barbuda', 'AG', 'ATG', '028']: domain = 'google.com.ag'
-        elif str(self.country) in ['Argentina', 'AR', 'ARG', '032']: domain = 'google.com.ar'
-        elif str(self.country) in ['Armenia', 'AM', 'ARM', '051']: domain = 'google.am'
-        elif str(self.country) in ['Australia', 'AU', 'AUS', '036']: domain = 'google.com.au'
-        elif str(self.country) in ['Austria', 'AT', 'AUT', '040']: domain = 'google.at'
-        elif str(self.country) in ['Azerbaijan', 'AZ', 'AZE', '031']: domain = 'google.az'
-        elif str(self.country) in ['Bahamas', 'BS', 'BHS', '044']: domain = 'google.bs'
-        elif str(self.country) in ['Bahrain', 'BH', 'BHR', '048']: domain = 'google.com.bh'
-        elif str(self.country) in ['Bangladesh', 'BD', 'BGD', '050']: domain = 'google.com.bd'
-        elif str(self.country) in ['Belarus', 'BY', 'BLR', '112']: domain = 'google.by'
-        elif str(self.country) in ['Belgium', 'BE', 'BEL', '056']: domain = 'google.be'
-        elif str(self.country) in ['Belize', 'BZ', 'BLZ', '084']: domain = 'google.com.bz'
-        elif str(self.country) in ['Benin', 'BJ', 'BEN', '204']: domain = 'google.bj'
-        elif str(self.country) in ['Bhutan', 'BT', 'BTN', '064']: domain = 'google.bt'
-        elif str(self.country) in ['Bolivia', 'BO', 'BOL', '068']: domain = 'google.com.bo'
-        elif str(self.country) in ['Bosnia and Herzegovina', 'BA', 'BIH', '070']: domain = 'google.ba'
-        elif str(self.country) in ['Botswana', 'BW', 'BWA', '072']: domain = 'google.co.bw'
-        elif str(self.country) in ['Brazil', 'BR', 'BRA', '076']: domain = 'google.com.br'
-        elif str(self.country) in ['British Indian Ocean Territory', 'IO', 'IOT', '086']: domain = 'google.io'
-        elif str(self.country) in ['British Virgin Islands', 'VG', 'VGB', '092']: domain = 'google.vg'
-        elif str(self.country) in ['Bulgaria', 'BG', 'BGR', '100']: domain = 'google.bg'
-        elif str(self.country) in ['Burkina Faso', 'BF', 'BFA', '854']: domain = 'google.bf'
-        elif str(self.country) in ['Burundi', 'BI', 'BDI', '108']: domain = 'google.bi'
-        elif str(self.country) in ['Cambodia', 'KH', 'KHM', '116']: domain = 'google.com.kh'
-        elif str(self.country) in ['Cameroon', 'CM', 'CMR', '120']: domain = 'google.cm'
-        elif str(self.country) in ['Canada', 'CA', 'CAN', '124']: domain = 'google.ca'
-        elif str(self.country) in ['Cape Verde', 'CV', 'CPV', '132']: domain = 'google.cv'
-        elif str(self.country) in ['Central African Republic', 'CF', 'CAF', '140']: domain = 'google.cf'
-        elif str(self.country) in ['Chad', 'TD', 'TCD', '148']: domain = 'google.td'
-        elif str(self.country) in ['Chile', 'CL', 'CHL', '152']: domain = 'google.cl'
-        elif str(self.country) in ['China', 'CN', 'CHN', '156']: domain = 'google.cn'
-        elif str(self.country) in ['Christmas Island', 'CX', 'CXR', '162']: domain = 'google.cx'
-        elif str(self.country) in ['Cocos (Keeling) Islands', 'CC', 'CCK', '166']: domain = 'google.cc'
-        elif str(self.country) in ['Colombia', 'CO', 'COL', '170']: domain = 'google.com.co'
-        elif str(self.country) in ['Cook Islands', 'CK', 'COK', '184']: domain = 'google.co.ck'
-        elif str(self.country) in ['Costa Rica', 'CR', 'CRI', '188']: domain = 'google.co.cr'
-        elif str(self.country) in ['Croatia', 'HR', 'HRV', '191']: domain = 'google.hr'
-        elif str(self.country) in ['Cuba', 'CU', 'CUB', '192']: domain = 'google.com.cu'
-        elif str(self.country) in ['Cyprus', 'CY', 'CYP', '196']: domain = 'google.com.cy'
-        elif str(self.country) in ['Czech Republic', 'CZ', 'CZE', '203']: domain = 'google.cz'
-        elif str(self.country) in ['Denmark', 'DK', 'DNK', '208']: domain = 'google.dk'
-        elif str(self.country) in ['Djibouti', 'DJ', 'DJI', '262']: domain = 'google.dj'
-        elif str(self.country) in ['Dominica', 'DM', 'DMA', '212']: domain = 'google.dm'
-        elif str(self.country) in ['Dominican Republic', 'DO', 'DOM', '214']: domain = 'google.com.do'
-        elif str(self.country) in ['Ecuador', 'EC', 'ECU', '218']: domain = 'google.com.ec'
-        elif str(self.country) in ['Egypt', 'EG', 'EGY', '818']: domain = 'google.com.eg'
-        elif str(self.country) in ['El Salvador', 'SV', 'SLV', '222']: domain = 'google.com.sv'
-        elif str(self.country) in ['Estonia', 'EE', 'EST', '233']: domain = 'google.ee'
-        elif str(self.country) in ['Ethiopia', 'ET', 'ETH', '231']: domain = 'google.com.et'
-        elif str(self.country) in ['Fiji', 'FJ', 'FJI', '242']: domain = 'google.com.fj'
-        elif str(self.country) in ['Finland', 'FI', 'FIN', '246']: domain = 'google.fi'
-        elif str(self.country) in ['France', 'FR', 'FRA', '250']: domain = 'google.fr'
-        elif str(self.country) in ['French Guiana', 'GF', 'GUF', '254']: domain = 'google.gf'
-        elif str(self.country) in ['Gabon', 'GA', 'GAB', '266']: domain = 'google.ga'
-        elif str(self.country) in ['Gambia', 'GM', 'GMB', '270']: domain = 'google.gm'
-        elif str(self.country) in ['Georgia', 'GE', 'GEO', '268']: domain = 'google.ge'
-        elif str(self.country) in ['Germany', 'DE', 'DEU', '276']: domain = 'google.de'
-        elif str(self.country) in ['Ghana', 'GH', 'GHA', '288']: domain = 'google.com.gh'
-        elif str(self.country) in ['Gibraltar', 'GI', 'GIB', '292']: domain = 'google.com.gi'
-        elif str(self.country) in ['Greece', 'GR', 'GRC', '300']: domain = 'google.gr'
-        elif str(self.country) in ['Greenland', 'GL', 'GRL', '304']: domain = 'google.gl'
-        elif str(self.country) in ['Guadeloupe', 'GP', 'GLP', '312']: domain = 'google.gp'
-        elif str(self.country) in ['Guatemala', 'GT', 'GTM', '320']: domain = 'google.com.gt'
-        elif str(self.country) in ['Guernsey', 'GG', 'GGY', '831']: domain = 'google.gg'
-        elif str(self.country) in ['Guyana', 'GY', 'GUY', '328']: domain = 'google.gy'
-        elif str(self.country) in ['Haiti', 'HT', 'HTI', '332']: domain = 'google.ht'
-        elif str(self.country) in ['Honduras', 'HN', 'HND', '340']: domain = 'google.hn'
-        elif str(self.country) in ['Hungary', 'HU', 'HUN', '348']: domain = 'google.hu'
-        elif str(self.country) in ['Iceland', 'IS', 'ISL', '352']: domain = 'google.is'
-        elif str(self.country) in ['India', 'IN', 'IND', '356']: domain = 'google.co.in'
-        elif str(self.country) in ['Indonesia', 'ID', 'IDN', '360']: domain = 'google.co.id'
-        elif str(self.country) in ['Iraq', 'IQ', 'IRQ', '368']: domain = 'google.iq'
-        elif str(self.country) in ['Ireland', 'IE', 'IRL', '372']: domain = 'google.ie'
-        elif str(self.country) in ['Isle of Man', 'IM', 'IMN', '833']: domain = 'google.im'
-        elif str(self.country) in ['Israel', 'IL', 'ISR', '376']: domain = 'google.co.il'
-        elif str(self.country) in ['Italy', 'IT', 'ITA', '380']: domain = 'google.it'
-        elif str(self.country) in ['Jamaica', 'JM', 'JAM', '388']: domain = 'google.com.jm'
-        elif str(self.country) in ['Japan', 'JP', 'JPN', '392']: domain = 'google.co.jp'
-        elif str(self.country) in ['Jersey', 'JE', 'JEY', '832']: domain = 'google.je'
-        elif str(self.country) in ['Jordan', 'JO', 'JOR', '400']: domain = 'google.jo'
-        elif str(self.country) in ['Kazakhstan', 'KZ', 'KAZ', '398']: domain = 'google.kz'
-        elif str(self.country) in ['Kenya', 'KE', 'KEN', '404']: domain = 'google.co.ke'
-        elif str(self.country) in ['Kiribati', 'KI', 'KIR', '296']: domain = 'google.ki'
-        elif str(self.country) in ['Kuwait', 'KW', 'KWT', '414']: domain = 'google.com.kw'
-        elif str(self.country) in ['Kyrgyzstan', 'KG', 'KGZ', '417']: domain = 'google.kg'
-        elif str(self.country) in ['Latvia', 'LV', 'LVA', '428']: domain = 'google.lv'
-        elif str(self.country) in ['Lebanon', 'LB', 'LBN', '422']: domain = 'google.com.lb'
-        elif str(self.country) in ['Lesotho', 'LS', 'LSO', '426']: domain = 'google.co.ls'
-        elif str(self.country) in ['Libya', 'LY', 'LBY', '434']: domain = 'google.com.ly'
-        elif str(self.country) in ['Liechtenstein', 'LI', 'LIE', '438']: domain = 'google.li'
-        elif str(self.country) in ['Lithuania', 'LT', 'LTU', '440']: domain = 'google.lt'
-        elif str(self.country) in ['Luxembourg', 'LU', 'LUX', '442']: domain = 'google.lu'
-        elif str(self.country) in ['Madagascar', 'MG', 'MDG', '450']: domain = 'google.mg'
-        elif str(self.country) in ['Malawi', 'MW', 'MWI', '454']: domain = 'google.mw'
-        elif str(self.country) in ['Malaysia', 'MY', 'MYS', '458']: domain = 'google.com.my'
-        elif str(self.country) in ['Maldives', 'MV', 'MDV', '462']: domain = 'google.mv'
-        elif str(self.country) in ['Mali', 'ML', 'MLI', '466']: domain = 'google.ml'
-        elif str(self.country) in ['Malta', 'MT', 'MLT', '470']: domain = 'google.com.mt'
-        elif str(self.country) in ['Mauritius', 'MU', 'MUS', '480']: domain = 'google.mu'
-        elif str(self.country) in ['Mexico', 'MX', 'MEX', '484']: domain = 'google.com.mx'
-        elif str(self.country) in ['Moldova', 'MD', 'MDA', '498']: domain = 'google.md'
-        elif str(self.country) in ['Mongolia', 'MN', 'MNG', '496']: domain = 'google.mn'
-        elif str(self.country) in ['Montenegro', 'ME', 'MNE', '499']: domain = 'google.me'
-        elif str(self.country) in ['Montserrat', 'MS', 'MSR', '500']: domain = 'google.ms'
-        elif str(self.country) in ['Morocco', 'MA', 'MAR', '504']: domain = 'google.co.ma'
-        elif str(self.country) in ['Mozambique', 'MZ', 'MOZ', '508']: domain = 'google.co.mz'
-        elif str(self.country) in ['Myanmar', 'MM', 'MMR', '104']: domain = 'google.com.mm'
-        elif str(self.country) in ['Namibia', 'NA', 'NAM', '516']: domain = 'google.com.na'
-        elif str(self.country) in ['Nauru', 'NR', 'NRU', '520']: domain = 'google.nr'
-        elif str(self.country) in ['Nepal', 'NP', 'NPL', '524']: domain = 'google.com.np'
-        elif str(self.country) in ['Netherlands', 'NL', 'NLD', '528']: domain = 'google.nl'
-        elif str(self.country) in ['New Zealand', 'NZ', 'NZL', '554']: domain = 'google.co.nz'
-        elif str(self.country) in ['Nicaragua', 'NI', 'NIC', '558']: domain = 'google.com.ni'
-        elif str(self.country) in ['Niger', 'NE', 'NER', '562']: domain = 'google.ne'
-        elif str(self.country) in ['Nigeria', 'NG', 'NGA', '566']: domain = 'google.com.ng'
-        elif str(self.country) in ['Niue', 'NU', 'NIU', '570']: domain = 'google.nu'
-        elif str(self.country) in ['Norfolk Island', 'NF', 'NFK', '574']: domain = 'google.nf'
-        elif str(self.country) in ['Norway', 'NO', 'NOR', '578']: domain = 'google.no'
-        elif str(self.country) in ['Oman', 'OM', 'OMN', '512']: domain = 'google.com.om'
-        elif str(self.country) in ['Pakistan', 'PK', 'PAK', '586']: domain = 'google.com.pk'
-        elif str(self.country) in ['Panama', 'PA', 'PAN', '591']: domain = 'google.com.pa'
-        elif str(self.country) in ['Papua New Guinea', 'PG', 'PNG', '598']: domain = 'google.com.pg'
-        elif str(self.country) in ['Paraguay', 'PY', 'PRY', '600']: domain = 'google.com.py'
-        elif str(self.country) in ['Peru', 'PE', 'PER', '604']: domain = 'google.com.pe'
-        elif str(self.country) in ['Philippines', 'PH', 'PHL', '608']: domain = 'google.com.ph'
-        elif str(self.country) in ['Poland', 'PL', 'POL', '616']: domain = 'google.pl'
-        elif str(self.country) in ['Portugal', 'PT', 'PRT', '620']: domain = 'google.pt'
-        elif str(self.country) in ['Puerto Rico', 'PR', 'PRI', '630']: domain = 'google.com.pr'
-        elif str(self.country) in ['Qatar', 'QA', 'QAT', '634']: domain = 'google.com.qa'
-        elif str(self.country) in ['Romania', 'RO', 'ROU', '642']: domain = 'google.ro'
-        elif str(self.country) in ['Rwanda', 'RW', 'RWA', '646']: domain = 'google.rw'
-        elif str(self.country) in ['Saint Lucia', 'LC', 'LCA', '662']: domain = 'google.com.lc'
-        elif str(self.country) in ['Samoa', 'WS', 'WSM', '882']: domain = 'google.ws'
-        elif str(self.country) in ['San Marino', 'SM', 'SMR', '674']: domain = 'google.sm'
-        elif str(self.country) in ['Saudi Arabia', 'SA', 'SAU', '682']: domain = 'google.com.sa'
-        elif str(self.country) in ['Senegal', 'SN', 'SEN', '686']: domain = 'google.sn'
-        elif str(self.country) in ['Serbia', 'RS', 'SRB', '688']: domain = 'google.rs'
-        elif str(self.country) in ['Seychelles', 'SC', 'SYC', '690']: domain = 'google.sc'
-        elif str(self.country) in ['Sierra Leone', 'SL', 'SLE', '694']: domain = 'google.com.sl'
-        elif str(self.country) in ['Singapore', 'SG', 'SGP', '702']: domain = 'google.com.sg'
-        elif str(self.country) in ['Slovakia', 'SK', 'SVK', '703']: domain = 'google.sk'
-        elif str(self.country) in ['Slovenia', 'SI', 'SVN', '705']: domain = 'google.si'
-        elif str(self.country) in ['Solomon Islands', 'SB', 'SLB', '090']: domain = 'google.com.sb'
-        elif str(self.country) in ['Somalia', 'SO', 'SOM', '706']: domain = 'google.so'
-        elif str(self.country) in ['South Africa', 'ZA', 'ZAF', '710']: domain = 'google.co.za'
-        elif str(self.country) in ['Spain', 'ES', 'ESP', '724']: domain = 'google.es'
-        elif str(self.country) in ['Sri Lanka', 'LK', 'LKA', '144']: domain = 'google.lk'
-        elif str(self.country) in ['Sweden', 'SE', 'SWE', '752']: domain = 'google.se'
-        elif str(self.country) in ['Switzerland', 'CH', 'CHE', '756']: domain = 'google.ch'
-        elif str(self.country) in ['Tajikistan', 'TJ', 'TJK', '762']: domain = 'google.com.tj'
-        elif str(self.country) in ['Thailand', 'TH', 'THA', '764']: domain = 'google.co.th'
-        elif str(self.country) in ['Timor-Leste', 'TL', 'TLS', '626']: domain = 'google.tl'
-        elif str(self.country) in ['Togo', 'TG', 'TGO', '768']: domain = 'google.tg'
-        elif str(self.country) in ['Tokelau', 'TK', 'TKL', '772']: domain = 'google.tk'
-        elif str(self.country) in ['Tonga', 'TO', 'TON', '776']: domain = 'google.to'
-        elif str(self.country) in ['Trinidad and Tobago', 'TT', 'TTO', '780']: domain = 'google.tt'
-        elif str(self.country) in ['Tunisia', 'TN', 'TUN', '788']: domain = 'google.tn'
-        elif str(self.country) in ['Turkey', 'TR', 'TUR', '792']: domain = 'google.com.tr'
-        elif str(self.country) in ['Turkmenistan', 'TM', 'TKM', '795']: domain = 'google.tm'
-        elif str(self.country) in ['Uganda', 'UG', 'UGA', '800']: domain = 'google.co.ug'
-        elif str(self.country) in ['Ukraine', 'UA', 'UKR', '804']: domain = 'google.com.ua'
-        elif str(self.country) in ['United Arab Emirates', 'AE', 'ARE', '784']: domain = 'google.ae'
-        elif str(self.country) in ['United Kingdom', 'GB', 'GBR', '826']: domain = 'google.co.uk'
-        elif str(self.country) in ['Uruguay', 'UY', 'URY', '858']: domain = 'google.com.uy'
-        elif str(self.country) in ['Uzbekistan', 'UZ', 'UZB', '860']: domain = 'google.co.uz'
-        elif str(self.country) in ['Vanuatu', 'VU', 'VUT', '548']: domain = 'google.vu'
-        elif str(self.country) in ['Zambia', 'ZM', 'ZMB', '894']: domain = 'google.co.zm'
-        elif str(self.country) in ['Zimbabwe', 'ZW', 'ZWE', '716']: domain = 'google.co.zw'
+        if   str(country) in ['Afghanistan', 'AF', 'AFG', '004']: domain = 'google.com.af'
+        elif str(country) in ['Albania', 'AL', 'ALB', '008']: domain = 'google.al'
+        elif str(country) in ['Algeria', 'DZ', 'DZA', '012']: domain = 'google.dz'
+        elif str(country) in ['American Samoa', 'AS', 'ASM', '016']: domain = 'google.as'
+        elif str(country) in ['Andorra', 'AD', 'AND', '020']: domain = 'google.ad'
+        elif str(country) in ['Angola', 'AO', 'AGO', '024']: domain = 'google.co.ao'
+        elif str(country) in ['Anguilla', 'AI', 'AIA', '660']: domain = 'google.com.ai'
+        elif str(country) in ['Antigua and Barbuda', 'AG', 'ATG', '028']: domain = 'google.com.ag'
+        elif str(country) in ['Argentina', 'AR', 'ARG', '032']: domain = 'google.com.ar'
+        elif str(country) in ['Armenia', 'AM', 'ARM', '051']: domain = 'google.am'
+        elif str(country) in ['Australia', 'AU', 'AUS', '036']: domain = 'google.com.au'
+        elif str(country) in ['Austria', 'AT', 'AUT', '040']: domain = 'google.at'
+        elif str(country) in ['Azerbaijan', 'AZ', 'AZE', '031']: domain = 'google.az'
+        elif str(country) in ['Bahamas', 'BS', 'BHS', '044']: domain = 'google.bs'
+        elif str(country) in ['Bahrain', 'BH', 'BHR', '048']: domain = 'google.com.bh'
+        elif str(country) in ['Bangladesh', 'BD', 'BGD', '050']: domain = 'google.com.bd'
+        elif str(country) in ['Belarus', 'BY', 'BLR', '112']: domain = 'google.by'
+        elif str(country) in ['Belgium', 'BE', 'BEL', '056']: domain = 'google.be'
+        elif str(country) in ['Belize', 'BZ', 'BLZ', '084']: domain = 'google.com.bz'
+        elif str(country) in ['Benin', 'BJ', 'BEN', '204']: domain = 'google.bj'
+        elif str(country) in ['Bhutan', 'BT', 'BTN', '064']: domain = 'google.bt'
+        elif str(country) in ['Bolivia', 'BO', 'BOL', '068']: domain = 'google.com.bo'
+        elif str(country) in ['Bosnia and Herzegovina', 'BA', 'BIH', '070']: domain = 'google.ba'
+        elif str(country) in ['Botswana', 'BW', 'BWA', '072']: domain = 'google.co.bw'
+        elif str(country) in ['Brazil', 'BR', 'BRA', '076']: domain = 'google.com.br'
+        elif str(country) in ['British Indian Ocean Territory', 'IO', 'IOT', '086']: domain = 'google.io'
+        elif str(country) in ['British Virgin Islands', 'VG', 'VGB', '092']: domain = 'google.vg'
+        elif str(country) in ['Bulgaria', 'BG', 'BGR', '100']: domain = 'google.bg'
+        elif str(country) in ['Burkina Faso', 'BF', 'BFA', '854']: domain = 'google.bf'
+        elif str(country) in ['Burundi', 'BI', 'BDI', '108']: domain = 'google.bi'
+        elif str(country) in ['Cambodia', 'KH', 'KHM', '116']: domain = 'google.com.kh'
+        elif str(country) in ['Cameroon', 'CM', 'CMR', '120']: domain = 'google.cm'
+        elif str(country) in ['Canada', 'CA', 'CAN', '124']: domain = 'google.ca'
+        elif str(country) in ['Cape Verde', 'CV', 'CPV', '132']: domain = 'google.cv'
+        elif str(country) in ['Central African Republic', 'CF', 'CAF', '140']: domain = 'google.cf'
+        elif str(country) in ['Chad', 'TD', 'TCD', '148']: domain = 'google.td'
+        elif str(country) in ['Chile', 'CL', 'CHL', '152']: domain = 'google.cl'
+        elif str(country) in ['China', 'CN', 'CHN', '156']: domain = 'google.cn'
+        elif str(country) in ['Christmas Island', 'CX', 'CXR', '162']: domain = 'google.cx'
+        elif str(country) in ['Cocos (Keeling) Islands', 'CC', 'CCK', '166']: domain = 'google.cc'
+        elif str(country) in ['Colombia', 'CO', 'COL', '170']: domain = 'google.com.co'
+        elif str(country) in ['Cook Islands', 'CK', 'COK', '184']: domain = 'google.co.ck'
+        elif str(country) in ['Costa Rica', 'CR', 'CRI', '188']: domain = 'google.co.cr'
+        elif str(country) in ['Croatia', 'HR', 'HRV', '191']: domain = 'google.hr'
+        elif str(country) in ['Cuba', 'CU', 'CUB', '192']: domain = 'google.com.cu'
+        elif str(country) in ['Cyprus', 'CY', 'CYP', '196']: domain = 'google.com.cy'
+        elif str(country) in ['Czech Republic', 'CZ', 'CZE', '203']: domain = 'google.cz'
+        elif str(country) in ['Denmark', 'DK', 'DNK', '208']: domain = 'google.dk'
+        elif str(country) in ['Djibouti', 'DJ', 'DJI', '262']: domain = 'google.dj'
+        elif str(country) in ['Dominica', 'DM', 'DMA', '212']: domain = 'google.dm'
+        elif str(country) in ['Dominican Republic', 'DO', 'DOM', '214']: domain = 'google.com.do'
+        elif str(country) in ['Ecuador', 'EC', 'ECU', '218']: domain = 'google.com.ec'
+        elif str(country) in ['Egypt', 'EG', 'EGY', '818']: domain = 'google.com.eg'
+        elif str(country) in ['El Salvador', 'SV', 'SLV', '222']: domain = 'google.com.sv'
+        elif str(country) in ['Estonia', 'EE', 'EST', '233']: domain = 'google.ee'
+        elif str(country) in ['Ethiopia', 'ET', 'ETH', '231']: domain = 'google.com.et'
+        elif str(country) in ['Fiji', 'FJ', 'FJI', '242']: domain = 'google.com.fj'
+        elif str(country) in ['Finland', 'FI', 'FIN', '246']: domain = 'google.fi'
+        elif str(country) in ['France', 'FR', 'FRA', '250']: domain = 'google.fr'
+        elif str(country) in ['French Guiana', 'GF', 'GUF', '254']: domain = 'google.gf'
+        elif str(country) in ['Gabon', 'GA', 'GAB', '266']: domain = 'google.ga'
+        elif str(country) in ['Gambia', 'GM', 'GMB', '270']: domain = 'google.gm'
+        elif str(country) in ['Georgia', 'GE', 'GEO', '268']: domain = 'google.ge'
+        elif str(country) in ['Germany', 'DE', 'DEU', '276']: domain = 'google.de'
+        elif str(country) in ['Ghana', 'GH', 'GHA', '288']: domain = 'google.com.gh'
+        elif str(country) in ['Gibraltar', 'GI', 'GIB', '292']: domain = 'google.com.gi'
+        elif str(country) in ['Greece', 'GR', 'GRC', '300']: domain = 'google.gr'
+        elif str(country) in ['Greenland', 'GL', 'GRL', '304']: domain = 'google.gl'
+        elif str(country) in ['Guadeloupe', 'GP', 'GLP', '312']: domain = 'google.gp'
+        elif str(country) in ['Guatemala', 'GT', 'GTM', '320']: domain = 'google.com.gt'
+        elif str(country) in ['Guernsey', 'GG', 'GGY', '831']: domain = 'google.gg'
+        elif str(country) in ['Guyana', 'GY', 'GUY', '328']: domain = 'google.gy'
+        elif str(country) in ['Haiti', 'HT', 'HTI', '332']: domain = 'google.ht'
+        elif str(country) in ['Honduras', 'HN', 'HND', '340']: domain = 'google.hn'
+        elif str(country) in ['Hungary', 'HU', 'HUN', '348']: domain = 'google.hu'
+        elif str(country) in ['Iceland', 'IS', 'ISL', '352']: domain = 'google.is'
+        elif str(country) in ['India', 'IN', 'IND', '356']: domain = 'google.co.in'
+        elif str(country) in ['Indonesia', 'ID', 'IDN', '360']: domain = 'google.co.id'
+        elif str(country) in ['Iraq', 'IQ', 'IRQ', '368']: domain = 'google.iq'
+        elif str(country) in ['Ireland', 'IE', 'IRL', '372']: domain = 'google.ie'
+        elif str(country) in ['Isle of Man', 'IM', 'IMN', '833']: domain = 'google.im'
+        elif str(country) in ['Israel', 'IL', 'ISR', '376']: domain = 'google.co.il'
+        elif str(country) in ['Italy', 'IT', 'ITA', '380']: domain = 'google.it'
+        elif str(country) in ['Jamaica', 'JM', 'JAM', '388']: domain = 'google.com.jm'
+        elif str(country) in ['Japan', 'JP', 'JPN', '392']: domain = 'google.co.jp'
+        elif str(country) in ['Jersey', 'JE', 'JEY', '832']: domain = 'google.je'
+        elif str(country) in ['Jordan', 'JO', 'JOR', '400']: domain = 'google.jo'
+        elif str(country) in ['Kazakhstan', 'KZ', 'KAZ', '398']: domain = 'google.kz'
+        elif str(country) in ['Kenya', 'KE', 'KEN', '404']: domain = 'google.co.ke'
+        elif str(country) in ['Kiribati', 'KI', 'KIR', '296']: domain = 'google.ki'
+        elif str(country) in ['Kuwait', 'KW', 'KWT', '414']: domain = 'google.com.kw'
+        elif str(country) in ['Kyrgyzstan', 'KG', 'KGZ', '417']: domain = 'google.kg'
+        elif str(country) in ['Latvia', 'LV', 'LVA', '428']: domain = 'google.lv'
+        elif str(country) in ['Lebanon', 'LB', 'LBN', '422']: domain = 'google.com.lb'
+        elif str(country) in ['Lesotho', 'LS', 'LSO', '426']: domain = 'google.co.ls'
+        elif str(country) in ['Libya', 'LY', 'LBY', '434']: domain = 'google.com.ly'
+        elif str(country) in ['Liechtenstein', 'LI', 'LIE', '438']: domain = 'google.li'
+        elif str(country) in ['Lithuania', 'LT', 'LTU', '440']: domain = 'google.lt'
+        elif str(country) in ['Luxembourg', 'LU', 'LUX', '442']: domain = 'google.lu'
+        elif str(country) in ['Madagascar', 'MG', 'MDG', '450']: domain = 'google.mg'
+        elif str(country) in ['Malawi', 'MW', 'MWI', '454']: domain = 'google.mw'
+        elif str(country) in ['Malaysia', 'MY', 'MYS', '458']: domain = 'google.com.my'
+        elif str(country) in ['Maldives', 'MV', 'MDV', '462']: domain = 'google.mv'
+        elif str(country) in ['Mali', 'ML', 'MLI', '466']: domain = 'google.ml'
+        elif str(country) in ['Malta', 'MT', 'MLT', '470']: domain = 'google.com.mt'
+        elif str(country) in ['Mauritius', 'MU', 'MUS', '480']: domain = 'google.mu'
+        elif str(country) in ['Mexico', 'MX', 'MEX', '484']: domain = 'google.com.mx'
+        elif str(country) in ['Moldova', 'MD', 'MDA', '498']: domain = 'google.md'
+        elif str(country) in ['Mongolia', 'MN', 'MNG', '496']: domain = 'google.mn'
+        elif str(country) in ['Montenegro', 'ME', 'MNE', '499']: domain = 'google.me'
+        elif str(country) in ['Montserrat', 'MS', 'MSR', '500']: domain = 'google.ms'
+        elif str(country) in ['Morocco', 'MA', 'MAR', '504']: domain = 'google.co.ma'
+        elif str(country) in ['Mozambique', 'MZ', 'MOZ', '508']: domain = 'google.co.mz'
+        elif str(country) in ['Myanmar', 'MM', 'MMR', '104']: domain = 'google.com.mm'
+        elif str(country) in ['Namibia', 'NA', 'NAM', '516']: domain = 'google.com.na'
+        elif str(country) in ['Nauru', 'NR', 'NRU', '520']: domain = 'google.nr'
+        elif str(country) in ['Nepal', 'NP', 'NPL', '524']: domain = 'google.com.np'
+        elif str(country) in ['Netherlands', 'NL', 'NLD', '528']: domain = 'google.nl'
+        elif str(country) in ['New Zealand', 'NZ', 'NZL', '554']: domain = 'google.co.nz'
+        elif str(country) in ['Nicaragua', 'NI', 'NIC', '558']: domain = 'google.com.ni'
+        elif str(country) in ['Niger', 'NE', 'NER', '562']: domain = 'google.ne'
+        elif str(country) in ['Nigeria', 'NG', 'NGA', '566']: domain = 'google.com.ng'
+        elif str(country) in ['Niue', 'NU', 'NIU', '570']: domain = 'google.nu'
+        elif str(country) in ['Norfolk Island', 'NF', 'NFK', '574']: domain = 'google.nf'
+        elif str(country) in ['Norway', 'NO', 'NOR', '578']: domain = 'google.no'
+        elif str(country) in ['Oman', 'OM', 'OMN', '512']: domain = 'google.com.om'
+        elif str(country) in ['Pakistan', 'PK', 'PAK', '586']: domain = 'google.com.pk'
+        elif str(country) in ['Panama', 'PA', 'PAN', '591']: domain = 'google.com.pa'
+        elif str(country) in ['Papua New Guinea', 'PG', 'PNG', '598']: domain = 'google.com.pg'
+        elif str(country) in ['Paraguay', 'PY', 'PRY', '600']: domain = 'google.com.py'
+        elif str(country) in ['Peru', 'PE', 'PER', '604']: domain = 'google.com.pe'
+        elif str(country) in ['Philippines', 'PH', 'PHL', '608']: domain = 'google.com.ph'
+        elif str(country) in ['Poland', 'PL', 'POL', '616']: domain = 'google.pl'
+        elif str(country) in ['Portugal', 'PT', 'PRT', '620']: domain = 'google.pt'
+        elif str(country) in ['Puerto Rico', 'PR', 'PRI', '630']: domain = 'google.com.pr'
+        elif str(country) in ['Qatar', 'QA', 'QAT', '634']: domain = 'google.com.qa'
+        elif str(country) in ['Romania', 'RO', 'ROU', '642']: domain = 'google.ro'
+        elif str(country) in ['Rwanda', 'RW', 'RWA', '646']: domain = 'google.rw'
+        elif str(country) in ['Saint Lucia', 'LC', 'LCA', '662']: domain = 'google.com.lc'
+        elif str(country) in ['Samoa', 'WS', 'WSM', '882']: domain = 'google.ws'
+        elif str(country) in ['San Marino', 'SM', 'SMR', '674']: domain = 'google.sm'
+        elif str(country) in ['Saudi Arabia', 'SA', 'SAU', '682']: domain = 'google.com.sa'
+        elif str(country) in ['Senegal', 'SN', 'SEN', '686']: domain = 'google.sn'
+        elif str(country) in ['Serbia', 'RS', 'SRB', '688']: domain = 'google.rs'
+        elif str(country) in ['Seychelles', 'SC', 'SYC', '690']: domain = 'google.sc'
+        elif str(country) in ['Sierra Leone', 'SL', 'SLE', '694']: domain = 'google.com.sl'
+        elif str(country) in ['Singapore', 'SG', 'SGP', '702']: domain = 'google.com.sg'
+        elif str(country) in ['Slovakia', 'SK', 'SVK', '703']: domain = 'google.sk'
+        elif str(country) in ['Slovenia', 'SI', 'SVN', '705']: domain = 'google.si'
+        elif str(country) in ['Solomon Islands', 'SB', 'SLB', '090']: domain = 'google.com.sb'
+        elif str(country) in ['Somalia', 'SO', 'SOM', '706']: domain = 'google.so'
+        elif str(country) in ['South Africa', 'ZA', 'ZAF', '710']: domain = 'google.co.za'
+        elif str(country) in ['Spain', 'ES', 'ESP', '724']: domain = 'google.es'
+        elif str(country) in ['Sri Lanka', 'LK', 'LKA', '144']: domain = 'google.lk'
+        elif str(country) in ['Sweden', 'SE', 'SWE', '752']: domain = 'google.se'
+        elif str(country) in ['Switzerland', 'CH', 'CHE', '756']: domain = 'google.ch'
+        elif str(country) in ['Tajikistan', 'TJ', 'TJK', '762']: domain = 'google.com.tj'
+        elif str(country) in ['Thailand', 'TH', 'THA', '764']: domain = 'google.co.th'
+        elif str(country) in ['Timor-Leste', 'TL', 'TLS', '626']: domain = 'google.tl'
+        elif str(country) in ['Togo', 'TG', 'TGO', '768']: domain = 'google.tg'
+        elif str(country) in ['Tokelau', 'TK', 'TKL', '772']: domain = 'google.tk'
+        elif str(country) in ['Tonga', 'TO', 'TON', '776']: domain = 'google.to'
+        elif str(country) in ['Trinidad and Tobago', 'TT', 'TTO', '780']: domain = 'google.tt'
+        elif str(country) in ['Tunisia', 'TN', 'TUN', '788']: domain = 'google.tn'
+        elif str(country) in ['Turkey', 'TR', 'TUR', '792']: domain = 'google.com.tr'
+        elif str(country) in ['Turkmenistan', 'TM', 'TKM', '795']: domain = 'google.tm'
+        elif str(country) in ['Uganda', 'UG', 'UGA', '800']: domain = 'google.co.ug'
+        elif str(country) in ['Ukraine', 'UA', 'UKR', '804']: domain = 'google.com.ua'
+        elif str(country) in ['United Arab Emirates', 'AE', 'ARE', '784']: domain = 'google.ae'
+        elif str(country) in ['United Kingdom', 'GB', 'GBR', '826']: domain = 'google.co.uk'
+        elif str(country) in ['Uruguay', 'UY', 'URY', '858']: domain = 'google.com.uy'
+        elif str(country) in ['Uzbekistan', 'UZ', 'UZB', '860']: domain = 'google.co.uz'
+        elif str(country) in ['Vanuatu', 'VU', 'VUT', '548']: domain = 'google.vu'
+        elif str(country) in ['Zambia', 'ZM', 'ZMB', '894']: domain = 'google.co.zm'
+        elif str(country) in ['Zimbabwe', 'ZW', 'ZWE', '716']: domain = 'google.co.zw'
         else:
             domain = 'google.com'
         domain = "https://www."+domain
+        return domain
 
     def perform_search_from_main_page(self, search_query, num_results_per_page = 10):
         '''This function does a basic "search", and retrieves the search url generated by Google, which cannot be spoofed.
@@ -273,11 +310,11 @@ class GoogleSearch(SearchTemplate):
             return None
         parsed_page = GoogleParser(self.browser.get_html(), url)
         if save_to_db:
-            self.save_serp_to_db(parsed_page)
+            self.save_serp_to_db(parsed_page, self.db_config)
 
 
 
-    def save_serp_to_db(self, parsed_page):
+    def save_serp_to_db(self, parsed_page, db_config):
         pass
 
 

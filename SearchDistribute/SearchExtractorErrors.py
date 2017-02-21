@@ -1,6 +1,6 @@
 import sys
 import datetime
-from SearchDistribute.Enums import ProxyBrowsers
+from SearchDistribute import Enums
 
 class SERPParsingException(Exception):
     def __init__(self, search_engine, parsing_stage):
@@ -11,7 +11,7 @@ class SERPParsingException(Exception):
 
 class UnsupportedProxyBrowserException(Exception):
     def __init__(self, proxy_browser_type):
-        Exception.__init__(self, "Invalid value %s entered for proxy_browser_type; value must from %s"%(proxy_browser_type, [x for x in ProxyBrowsers]))
+        Exception.__init__(self, "Invalid value %s entered for proxy_browser_type; value must from %s"%(proxy_browser_type, [x for x in Enums.ProxyBrowsers]))
         self.proxy_browser_type = proxy_browser_type
 
 
