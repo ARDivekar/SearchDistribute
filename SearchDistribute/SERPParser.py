@@ -8,6 +8,7 @@ class GoogleParser:
 	''' If any of the attributes are `None`, that attribute was not present on the SERP.
 	'''
 	current_url = ""
+	start_offset = -1
 	domain = ""
 	protocol = ""
 	results = []
@@ -20,8 +21,9 @@ class GoogleParser:
 	link_to_next_page = ""
 	location = ""
 
-	def __init__(self, html, current_url):
+	def __init__(self, html, current_url, start_offset):
 		self.current_url = current_url ## This must not be moved, as self._parse_navigation_links(...) uses it.
+		self.start_offset = start_offset
 		self.protocol = urllib.parse.urlparse(current_url).scheme
 		self.domain = urllib.parse.urlparse(current_url).netloc.replace("www.", "")
 

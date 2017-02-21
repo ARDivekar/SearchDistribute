@@ -193,7 +193,6 @@ class PhantomJS():
 							##  - username : (optional, defaults to None) a string of the proxy authentication username
 							##  - password : (optional, defaults to None) a string of the proxy authentication password
 	webdriver = None		## The selenium object. This should not be refreshed.
-	last_visit_time = None	## The time in seconds (float) since UNIX epoch, when a page was visited.
 
 	def __init__(self, proxy_args):
 		'''

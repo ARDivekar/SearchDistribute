@@ -4,6 +4,7 @@ from SearchDistribute import Enums
 from SearchDistribute.SearchExtractorErrors import *
 from SearchDistribute import ProxyBrowser
 from SearchDistribute.SERPParser import GoogleParser
+import time
 
 import re
 from selenium.webdriver.common.keys import Keys
@@ -67,7 +68,6 @@ class GoogleSearch(SearchTemplate):
                     "password" : "3iV3za46xD"
                 }
             },
-            "save_to_db" : True,
             "db_config" : {
                 "db_path" : "./SearchResults.db",
                 "db_table" : "GoogleSearchResults"
@@ -91,10 +91,12 @@ class GoogleSearch(SearchTemplate):
 
         self.proxy_args = proxy_browser_config.get("proxy_args")                    ## Defaults to None
 
+        ## Instantiate browser:
         if self.proxy_browser_type == Enums.ProxyBrowsers.PhantomJS:  ## We are equating stings. See Enums.py and /tests/EnumTests.py
             self.browser = ProxyBrowser.PhantomJS(self.proxy_args)
 
-        self.db_config = config.get("db_config")    ## Defaults to None
+        ## Optional parameter `db_config`, defaults to None
+        self.db_config = config.get("db_config")
 
 
     def get_country_domain(self, country):
@@ -305,9 +307,11 @@ class GoogleSearch(SearchTemplate):
         self.browser.visit(url)
         if self.browser.wait_for_element_to_load_ajax(timeout=30, element_id="search") == False:
             return None
-        parsed_page = GoogleParser(self.browser.get_html(), url)
+        self.time_of_last_retrieved_query = time.time()
+        parsed_serp = GoogleParser(self.browser.get_html(), url)
         if save_to_db:
-            self.save_serp_to_db(parsed_page, self.db_config)
+            self.save_serp_to_db(parsed_serp, self.db_config)
+        return parsed_serp
 
 
 
