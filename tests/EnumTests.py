@@ -8,12 +8,11 @@ class Animals(StrictEnum):
     Platypus = "Platypus"
     Armadillo = "Armadillo"
 
-def test_enum_get_value():
+def test_enum_test_value():
     assert Animals.Armadillo == "Armadillo"
 
 def test_enum_set_value():
     Animals.Horse = "Horse"
-    assert Animals.Platypus == "Platypus"
     assert Animals.Horse == "Horse"
 
 def test_enum_set_value_exception():
