@@ -3,7 +3,7 @@ from SearchDistribute.Enums import SearchEngines
 from SearchDistribute.SearchExtractorErrors import InvalidSearchParameterException
 
 
-class QueryDistribute:
+class Distribute:
     ''' Each distribute object runs one query string, across multiple *Search objects (each of which have identical parameters).
         It essentially runs a 'map' function, distributing the fetching of the results of the query across several workers (*Search objects).
     '''
