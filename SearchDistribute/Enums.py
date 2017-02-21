@@ -27,7 +27,7 @@ class MetaEnum(type):
 
 class StrictEnum(metaclass=MetaEnum):
 	'''	StrictEnums are classes which subclass this class.
-		Only enums parameters set with an identical paramter_name = parameter_value pair will be allowed, both as class variables or otherwise
+		Only enums parameters set with an identical paramter_name = "parameter_name" pair will be allowed, both as class variables or otherwise
 
 		Example usage:
 			class SearchEngines(Enum):
@@ -42,7 +42,6 @@ class StrictEnum(metaclass=MetaEnum):
 			"Google" in SearchEngines	## will return True
 			"AltVista" in SearchEngines	## will return False
 	'''
-
 	def __init__(self):
 		raise TypeError  ## Source: https://docs.python.org/2/library/exceptions.html#exceptions.TypeError
 
