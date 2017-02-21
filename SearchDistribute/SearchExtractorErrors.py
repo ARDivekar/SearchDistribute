@@ -47,7 +47,7 @@ class UnsupportedFeatureException(Exception):   ## Source: https://www.codemento
 
 class InvalidSearchParameterException(Exception):   ## Source: https://www.codementor.io/sheena/how-to-write-python-custom-exceptions-du107ufv9#subclassing-exceptions-and-other-fancy-things
     def __init__(self, search_engine, param_name, param_value, reason):
-        Exception.__init__(self, "Invalid value `%s` encountered while generating %s search query: parameter `%s` %s"%(param_value, search_engine, param_name, reason))
+        Exception.__init__(self, "Invalid value `%s` encountered while running the %s search: parameter `%s` %s"%(param_value, search_engine, param_name, reason))
         self.param_name = param_name
         self.param_value = param_value
         self.search_engine = search_engine

@@ -190,7 +190,12 @@ class PhantomJS():
 	last_visit_time = None
 	service_args = []
 
-	def __init__(self, proxy_type, hostname, port, username=None, password=None):
+	def __init__(self, config):
+		proxy_type = config.get('proxy_type')
+		hostname = config.get('hostname')
+		port = config.get('port')
+		username = config.get('username')	## Can be None
+	   	password = config.get('password')	## Can be None
 		## For PrivateInternetAccess.com : https://www.privateinternetaccess.com/forum/discussion/258/private-internet-access-proxy-now-available-now-open
 		## Source: http://stackoverflow.com/a/16353584/4900327
 		service_args = ['--load-images=no']

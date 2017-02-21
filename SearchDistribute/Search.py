@@ -41,19 +41,26 @@ class SearchTemplate(object):
      [4] To actually search and retrieve results, the search query must be passed explicitly to the `search(...)` function, along with an optional offset and number of results in the SERP.
 '''
 class GoogleSearch(SearchTemplate):
-    search_engine = SearchEngines.Google
-    proxy_browser_type = ""             ## taken from SearchDistribute.Enums.ProxyBrowsers
+    search_engine = SearchEngines.Google    ## must be from SearchDistribute.Enums.SearchEngines
+    proxy_browser_type = ""                 ## must be from SearchDistribute.Enums.ProxyBrowsers
+    proxy_args = {}
     browser = None
-    time_of_last_retrieved_query = 0    ## Seconds since UNIX epoch
-    country = ""
+    time_of_last_retrieved_query = 0        ## Seconds since UNIX epoch (float)
+    country = ""                            ## Either a Country Name,  ISO ALPHA-2 Code,  ISO ALPHA-3 Code, or ISO Numeric Code UN M49 Numerical Code
     possible_num_results_per_page = [10, 20, 30, 40, 50, 100]
 
     def __init__(self, config={}):
         self.proxy_browser_type = config.get("proxy_browser_type") ## Set to None if does not exist
+        self.proxy_args = config.get("proxy_args")
         if self.proxy_browser_type == ProxyBrowsers.PhantomJS:  ## We are equating stings. See Enums.py and /tests/EnumTests.py
-            self.browser = ProxyBrowser.PhantomJS(config.get("proxy_type"), config.get("hostname"), config.get("port"), config.get("username"), config.get("password"))
+            if type(self.proxy_args) == type({}) and len(self.proxy_args)>0:
+                self.browser = ProxyBrowser.PhantomJS(self.proxy_args)
+            else:
+                self.browser = ProxyBrowsers.PhantomJS()
         else:
             raise UnsupportedProxyBrowserException(self.proxy_browser_type)
+
+
         self.country = config.get("country")  ## Set to None if does not exist, will default to the domain of google.com
 
 
