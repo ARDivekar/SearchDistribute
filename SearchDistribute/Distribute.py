@@ -41,7 +41,7 @@ class Distribute:
             "num_results_per_page" : 10,
             "cooldown_time" : 300,
             "proxy_browser_config" : {
-                "proxy_browser_type" : ProxyBrowsers.PhantomJS,
+                "proxy_browser_type" : Enums.ProxyBrowsers.PhantomJS,
                 "proxy_args" : {
                     "proxy_type" : Enums.ProxyTypes.Socks5,
                     "hostname" : "proxy-nl.privateinternetaccess.com",
