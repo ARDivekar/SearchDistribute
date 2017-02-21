@@ -3,7 +3,7 @@ from SearchDistribute.Enums import SearchEngines
 from SearchDistribute.SearchExtractorErrors import InvalidSearchParameterException
 from SearchDistribute.SearchExtractorErrors import MissingSearchParameterException
 from SearchDistribute import Enums
-from SearchDistribute.Enums import ProxyTypes
+
 
 
 class Distribute:
@@ -44,7 +44,7 @@ class Distribute:
             "proxy_browser_config" : {
                 "proxy_browser_type" : ProxyBrowsers.PhantomJS,
                 "proxy_args" : {
-                    "proxy_type" : ProxyTypes.Socks5,
+                    "proxy_type" : Enums.ProxyTypes.Socks5,
                     "hostname" : "proxy-nl.privateinternetaccess.com",
                     "port" : "1080",
                     "username" : "x1237029",
@@ -73,23 +73,23 @@ class Distribute:
             raise InvalidSearchParameterException(self.search_engine, "query", self.query, "must be a non-empty string")
 
         ## Optional parameter `num_workers`
-        self.num_workers = get_default_if_not_found_in_config("num_workers")
-        if type(self.num_workers) != type(0) and self.num_workers <= 0:     ## will only run if the value is present, but in the wrong format.
+        self.num_workers = str(get_default_if_not_found_in_config("num_workers"))
+        if not self.num_workers.isdigit() or int(self.num_workers) <= 0:     ## will only run if the value is present, but in the wrong format.
             raise InvalidSearchParameterException(self.search_engine, "num_workers", self.num_workers, "must be an integer greater than zero")
 
         ## Optional parameter `num_results`
-        self.num_results = get_default_if_not_found_in_config("num_results")
-        if type(self.num_results) != type(0) and self.num_results <= 0:     ## will only run if the value is present, but in the wrong format.
+        self.num_results = str(get_default_if_not_found_in_config("num_results"))
+        if not self.num_results.isdigit() or int(self.num_results) <= 0:     ## will only run if the value is present, but in the wrong format.
             raise InvalidSearchParameterException(self.search_engine, "num_results", self.num_results, "must be an integer greater than zero")
 
         ## Optional parameter `num_results_per_page`
-        self.num_results_per_page = get_default_if_not_found_in_config("num_results_per_page")
-        if type(self.num_results_per_page) != type(0) and self.num_results_per_page <= 0:   ## will only run if the value is present, but in the wrong format.
+        self.num_results_per_page = str(get_default_if_not_found_in_config("num_results_per_page"))
+        if not self.num_results_per_page.isdigit() or int(self.num_results_per_page <= 0):   ## will only run if the value is present, but in the wrong format.
             raise InvalidSearchParameterException(self.search_engine, "num_results_per_page", self.num_results_per_page, "must be an integer greater than zero")
 
         ## Optional parameter `cooldown_time`
-        self.cooldown_time = get_default_if_not_found_in_config("cooldown_time")
-        if type(self.cooldown_time) != type(0) and self.cooldown_time < 0:   ## will only run if the value is present, but in the wrong format.
+        self.cooldown_time = str(get_default_if_not_found_in_config("cooldown_time"))
+        if not self.cooldown_time.isdigit() or int(self.cooldown_time) < 0:   ## will only run if the value is present, but in the wrong format.
             raise InvalidSearchParameterException(self.search_engine, "cooldown_time", self.cooldown_time, "must be an integer greater than or equal to zero")
 
         ## Optional parameter `save_to_db`
@@ -122,9 +122,9 @@ class Distribute:
         }
         return default_config.get(param)
 
+
     def spawn_worker(self):
-        search_config = {
-        }
+        worker_config = {}
         if self.search_engine == SearchEngines.Google:
             return GoogleSearch()
 

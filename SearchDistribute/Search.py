@@ -17,8 +17,6 @@ class SearchTemplate(object):
     def list_websites_with_top_level_domain(self, top_level_domain):
         query = GoogleSearchQuery(config={"top_level_domains": [top_level_domain], "necessary_topics":[" "]}).generate_query()
 
-
-
 ''' A *Search object (GoogleSearch, BingSearch etc.) offers an abstraction for retrieving search results for a particular query, and optionally saving them in a database.
     Each *Search object is a worker, waiting for the input query string, and it retrieves SERPs (Search Result Pages). Between searches, it idles in memory. It may be reused for multiple searches, with a sufficient cooldown period so as to not trigger IP blocking from the search engine.
     Rules:
@@ -29,7 +27,7 @@ class SearchTemplate(object):
      [3] It's `config` consists of fields which should not be modified during the object's lifetime:
           (a) proxy_browser_type    : a string, taken from `Enums.ProxyBrowsers`
           (b) (optional) proxy_args : a dictionary {'proxy_type':"xyz", 'hostname':"xyz", 'port':"xyz", 'username':"xyz", 'password':"xyz"}
-              - proxy_type : a string e.g. "Socks5", "HTTP" taken from `SearchDistribute.Enums.ProxyTypes`.
+              - proxy_type : a string e.g. "Socks5", "HTTP" taken from `Enums.ProxyTypes`.
               - hostname   : a string of the IP address or host url of the proxy server. e.g. "proxy-nl.privateinternetaccess.com"
               - port       : a string of the port at which to access the proxy server.
               - (optional) username : the username used for authentication, e.g. Socks5 authentication.
@@ -40,6 +38,8 @@ class SearchTemplate(object):
 
      [4] To actually search and retrieve results, the search query must be passed explicitly to the `search(...)` function, along with an optional offset and number of results in the SERP.
 '''
+
+
 class GoogleSearch(SearchTemplate):
     search_engine = SearchEngines.Google    ## must be from SearchDistribute.Enums.SearchEngines
     proxy_browser_type = "" ## The type of proxy browser, must be from Enums.ProxyBrowsers
@@ -49,7 +49,7 @@ class GoogleSearch(SearchTemplate):
     db_config = {}          ## (optional, defaults to None) A hashtable with these fields: db_path, db_table.
                             ##  - db_path : The path (relative or otherwise) to the SQLite database file.
                             ##  - db_table : The table of the SQLite database in which to save the results.
-    time_of_last_retrieved_query = 0        ## Seconds since UNIX epoch (float)
+    time_of_last_retrieved_query = 0    ## The time in seconds (float) since UNIX epoch, when a page was visited.
     possible_num_results_per_page = [10, 20, 30, 40, 50, 100]
     browser = None
 
@@ -63,7 +63,7 @@ class GoogleSearch(SearchTemplate):
             "proxy_browser_config" : {
                 "proxy_browser_type" : Enums.ProxyBrowsers.PhantomJS,
                 "proxy_args" : {
-                    "proxy_type" : ProxyTypes.Socks5,
+                    "proxy_type" : Enums.ProxyTypes.Socks5,
                     "hostname" : "proxy-nl.privateinternetaccess.com",
                     "port" : "1080",
                     "username" : "x1237029",

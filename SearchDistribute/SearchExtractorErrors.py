@@ -8,10 +8,18 @@ class SERPParsingException(Exception):
         self.search_engine = search_engine
         self.parsing_stage = parsing_stage
 
+class InvalidProxyParameterException(Exception):   ## Source: https://www.codementor.io/sheena/how-to-write-python-custom-exceptions-du107ufv9#subclassing-exceptions-and-other-fancy-things
+    def __init__(self, proxy_browser_type, param_name, param_value, reason):
+        Exception.__init__(self, "Invalid value `%s` encountered while trying to instantise a %s proxy browser: parameter `%s` %s."%(param_value, proxy_browser_type, param_name, reason))
+        self.param_name = param_name
+        self.param_value = param_value
+        self.proxy_browser_type = proxy_browser_type
+        self.reason = reason
+
 
 class UnsupportedProxyBrowserException(Exception):
     def __init__(self, proxy_browser_type):
-        Exception.__init__(self, "Invalid value %s entered for proxy_browser_type; value must from %s"%(proxy_browser_type, [x for x in Enums.ProxyBrowsers]))
+        Exception.__init__(self, "Invalid value %s entered for proxy_browser_type; value must from %s."%(proxy_browser_type, [x for x in Enums.ProxyBrowsers]))
         self.proxy_browser_type = proxy_browser_type
 
 

@@ -7,8 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
 import datetime
 
-from SearchDistribute.Enums import Enum
-from SearchDistribute.Enums import ProxyTypes
+from SearchDistribute import Enums
 from SearchDistribute.SearchExtractorErrors import *
 
 phantomjs_path = None
@@ -185,27 +184,59 @@ socks5_proxies = {
 socks5_proxy_service_providers = socks5_proxies.keys()
 
 class PhantomJS():
-	webdriver = None
+	proxy_browser_type = Enums.ProxyBrowsers.PhantomJS
 	headless = True
-	last_visit_time = None
-	proxy_args = {}
+	proxy_args = {}			## (optional, defaults to None) A hashtable with the following values: proxy_type, hostname, port, username, password.
+							##  - proxy_type : a string denoting the type of proxy, e.g. Socks5, HTTP etc. Must be from Enums.ProxyTypes
+							##  - hostname : a string of the name or ip address of the proxy server.
+							##  - port : a string of the port at the proxy server to which the webdriver must connect.
+							##  - username : (optional, defaults to None) a string of the proxy authentication username
+							##  - password : (optional, defaults to None) a string of the proxy authentication password
+	webdriver = None		## The selenium object. This should not be refreshed.
+	last_visit_time = None	## The time in seconds (float) since UNIX epoch, when a page was visited.
 
 	def __init__(self, proxy_args):
-		'''	Here, proxy_args may be None. In that case, we must instantise the default browser.
+		'''
+		Here, proxy_args may be None. In that case, we instantiate the default browser.
+
+		Example proxy_args with all parameters set:
+		{
+			"proxy_type" : Enums.ProxyTypes.Socks5,
+			"hostname" : "proxy-nl.privateinternetaccess.com",
+			"port" : "1080",
+			"username" : "x1237029",
+			"password" : "3iV3za46xD"
+		}
 		'''
 		self.proxy_args = proxy_args	## Defaults to None
 		service_args = ['--load-images=no']
 		if proxy_args is not None:
+			for key in proxy_args:	## Ensure all values in self.proxy_args are strings.
+				self.proxy_args[key] = str(proxy_args[key])
+
 			proxy_type = proxy_args.get('proxy_type')
+			if proxy_type not in Enums.ProxyTypes:
+				raise InvalidProxyParameterException(self.proxy_browser_type, 'proxy_type', proxy_type, "must be a non-empty string from %s"%Enums.ProxyTypes)
+
 			hostname = proxy_args.get('hostname')
-			port = proxy_args.get('port')
+			if type(hostname) != type("") or len(hostname) == 0:
+				raise InvalidProxyParameterException(self.proxy_browser_type, 'hostname', hostname, "must be a non-empty string")
+
+			port = str(proxy_args.get('port'))
+			if not port.isdigit() or int(port)<0 or int(port)>65535:
+				raise InvalidProxyParameterException(self.proxy_browser_type, 'port', port, "must be a non-empty between 0 and 65535 (inclusive)")
+
 			username = proxy_args.get('username')	## Can be None
 			password = proxy_args.get('password')	## Can be None
 			## For PrivateInternetAccess.com : https://www.privateinternetaccess.com/forum/discussion/258/private-internet-access-proxy-now-available-now-open
 			## Source: http://stackoverflow.com/a/16353584/4900327
-			if proxy_type == ProxyTypes.Socks5:
+			if proxy_type == Enums.ProxyTypes.Socks5:
 				phantomjs_socks5_proxy_service_args = ['--proxy=%s:%s'%(hostname, port), '--proxy-type=socks5']
 				if username is not None and password is not None:
+					if type(username) != type("") or len(username) == 0:
+						raise InvalidProxyParameterException(self.proxy_browser_type, 'username', username, "must be a non-empty string")
+					if type(password) != type("") or len(password) == 0:
+						raise InvalidProxyParameterException(self.proxy_browser_type, 'password', password, "must be a non-empty string")
 					phantomjs_socks5_proxy_service_args += ['--proxy-auth=%s:%s'%(username, password)]
 				service_args += phantomjs_socks5_proxy_service_args
 		self.webdriver = webdriver.PhantomJS(service_args = service_args)
