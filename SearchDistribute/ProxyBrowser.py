@@ -9,7 +9,7 @@ import datetime
 
 from SearchDistribute import Enums
 from SearchDistribute.SearchExtractorErrors import *
-
+'''
 phantomjs_path = None
 if platform.system() == "Windows":
 	phantomjs_path = "./ExternalLibs/PhantomJS/Windows/phantomjs.exe"
@@ -164,7 +164,7 @@ class BrowserTemplate(object):
 
 
 
-
+'''
 
 ''' Note that as of 19 Feb 2017, Firefox and Chrome do not support SOCKS5 authentication [1], but PhantomJS does [2].
 [1] https://www.privateinternetaccess.com/forum/discussion/2915/setting-up-the-socks5-proxy-on-chrome-firefox
@@ -269,7 +269,7 @@ class PhantomJS():
 
 
 # print("\n\tSplinter is the default headless client of this package as it is more reliable.")
-
+'''
 
 
 class splinterBrowser(BrowserTemplate):
@@ -611,4 +611,4 @@ class twillBrowser(BrowserTemplate):
 # sbJS.test(printing=True)
 
 
-
+'''
