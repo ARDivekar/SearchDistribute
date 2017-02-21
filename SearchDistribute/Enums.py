@@ -1,11 +1,25 @@
+class Enum():	## Source: http://stackoverflow.com/a/2182437/4900327
+	'''	Note: only enums set with an identical paramter_name = parameter_value pair will be allowed.
+		e.g. SearchEngines.Google = "Google" will work
+			 SearchEngines.Bing = "Boing" won't work; it won't show up when we do SearchEngines.list()
+	'''
+	## Source: http://stackoverflow.com/a/1398059/4900327
+	## and http://stackoverflow.com/a/35864720/4900327
+	## and http://radek.io/2011/07/21/static-variables-and-methods-in-python/
+	@classmethod
+	def list(classname):		## Now, you can search as: `if user_input in SearchEngines.list()`
+		static_vars = []
+		for attribute in dir(classname):
+			if not callable(getattr(classname, attribute)) and not attribute.startswith("__") and attribute == getattr(classname, attribute):
+				static_vars.append(attribute)
+		return static_vars
 
-class Enum(set):	## Source: http://stackoverflow.com/a/2182437/4900327
 	def __getattr__(self, name):
 		if name in self:
 			return name
 		return None
 
-	def __setattr__(self, name, value):		
+	def __setattr__(self, name, value):
 		vals = [i for i in self]
 		if value=="" or value==None:		## used as: Enum.VAL = "" or Enum.VAL = None i.e. we are trying to delete
 			if name not in vals:			## used as: Enum.VAL_XYZ = "" i.e. we are trying to remove something that doesn't exist.
@@ -23,10 +37,10 @@ class Enum(set):	## Source: http://stackoverflow.com/a/2182437/4900327
 				self = self.__init__(vals)
 				return
 			else:
-				# print("name: %s %s; value: %s %s"%(name, type(name), value, type(value)))
 				raise AttributeError
-			
+
 	def __delattr__(self, name):			## used as:	 del(Enum.VAL)
+		raise AttributeError
 		vals = [i for i in self]
 		if name not in vals:
 			raise AttributeError
@@ -35,10 +49,17 @@ class Enum(set):	## Source: http://stackoverflow.com/a/2182437/4900327
 		self = self.__init__(vals)
 
 
+class SearchEngines(Enum):
+	Google = "Google"
 
 
-SearchEngines = Enum(["Google"])
+SearchEngines.Soo = "gog"
+del(SearchEngines.Google)
+print(SearchEngines.list())
 
-ProxyTypes = Enum(["Socks5"])
+class ProxyTypes(Enum):
+	Socks5 = "Socks5"
 
-ProxyBrowsers = Enum(["PhantomJS"])
+class ProxyBrowsers(Enum):
+	PhantomJS = "PhantomJS"
+
