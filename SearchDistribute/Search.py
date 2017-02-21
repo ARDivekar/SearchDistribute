@@ -14,15 +14,12 @@ class SearchTemplate(object):
     def __init__(self, search_engine):
         self.search_engine = search_engine
 
-    def list_websites_with_top_level_domain(self, top_level_domain):
-        query = GoogleSearchQuery(config={"top_level_domains": [top_level_domain], "necessary_topics":[" "]}).generate_query()
-
 ''' A *Search object (GoogleSearch, BingSearch etc.) offers an abstraction for retrieving search results for a particular query, and optionally saving them in a database.
     Each *Search object is a worker, waiting for the input query string, and it retrieves SERPs (Search Result Pages). Between searches, it idles in memory. It may be reused for multiple searches, with a sufficient cooldown period so as to not trigger IP blocking from the search engine.
     Rules:
      [1] Each *Search object runs in its own process/thread.
 
-     [2] Each *Search object is tied to a single browser instance for the duration of its existence (the browser instance may be refreshed).
+     [2] Each *Search object is tied to worker_configa single browser instance for the duration of its existence (the browser instance may be refreshed).
 
      [3] It's `config` consists of fields which should not be modified during the object's lifetime:
           (a) proxy_browser_type    : a string, taken from `Enums.ProxyBrowsers`
@@ -53,7 +50,7 @@ class GoogleSearch(SearchTemplate):
     possible_num_results_per_page = [10, 20, 30, 40, 50, 100]
     browser = None
 
-    def __init__(self, config={}):
+    def __init__(self, config):
         '''
         The logic in this function is that: no parameter of the config should be None. Every parameter should have its default value, or a value passed by the user. It is upto this function to check whether the value passed is correct or not.
 

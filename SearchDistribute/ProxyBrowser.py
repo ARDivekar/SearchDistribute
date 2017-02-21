@@ -211,9 +211,6 @@ class PhantomJS():
 		self.proxy_args = proxy_args	## Defaults to None
 		service_args = ['--load-images=no']
 		if proxy_args is not None:
-			for key in proxy_args:	## Ensure all values in self.proxy_args are strings.
-				self.proxy_args[key] = str(proxy_args[key])
-
 			proxy_type = proxy_args.get('proxy_type')
 			if proxy_type not in Enums.ProxyTypes:
 				raise InvalidProxyParameterException(self.proxy_browser_type, 'proxy_type', proxy_type, "must be a non-empty string from %s"%Enums.ProxyTypes)
@@ -222,9 +219,9 @@ class PhantomJS():
 			if type(hostname) != type("") or len(hostname) == 0:
 				raise InvalidProxyParameterException(self.proxy_browser_type, 'hostname', hostname, "must be a non-empty string")
 
-			port = str(proxy_args.get('port'))
-			if not port.isdigit() or int(port)<0 or int(port)>65535:
-				raise InvalidProxyParameterException(self.proxy_browser_type, 'port', port, "must be a non-empty between 0 and 65535 (inclusive)")
+			port = proxy_args.get('port')
+			if type(port) != type(0) or port<0 or port>65535:
+				raise InvalidProxyParameterException(self.proxy_browser_type, 'port', port, "must be an interger between 0 and 65535 (inclusive)")
 
 			username = proxy_args.get('username')	## Can be None
 			password = proxy_args.get('password')	## Can be None
