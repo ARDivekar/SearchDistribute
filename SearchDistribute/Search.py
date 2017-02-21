@@ -50,7 +50,7 @@ class GoogleSearch(SearchTemplate):
 
     def __init__(self, config={}):
         self.proxy_browser_type = config.get("proxy_browser_type") ## Set to None if does not exist
-        if self.proxy_browser_type == ProxyBrowsers.PhantomJS:
+        if self.proxy_browser_type == ProxyBrowsers.PhantomJS:  ## We are equating stings. See Enums.py and /tests/EnumTests.py
             self.browser = ProxyBrowser.PhantomJS(config.get("proxy_type"), config.get("hostname"), config.get("port"), config.get("username"), config.get("password"))
         else:
             raise UnsupportedProxyBrowserException(self.proxy_browser_type)
