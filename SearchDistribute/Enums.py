@@ -1,65 +1,49 @@
-class Enum():	## Source: http://stackoverflow.com/a/2182437/4900327
-	'''	Note: only enums set with an identical paramter_name = parameter_value pair will be allowed.
-		e.g. SearchEngines.Google = "Google" will work
-			 SearchEngines.Bing = "Boing" won't work; it won't show up when we do SearchEngines.list()
+from abc import abstractmethod
+
+## Source: http://stackoverflow.com/a/42360496/4900327
+class MetaEnum(type):
+	def __new__(meta, name, bases, attrs):
+		return super().__new__(meta, name, bases, attrs)
+
+	def __setattr__(cls, attr, value):
+		# print("Setting `%s` to %s"%(attr, value))
+		if str(attr) != str(value):
+			raise AttributeError
+		return super().__setattr__(attr, value)
+
+
+class Enum(metaclass=MetaEnum):
+	'''	Enums are classes which subclass this class.
+
+		Only enums parameters set with an identical paramter_name = parameter_value pair will be allowed.
+
+		Example usage:
+			class SearchEngines(Enum):
+				Google = "Google"
+			SearchEngines.Yandex = "Yandex"
+			SearchEngines.Bing = "Boing" ## will raise an AttributeError
+			SearchEngines.Google  ## will return 'Google'
+			SearchEngines.Yandex  ## will return 'Yandex'
+			SearchEngines.list()  ## will return ['Google', 'Yandex']
+			obj = SearchEngines() ## will raise TypeError, as Enum should not be instantised
 	'''
-	## Source: http://stackoverflow.com/a/1398059/4900327
-	## and http://stackoverflow.com/a/35864720/4900327
-	## and http://radek.io/2011/07/21/static-variables-and-methods-in-python/
+	def __init__(self):
+		raise TypeError  ## Source: https://docs.python.org/2/library/exceptions.html#exceptions.TypeError
+
 	@classmethod
-	def list(classname):		## Now, you can search as: `if user_input in SearchEngines.list()`
+	def list(classname):  ## Now, you can search as: `if user_input in SearchEngines.list()`
 		static_vars = []
 		for attribute in dir(classname):
-			if not callable(getattr(classname, attribute)) and not attribute.startswith("__") and attribute == getattr(classname, attribute):
+			if not callable(getattr(classname, attribute)) and not attribute.startswith("__") and attribute == getattr(
+					classname, attribute):
 				static_vars.append(attribute)
-		return static_vars
-
-	def __getattr__(self, name):
-		if name in self:
-			return name
-		return None
-
-	def __setattr__(self, name, value):
-		vals = [i for i in self]
-		if value=="" or value==None:		## used as: Enum.VAL = "" or Enum.VAL = None i.e. we are trying to delete
-			if name not in vals:			## used as: Enum.VAL_XYZ = "" i.e. we are trying to remove something that doesn't exist.
-				return
-			else:
-				vals.remove(name)
-				self = self.__init__(vals)
-				return
-
-		else:								## used as: Enum.VAL = "VAL" i.e. we are trying to set a new value.
-			if name in vals:
-				return
-			elif str(name) == str(value):
-				vals = set(vals + [name])
-				self = self.__init__(vals)
-				return
-			else:
-				raise AttributeError
-
-	def __delattr__(self, name):			## used as:	 del(Enum.VAL)
-		raise AttributeError
-		vals = [i for i in self]
-		if name not in vals:
-			raise AttributeError
-		vals.remove(name)
-		vals = set(vals)
-		self = self.__init__(vals)
-
+		return sorted(static_vars)
 
 class SearchEngines(Enum):
 	Google = "Google"
-
-
-SearchEngines.Soo = "gog"
-del(SearchEngines.Google)
-print(SearchEngines.list())
 
 class ProxyTypes(Enum):
 	Socks5 = "Socks5"
 
 class ProxyBrowsers(Enum):
 	PhantomJS = "PhantomJS"
-
