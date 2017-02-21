@@ -1,5 +1,3 @@
-from abc import abstractmethod
-
 ## Source: http://stackoverflow.com/a/42360496/4900327
 class MetaEnum(type):
 	def __new__(meta, name, bases, attrs):
