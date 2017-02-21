@@ -2,9 +2,9 @@
 import sys
 sys.path.append("..")
 import pytest
-from SearchDistribute.Enums import Enum
+from SearchDistribute.Enums import StrictEnum
 
-class Animals(Enum):
+class Animals(StrictEnum):
     Platypus = "Platypus"
     Armadillo = "Armadillo"
 
@@ -32,3 +32,7 @@ def test_enum_deletion():
     Animals.Horse = "Horse"
     del(Animals.Horse)
     assert Animals.list() == ['Armadillo', 'Platypus']
+
+def test_contains():
+    assert ("Armadillo" in Animals) == True
+    assert ("LinusTorvlads" in Animals) == False    ## debatable
