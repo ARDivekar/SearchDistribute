@@ -1,5 +1,3 @@
-## Run this file as: go to the command line and type: `py.test SearchQueryTests.py`. You must have the pytest module installed.
-
 import sys
 sys.path.append("..")
 from SearchDistribute.SearchQuery import GoogleSearchQuery as GSQ

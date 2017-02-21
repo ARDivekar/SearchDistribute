@@ -32,7 +32,7 @@ class SearchQueryTemplate(object):
     ## IMPORTANT: When a new field is added to the list above, we must also correspondingly add it to:
     ##  - SearchQuery.py : SearchQueryTemplate.__init__(...)
     ##  - GoogleSearchQuery.generate_query(), BingSearchQuery.generate_query(), etc.
-    ##  - ../tests/SearchQueryTests.py
+    ##  - ../tests/SearchQueryClassTests.py
     ##  - (Maybe) GoogleSearchQuery.__init__(), BingSearchQuery.__init__(), etc.
     ##  and
     ##  - SearchExtractorErrors.py : UnsupportedFeatureException.__init__(...)
