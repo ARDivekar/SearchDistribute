@@ -1,1 +1,5 @@
-- Have each worker save results in an SQLite Database (use SQLAlchemy)
+- Have each worker save results in an SQLite Database (use SQLAlchemy), see: 
+   - http://docs.sqlalchemy.org/en/latest/intro.html
+- Add OpenVPN support, see:
+   - https://www.cactusvpn.com/beginners-guide-to-vpn/what-is-openvpn/ 
+   - https://vpntunnel.com/faqs/what-is-openvpn/
