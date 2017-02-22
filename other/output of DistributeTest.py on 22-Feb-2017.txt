@@ -1,0 +1,206 @@
+/usr/bin/python3.5 /mnt/Data/Workspaces/Python/GoogleExtractor/tests/DistributeTest.py
+
+Starting the Google search with query `site:washingtonpost.com husky`
+/usr/lib/python3/dist-packages/bs4/__init__.py:166: UserWarning: No parser was explicitly specified, so I'm using the best available HTML parser for this system ("lxml"). This usually isn't a problem, but if you run this code on another system, or in a different virtual environment, it may use a different parser and behave differently.
+
+To get rid of this warning, change this:
+
+ BeautifulSoup([your markup])
+
+to this:
+
+ BeautifulSoup([your markup], "lxml")
+
+  markup_type=markup_type))
+Spawned GoogleSearch worker with id : 140402551126448. Detected proxy details:
+{
+  "Browser": "Safari 2.0",
+  "DNS": "8.0.16.0",
+  "DNS_country": "Germany",
+  "ISP": "NFOrce Entertainment B.V.",
+  "OS": "Linux",
+  "anonymizer": "No",
+  "behind_proxy": "Yes",
+  "behind_tor": "No",
+  "blacklisted": "No (Unauthenticated SMTP)",
+  "hostname": "tsn109-201-152-21.dyn.nltelcom.net",
+  "ip_address": "109.201.152.21",
+  "location": "Netherlands (NL), Rosendaal"
+}
+Spawned GoogleSearch worker with id : 140402412194280. Detected proxy details:
+{
+  "Browser": "Safari 2.0",
+  "DNS": "109.201.138.233",
+  "DNS_country": "Netherlands",
+  "ISP": "NFOrce Entertainment B.V.",
+  "OS": "Linux",
+  "anonymizer": "No",
+  "behind_proxy": "Yes",
+  "behind_tor": "No",
+  "blacklisted": "No (Unauthenticated SMTP)",
+  "hostname": ".",
+  "ip_address": "109.201.138.233",
+  "location": "Netherlands (NL), N/A"
+}
+Results 0-10
+('https://www.washingtonpost.com/news/the-fix/wp/2016/02/12/is-calling-hillary-clinton-angry-or-her-voice-husky-inherently-sexist/', 'http://findnsave.washingtonpost.com/brand/Husky/7216/%3Fpage%3D2', 'https://www.washingtonpost.com/local/obituaries/ferlin-husky-versatile-country-music-star-with-a-comic-flair-dies-at-85/2011/03/03/ABLLIom_story.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2010/08/18/AR2010081807247.html', 'https://www.washingtonpost.com/news/morning-mix/wp/2015/09/24/i-love-my-dog-this-young-syrian-refugee-refused-to-leave-his-husky-behind/', 'https://www.washingtonpost.com/news/wonk/wp/2013/06/04/husky-interrupts-baseball-runs-around-the-outfield/', 'https://www.washingtonpost.com/news/speaking-of-science/wp/2014/12/17/meet-derby-the-dog-who-runs-on-3-d-printed-legs/', 'https://www.washingtonpost.com/news/sports/wp/2016/10/01/the-long-dormant-huskies-just-throttled-stanford-and-put-college-football-on-notice/', 'http://www.washingtonpost.com/wp-dyn/content/article/2008/02/22/AR2008022201009.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2011/03/07/AR2011030704125.html')
+
+
+Spawned GoogleSearch worker with id : 140402409842056. Detected proxy details:
+{
+  "Browser": "Safari 2.0",
+  "DNS": "109.201.152.236",
+  "DNS_country": "Netherlands",
+  "ISP": "NFOrce Entertainment B.V.",
+  "OS": "Linux",
+  "anonymizer": "No",
+  "behind_proxy": "Yes",
+  "behind_tor": "No",
+  "blacklisted": "No (Unauthenticated SMTP)",
+  "hostname": "tsn109-201-152-236.dyn.nltelcom.net",
+  "ip_address": "109.201.152.236",
+  "location": "Netherlands (NL), Rosendaal"
+}
+Results 10-20
+('https://www.washingtonpost.com/archive/sports/2001/09/16/huskies-mourn-a-death-in-the-family/a8aff86b-465c-4af5-9ec7-52669e002374/', 'https://www.washingtonpost.com/archive/lifestyle/2002/01/28/fashion-woes-of-the-big-boned-boy/b59c5432-ce78-4ef3-b505-d8ec7c24490a/', 'http://www.washingtonpost.com/wp-dyn/content/article/2005/12/07/AR2005120700272.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2007/10/12/AR2007101202305.html', 'http://www.washingtonpost.com/wp-srv/style/longterm/movies/videos/baltogmcmanus_b003a9.htm', 'https://www.washingtonpost.com/lifestyle/kidspost/middle-schoolers-compete-in-the-kitchen/2014/02/04/012b5ccc-89f5-11e3-833c-33098f9e5267_story.html', 'https://www.washingtonpost.com/archive/sports/1993/09/04/walsh-has-huskies-ready-for-stanford/79fd1caf-3ad4-4097-839f-18d1a549bbcd/', 'http://chinawatch.washingtonpost.com/2016/08/tuition-fraud-spread-rapidly/', 'https://www.washingtonpost.com/sports/every-dog-has-his-day--many-of-them-when-it-comes-to-the-iditarod/2016/03/06/e263e300-e3ce-11e5-a6f3-21ccdbc5f74e_story.html', 'https://www.washingtonpost.com/news/early-lead/wp/2016/04/28/beachy-glow-false-lashes-hair-down-college-cheerleader-advice-unleashes-outrage/')
+
+
+Spawned GoogleSearch worker with id : 140402410330544. Detected proxy details:
+{
+  "Browser": "Safari 2.0",
+  "DNS": "109.201.152.24",
+  "DNS_country": "Netherlands",
+  "ISP": "NFOrce Entertainment B.V.",
+  "OS": "Linux",
+  "anonymizer": "No",
+  "behind_proxy": "Yes",
+  "behind_tor": "No",
+  "blacklisted": "No (Unauthenticated SMTP)",
+  "hostname": "tsn109-201-152-24.dyn.nltelcom.net",
+  "ip_address": "109.201.152.24",
+  "location": "Netherlands (NL), Rosendaal"
+}
+Results 20-30
+('http://www.washingtonpost.com/wp-srv/style/theater/features/ashvoice0601.htm', 'http://www.washingtonpost.com/video/world/watch-russian-troops-train-with-reindeer-and-sled-dogs/2016/02/01/9023bbbc-c900-11e5-b9ab-26591104bb19_video.html', 'https://www.washingtonpost.com/national/health-science/2016/07/12/ce63ad22-480f-11e6-8dac-0c6e4accc5b1_story.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2006/12/22/AR2006122200822_pf.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2006/08/10/AR2006081001535.html', 'http://www.washingtonpost.com/pb/lifestyle/advice/animal-doctor-what-happens-if-my-dogs-outlive-me/2017/02/03/1bbc54f4-e818-11e6-bf6f-301b6b443624_story.html%3FoutputType%3Daccessibility%26nid%3Dmenu_nav_accessibilityforscreenreader', 'http://www.washingtonpost.com/wp-dyn/content/article/2006/07/18/AR2006071801307.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2005/08/08/AR2005080801527.html', 'https://www.washingtonpost.com/news/post-politics/wp/2015/09/03/obama-gets-an-eskimo-kiss-and-asks-for-another/', 'http://www.washingtonpost.com/wp-srv/style/longterm/movies/videos/baltogkempley_c03f09.htm')
+
+
+Spawned GoogleSearch worker with id : 140402408149456. Detected proxy details:
+{
+  "Browser": "Safari 2.0",
+  "DNS": "46.166.186.230",
+  "DNS_country": "Netherlands",
+  "ISP": "NFOrce Entertainment B.V.",
+  "OS": "Linux",
+  "anonymizer": "No",
+  "behind_proxy": "Yes",
+  "behind_tor": "No",
+  "blacklisted": "Yes (Infected)",
+  "hostname": "tsn46-166-168-230.dyn.nltelcom.net",
+  "ip_address": "46.166.186.230",
+  "location": "Netherlands (NL), N/A"
+}
+Results 30-40
+('http://www.washingtonpost.com/wp-dyn/content/article/2006/02/15/AR2006021502762.html', 'http://www.washingtonpost.com/wp-dyn/articles/A3105-2002Nov17.html', 'http://comics.washingtonpost.com/books/dogs-of-c-kennel-fresh-fish', 'http://www.washingtonpost.com/wp-dyn/content/article/2007/01/11/AR2007011101959.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2008/03/23/AR2008032301990.html', 'https://www.washingtonpost.com/news/inspired-life/wp/2016/01/10/bullied-by-classmates-this-georgia-teen-can-now-bring-her-service-dog-carson-to-school-to-help-her-cope/', 'https://www.washingtonpost.com/news/sports/wp/2016/11/13/upsets-rock-the-undefeated-as-three-of-the-nations-top-four-teams-are-toppled/', 'http://www.washingtonpost.com/wp-dyn/content/article/2005/09/07/AR2005090701593.html', 'https://www.washingtonpost.com/national/health-science/modern-day-pooches-most-closely-related-to-european-canines-study-says/2013/11/14/723a2a0a-4d47-11e3-9890-a1e0997fb0c0_story.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2007/01/31/AR2007013101767.html')
+
+
+Spawned GoogleSearch worker with id : 140402409956072. Detected proxy details:
+{
+  "Browser": "Safari 2.0",
+  "DNS": "46.166.186.204",
+  "DNS_country": "Netherlands",
+  "ISP": "NFOrce Entertainment B.V.",
+  "OS": "Linux",
+  "anonymizer": "No",
+  "behind_proxy": "Yes",
+  "behind_tor": "No",
+  "blacklisted": "No",
+  "hostname": "tsn46-166-168-204.dyn.nltelcom.net",
+  "ip_address": "46.166.186.204",
+  "location": "Netherlands (NL), N/A"
+}
+Results 40-50
+('http://www.washingtonpost.com/wp-dyn/content/article/2009/11/10/AR2009111016599.html', 'https://www.washingtonpost.com/blogs/compost/wp/2016/02/29/get-ready-for-justice-thomass-next-question-on-the-supreme-court/', 'http://www.washingtonpost.com/wp-dyn/content/article/2009/08/20/AR2009082001313.html', 'https://www.washingtonpost.com/archive/business/1984/03/30/stock-offer-not-enough-shell-oil-says/dd863329-babd-4d01-9f12-3d178d63cdb3/', 'https://www.washingtonpost.com/entertainment/lynn-anderson-country-singer-who-topped-charts-in-1971-dies-at-67/2015/08/01/ed271fc4-3865-11e5-b673-1df005a0fb28_story.html', 'http://voices.washingtonpost.com/crime-scene/anne-arundel/outrage-over-dogs-shooting-in.html', 'https://www.washingtonpost.com/lifestyle/magazine/date-lab-hes-from-oklahoma-shes-not-dealbreaker/2014/01/10/99d28ae2-61cb-11e3-94ad-004fefa61ee6_story.html', 'https://www.washingtonpost.com/lifestyle/travel/garrett-county-md-beyond-deep-creek-lake/2013/07/18/dc32bcf2-ee50-11e2-9008-61e94a7ea20d_story.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2005/11/10/AR2005111001213.html', 'http://apps.washingtonpost.com/local/highschoolchallenge/schools/2016/heritage-wake-forest-nc/')
+
+
+Spawned GoogleSearch worker with id : 140402408974488. Detected proxy details:
+{
+  "Browser": "Safari 2.0",
+  "DNS": "46.166.137.198",
+  "DNS_country": "Netherlands",
+  "ISP": "NFOrce Entertainment B.V.",
+  "OS": "Linux",
+  "anonymizer": "No",
+  "behind_proxy": "Yes",
+  "behind_tor": "No",
+  "blacklisted": "Yes (Infected)",
+  "hostname": "N/A",
+  "ip_address": "46.166.137.198",
+  "location": "Netherlands (NL), N/A"
+}
+Results 50-60
+('https://www.washingtonpost.com/archive/sports/1991/12/12/beware-of-unhappy-husky-lads/cc595aec-8c0f-4a26-aa53-eed4f1e8f08b/', 'http://www.washingtonpost.com/wp-srv/style/columns/roadtrip/maps/trip08132006.pdf', 'https://www.washingtonpost.com/news/style/wp/2016/12/18/evan-birnholzs-guide-to-the-dec-18-post-magazine-crossword-crossbreeds/', 'https://www.washingtonpost.com/archive/lifestyle/wellness/1993/06/08/side-effects-of-medications-are-numerous/8e81135a-2927-4d64-8397-5504ca427d98/', 'https://www.washingtonpost.com/news/animalia/wp/2016/10/26/a-4-year-old-girl-tried-to-give-her-new-dog-a-treat-instead-it-turned-on-her/', 'http://tickets.washingtonpost.com/ncaa/uconn-huskies-tickets/%3Fpublisherid%3D51113%26brandid%3Dtiqiqhomepage%26EventCount%3D10', 'http://www.washingtonpost.com/pb/business/metal-objects-in-some-cans-prompt-skoal-tobacco-recall/2017/02/02/029cb548-e946-11e6-903d-9b11ed7d8d2a_story.html%3FoutputType%3Daccessibility%26nid%3Dmenu_nav_accessibilityforscreenreader', 'http://www.washingtonpost.com/wp-dyn/content/article/2009/07/17/AR2009071700756.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2006/08/02/AR2006080200743.html', 'https://www.washingtonpost.com/local/dog-with-paralysis-of-the-larynx-needs-surgery/2013/09/19/6d7c715c-11b6-11e3-85b6-d27422650fd5_story.html')
+
+
+Spawned GoogleSearch worker with id : 140402412498784. Detected proxy details:
+{
+  "Browser": "Safari 2.0",
+  "DNS": "109.201.154.173",
+  "DNS_country": "Netherlands",
+  "ISP": "NFOrce Entertainment B.V.",
+  "OS": "Linux",
+  "anonymizer": "No",
+  "behind_proxy": "Yes",
+  "behind_tor": "No",
+  "blacklisted": "Yes (Infected / Unauthenticated SMTP)",
+  "hostname": "tsn109-201-154-173.dyn.nltelcom.net",
+  "ip_address": "109.201.154.173",
+  "location": "Netherlands (NL), Amsterdam"
+}
+Results 60-70
+('https://www.washingtonpost.com/news/recruiting-insider/wp/2015/11/09/w-t-woodson-sharpshooter-matt-ayoub-commits-to-st-marys-college-of-maryland/', 'http://www.washingtonpost.com/wp-dyn/content/article/2008/10/20/AR2008102002538.html', 'https://live.washingtonpost.com/home-front-0315.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2005/05/07/AR2005050701145.html', 'https://www.washingtonpost.com/local/why-does-it-seem-like-every-mans-dress-shirt-these-days-is-slim-fit/2015/06/28/2b065046-1c08-11e5-93b7-5eddc056ad8a_story.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2010/04/18/AR2010041802964.html', 'http://www.washingtonpost.com/wp-srv/style/daily/loisgibbs.htm', 'http://www.washingtonpost.com/wp-dyn/content/article/2005/06/25/AR2005062501170.html', 'https://www.washingtonpost.com/sports/highschools/tate-rusby-woods-timely-strike-gives-flint-hill-a-repeat-mac-soccer-title/2015/11/08/a3bdd704-85ce-11e5-8ba6-cec48b74b2a7_story.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2007/04/25/AR2007042500421.html')
+
+
+Spawned GoogleSearch worker with id : 140402412023424. Detected proxy details:
+{
+  "Browser": "Safari 2.0",
+  "DNS": "109.201.154.220",
+  "DNS_country": "Netherlands",
+  "ISP": "NFOrce Entertainment B.V.",
+  "OS": "Linux",
+  "anonymizer": "No",
+  "behind_proxy": "Yes",
+  "behind_tor": "No",
+  "blacklisted": "Yes (Unauthenticated SMTP / Infected)",
+  "hostname": "tsn109-201-154-220.dyn.nltelcom.net",
+  "ip_address": "109.201.154.220",
+  "location": "Netherlands (NL), Amsterdam"
+}
+Results 70-80
+('http://voices.washingtonpost.com/local-breaking-news/maryland/officer-who-shot-dog-placed-on.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2008/03/23/AR2008032301990.html', 'https://www.washingtonpost.com/news/recruiting-insider/wp/2015/11/09/w-t-woodson-sharpshooter-matt-ayoub-commits-to-st-marys-college-of-maryland/', 'https://www.washingtonpost.com/national/health-science/modern-day-pooches-most-closely-related-to-european-canines-study-says/2013/11/14/723a2a0a-4d47-11e3-9890-a1e0997fb0c0_story.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2005/09/07/AR2005090701593.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2007/01/31/AR2007013101767.html', 'https://www.washingtonpost.com/sports/highschools/tate-rusby-woods-timely-strike-gives-flint-hill-a-repeat-mac-soccer-title/2015/11/08/a3bdd704-85ce-11e5-8ba6-cec48b74b2a7_story.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2007/05/01/AR2007050100470.html', 'http://www.washingtonpost.com/wp-dyn/content/discussion/2007/11/27/DI2007112701770.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2006/05/20/AR2006052001143.html')
+
+
+Spawned GoogleSearch worker with id : 140402407700912. Detected proxy details:
+{
+  "Browser": "Safari 2.0",
+  "DNS": "46.166.137.215",
+  "DNS_country": "Netherlands",
+  "ISP": "NFOrce Entertainment B.V.",
+  "OS": "Linux",
+  "anonymizer": "No",
+  "behind_proxy": "Yes",
+  "behind_tor": "No",
+  "blacklisted": "Yes (Infected)",
+  "hostname": "N/A",
+  "ip_address": "46.166.137.215",
+  "location": "Netherlands (NL), N/A"
+}
+Results 80-90
+('http://www.washingtonpost.com/wp-dyn/content/article/2006/10/25/AR2006102501477.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2009/04/07/AR2009040703559.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2009/03/08/AR2009030801890.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2009/07/28/AR2009072802834.html', 'https://www.washingtonpost.com/graphics/lifestyle/galapagos/', 'http://www.washingtonpost.com/wp-dyn/articles/A22250-2005Jan19.html%3Fnav%3Drss_world/africa/centralafrica/congo', 'https://www.washingtonpost.com/news/inspired-life/wp/2016/01/10/bullied-by-classmates-this-georgia-teen-can-now-bring-her-service-dog-carson-to-school-to-help-her-cope/', 'http://www.washingtonpost.com/wp-srv/politics/campaigns/junkie/links/abzug.htm', 'http://comics.washingtonpost.com/books/dogs-of-c-kennel-fresh-fish', 'http://www.washingtonpost.com/wp-srv/entertainment/movies/reviews/visitwiltz.htm')
+
+
+Results 90-100
+('http://www.washingtonpost.com/wp-dyn/content/article/2006/12/13/AR2006121302238.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2005/06/12/AR2005061201503.html', 'https://www.washingtonpost.com/archive/sports/1993/08/25/huskies-seek-reinstatement-for-3/2845ac40-d8f4-4076-aa31-1735eaae64c6/', 'http://www.washingtonpost.com/wp-dyn/content/article/2007/10/11/AR2007101102029.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2006/10/31/AR2006103100715.html', 'https://live.washingtonpost.com/home-front-0315.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2008/10/20/AR2008102002538.html', 'https://www.washingtonpost.com/local/why-does-it-seem-like-every-mans-dress-shirt-these-days-is-slim-fit/2015/06/28/2b065046-1c08-11e5-93b7-5eddc056ad8a_story.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2005/06/25/AR2005062501170.html', 'http://www.washingtonpost.com/wp-dyn/content/article/2007/04/25/AR2007042500421.html')
+
+
+
+Process finished with exit code 0
