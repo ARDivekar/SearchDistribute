@@ -170,8 +170,6 @@ class Distribute:
         parsed_serps = []  ## an array of parsed SERPs
         print("\nStarting the %s search with query `%s`" % (self.search_engine, self.query))
 
-
-
         ## The first worker the stage for the other workers, getting the basic url which is then modified by each worker.
         worker = self._spawn_worker()
         basic_url = worker.perform_search_from_main_page(query, num_results_per_page)
