@@ -7,6 +7,8 @@ from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
 import SearchDistribute.Enums
 import datetime
+import io
+from bs4 import BeautifulSoup as BS
 
 from SearchDistribute import Enums
 from SearchDistribute.SearchExtractorErrors import *
@@ -252,10 +254,19 @@ class PhantomJS():
 	def wait_for_element_to_load_ajax(self, timeout, element_css_selector):
 		try:
 			## Wait for the AJAX to load.
-			WebDriverWait(self.browser.webdriver, timeout).until(EC.presence_of_element_located((By.CSS_SELECTOR, element_css_selector)))
+			WebDriverWait(self.webdriver, timeout).until(EC.presence_of_element_located((By.CSS_SELECTOR, element_css_selector)))
 			return True
 		except Exception:  ## The WebDriverWait timed out.
+			print("Webdriver has timed out.")
+			self._log_state()
 			return False
+
+	def _log_state(self, timeout):
+		now = datetime.datetime.now()
+		with io.open("./search_logs/UTC %s-%s-%s %s-%s-%s.html" % (
+		now.year, now.month, now.day, now.hour, now.minute, now.second), "w+") as out:
+			out.write("<!--Timeout time: %s seconds-->\n\n<!--URL:\n%s-->\n\n<!--HTML:-->\n%s" % (timeout, self.get_url(), BS(self.get_html()).prettify()))
+
 
 
 # print("\n\tSplinter is the default headless client of this package as it is more reliable.")
