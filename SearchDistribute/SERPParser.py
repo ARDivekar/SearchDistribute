@@ -5,14 +5,13 @@ from SearchDistribute.Enums import SearchEngines
 import urllib
 
 class GoogleParser:
-	''' If any of the attributes are `None`, that attribute was not present on the SERP.
-	'''
-	current_url = ""
+	''' If any of the attributes are `None`, that attribute was not present on the SERP.'''
 	start_offset = -1
+	num_results = -1
+	current_url = ""
 	domain = ""
 	protocol = ""
 	results = []
-	num_results = -1
 	total_num_results_for_query = -1
 	query_retrieval_time_in_seconds = -1.0
 	link_to_previous_page = ""
@@ -153,6 +152,21 @@ class GoogleParser:
 			return None
 
 
+	def __str__(self):
+		out = ""
+		current_url = ""
+		start_offset = -1
+		domain = ""
+		protocol = ""
+		results = []
+		num_results = -1
+		total_num_results_for_query = -1
+		query_retrieval_time_in_seconds = -1.0
+		link_to_previous_page = ""
+		links_to_previous_pages = []
+		links_to_next_pages = []
+		link_to_next_page = ""
+		location = ""
 
 
 

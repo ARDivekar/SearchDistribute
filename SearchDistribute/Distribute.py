@@ -157,8 +157,7 @@ class Distribute:
             if self.workers[i].time_of_last_retrieved_query < time_of_last_retrieved_query_of_coolest_worker:
                 index_of_coolest_worker = i
                 time_of_last_retrieved_query_of_coolest_worker = self.workers[i].time_of_last_retrieved_query
-        time_passed_since_last_fetched_from_coolest_worker = time.time() - self.workers[
-            index_of_coolest_worker].time_of_last_retrieved_query
+        time_passed_since_last_fetched_from_coolest_worker = time.time() - self.workers[index_of_coolest_worker].time_of_last_retrieved_query
         return (index_of_coolest_worker, time_passed_since_last_fetched_from_coolest_worker)
 
 
@@ -185,7 +184,9 @@ class Distribute:
                                                url = worker._update_url_number_of_results_per_page(worker._update_url_start(basic_url, start_offset_so_far), num_results_per_page))
             parsed_serps.append(parsed_serp)
             start_offset_so_far += parsed_serps[-1].num_results
-            print("Results %s-%s\n%s\n\n" % (start_offset_so_far-parsed_serps[-1].num_results, start_offset_so_far, parsed_serps[-1].results))
+            now = datetime.datetime.now()
+            time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
+            print("Results %s-%s (obtained at %s)\n%s\n\n" % (start_offset_so_far - parsed_serps[-1].num_results, start_offset_so_far, time_str, parsed_serps[-1].results))
             self.workers.append(worker)     ## Can be extended to use multithreading or multiprocessing.
 
         num_completed = start_offset_so_far
@@ -194,8 +195,7 @@ class Distribute:
             index_of_coolest_worker, time_passed_since_last_fetched_from_coolest_worker = self._get_index_of_coolest_worker()
             if time_passed_since_last_fetched_from_coolest_worker < cooldown_time:
                 sleep_for = cooldown_time - time_passed_since_last_fetched_from_coolest_worker ## Sleep for the remaining time.
-                now = datetime.datetime.now()
-                wakeup_datetime = now + datetime.timedelta(seconds=sleep_for) ## Source: http://stackoverflow.com/a/3240493/4900327
+                wakeup_datetime = datetime.datetime.now() + datetime.timedelta(seconds=sleep_for) ## Source: http://stackoverflow.com/a/3240493/4900327
                 time_str = "%s-%s-%s %s:%s:%s"%(wakeup_datetime.year, wakeup_datetime.month, wakeup_datetime.day, wakeup_datetime.hour, wakeup_datetime.minute, wakeup_datetime.second)
                 print("<-----All workers need to cooldown, sleeping till: %s----->" % time_str)
                 time.sleep(sleep_for)
@@ -203,7 +203,9 @@ class Distribute:
                 self.workers[index_of_coolest_worker].get_SERP_results(
                     basic_url, num_completed, num_results_per_page, save_to_db))
             num_completed += parsed_serps[-1].num_results
-            print("Results %s-%s\n%s\n\n" % (num_completed-parsed_serps[-1].num_results, num_completed, parsed_serps[-1].results))
+            now = datetime.datetime.now()
+            time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
+            print("Results %s-%s (obtained at %s)\n%s\n\n" % (num_completed-parsed_serps[-1].num_results, num_completed, time_str, parsed_serps[-1].results))
 
         return parsed_serps
 

@@ -7,7 +7,7 @@ config = {
     "country" : "IND",
     "query" : "site:washingtonpost.com husky",
     "num_workers" : 10,
-    "num_results" : 100,
+    "num_results" : 300,
     "num_results_per_page" : 10,
     "cooldown_time" : 300,
     "proxy_browser_config" : {
@@ -28,4 +28,4 @@ config = {
 }
 
 d = Distribute(config)
-d.start()
+parsed_serps = d.start()
