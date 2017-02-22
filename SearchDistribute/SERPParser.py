@@ -36,15 +36,8 @@ class GoogleParser:
 		self.results = results
 		self.num_results = len(self.results)
 
-		total_num_results_for_query = self._parse_total_number_of_results_for_query(bs)
-		if total_num_results_for_query == None:
-			raise SERPParsingException(search_engine=SearchEngines.Google, parsing_stage="total number of results for query")
-		self.total_num_results_for_query = total_num_results_for_query
-
-		query_retrieval_time_in_seconds = self._parse_query_retrieval_time(bs)
-		if query_retrieval_time_in_seconds == None:
-			raise SERPParsingException(search_engine=SearchEngines.Google, parsing_stage="query retrieval time")
-		self.query_retrieval_time_in_seconds = query_retrieval_time_in_seconds
+		self.total_num_results_for_query = self._parse_total_number_of_results_for_query(bs)
+		self.query_retrieval_time_in_seconds = self._parse_query_retrieval_time(bs)
 
 		nav_links = self._parse_navigation_links(bs, current_url)
 		self.link_to_previous_page, self.links_to_previous_pages, temp, self.links_to_next_pages, self.link_to_next_page = nav_links
@@ -150,7 +143,7 @@ class GoogleParser:
 
 			return (link_to_previous_page, list_of_links_to_previous_pages, link_to_current_page, list_of_links_to_next_pages, link_to_next_page)
 		except Exception:
-			return None
+			return (None, None, None, None, None)
 
 
 	def _parse_location(self, bs):
