@@ -99,6 +99,8 @@ class GoogleSearch(SearchTemplate):
         ## Optional parameter `db_config`, defaults to None
         self.db_config = config.get("db_config")
 
+        print("Spawned %s worker with id : %s"%(self.__class__.__name__, id(self)))
+
 
     def get_country_domain(self, country):
         domain = ""
@@ -305,7 +307,7 @@ class GoogleSearch(SearchTemplate):
         ## Get a search engine results page from url
         url = self._update_url_number_of_results_per_page(self._update_url_start(old_url, start), num_results_per_page)
         self.browser.visit(url)
-        if self.browser.wait_for_element_to_load_ajax(timeout=15, element_css_selector=GoogleParser.css_selector_for_valid_page) == False:
+        if self.browser.wait_for_element_to_load_ajax(timeout=60, element_css_selector=GoogleParser.css_selector_for_valid_page) == False:
             return None
         self.time_of_last_retrieved_query = time.time()
         parsed_serp = GoogleParser(self.browser.get_html(), url, start)
@@ -322,7 +324,7 @@ class GoogleSearch(SearchTemplate):
     def disable_google_instant(self):
         ## This allows you to get more than ten results per page.
         self.browser.visit(self.get_country_domain(self.country)+("/preferences"))
-        if self.browser.wait_for_element_to_load_ajax(15, "#instant-radio") == False:
+        if self.browser.wait_for_element_to_load_ajax(30, "#instant-radio") == False:
             return False
         ## Click the 'disable' <div>:
         self.browser.webdriver.find_element_by_id('instant-radio').find_elements_by_class_name('jfk-radiobutton')[-1].click()
