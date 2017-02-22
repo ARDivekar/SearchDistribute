@@ -262,11 +262,12 @@ class PhantomJS:
 			self._log_state(timeout)
 			return False
 
-	def _log_state(self, timeout):
+	def _log_state(self, foldername = "./search_logs/", timeout=None):
 		now = datetime.datetime.now()
-		with io.open("./search_logs/Local Time %s-%s-%s %s-%s-%s.html" % (
-		now.year, now.month, now.day, now.hour, now.minute, now.second), "w+") as out:
-			out.write("<!--Timeout time: %s seconds-->\n\n<!--URL:\n%s-->\n\n<!--HTML:-->\n%s" % (timeout, self.get_url(), BS(self.get_html()).prettify()))
+		with io.open(foldername+"Local Time %s-%s-%s %s-%s-%s.html" % (now.year, now.month, now.day, now.hour, now.minute, now.second), "w+") as out:
+			if timeout is not None:
+				out.write("<!--Timeout time: %s seconds-->\n\n"%timeout)
+			out.write("<!--URL:\n%s-->\n\n<!--HTML:-->\n%s" % (self.get_url(), BS(self.get_html()).prettify()))
 
 	def _detect_proxy_details(self):
 		self.visit(self.detected_proxy_details.get("proxy_detection_website"))

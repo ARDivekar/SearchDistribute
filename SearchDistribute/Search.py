@@ -50,6 +50,7 @@ class GoogleSearch(SearchTemplate):
     time_of_last_retrieved_query = 0    ## The time in seconds (float) since UNIX epoch, when a page was visited.
     possible_num_results_per_page = [10, 20, 30, 40, 50, 100]
     default_num_results_per_page = 10
+    disabled_google_instant = False
     browser = None
 
     def __init__(self, config):
@@ -291,7 +292,7 @@ class GoogleSearch(SearchTemplate):
             This url is then passed on to all the other workers, who append &num and &start and to it.
             This function should only be called once for the total query execution. '''
         ## Takes as input a search query string
-        if num_results_per_page != 10:
+        if num_results_per_page > 10 and self.disabled_google_instant == False:
             self.disable_google_instant()
         else:
             self.browser.visit(self.get_country_domain(self.country))
@@ -300,16 +301,18 @@ class GoogleSearch(SearchTemplate):
         # if self.browser.wait_for_element_to_load_ajax(15, "search") == False:
         #     print("THIS CANNOT GO ON")
         #     return None
-        return self.browser.get_url()
+        return (self.browser.get_url(), GoogleParser(self.browser.get_html(), self.browser.get_url(), 0))
 
 
     def get_SERP_results(self, old_url, start, num_results_per_page, save_to_db = True):
+        if num_results_per_page > 10 and self.disabled_google_instant == False:
+            self.disable_google_instant()
         ## Get a search engine results page from url
         url = self._update_url_number_of_results_per_page(self._update_url_start(old_url, start), num_results_per_page)
         self.browser.visit(url)
         if self.browser.wait_for_element_to_load_ajax(timeout=60, element_css_selector=GoogleParser.css_selector_for_valid_page) == False:
             return None
-        self.time_of_last_retrieved_query = time.time()
+        self.time_of_last_retrieved_query = time.time()     ## Do not move this line, this value is used for error-checking.
         parsed_serp = GoogleParser(self.browser.get_html(), url, start)
         if save_to_db:
             self.save_serp_to_db(parsed_serp, self.db_config)
@@ -321,23 +324,45 @@ class GoogleSearch(SearchTemplate):
         pass
 
 
-    def disable_google_instant(self):
+    def disable_google_instant(self, num_results=100):
         ## This allows you to get more than ten results per page.
         self.browser.visit(self.get_country_domain(self.country)+("/preferences"))
-        if self.browser.wait_for_element_to_load_ajax(30, "#instant-radio") == False:
-            return False
-        ## Click the 'disable' <div>:
-        self.browser.webdriver.find_element_by_id('instant-radio').find_elements_by_class_name('jfk-radiobutton')[-1].click()
-        ## Save the results:
-        if self.browser.webdriver.find_element_by_id('form-buttons').find_elements_by_class_name('jfk-button')[0].text == "Save":
-            self.browser.webdriver.find_element_by_id('form-buttons').find_elements_by_class_name('jfk-button')[0].click()
-        elif self.browser.webdriver.find_element_by_id('form-buttons').find_elements_by_class_name('jfk-button')[1].text == "Save":
-            self.browser.webdriver.find_element_by_id('form-buttons').find_elements_by_class_name('jfk-button')[1].click()
-        ## Press 'ok' on the resulting alert:
         try:
-            self.browser.webdriver.switch_to_alert().accept()
+            # if self.browser.wait_for_element_to_load_ajax(30, "#instant-radio") == True:
+            self.browser.webdriver.find_element_by_id('instant-radio').find_elements_by_class_name('jfk-radiobutton')[-1].click()
+            ## Click the 'disable' <div>:
+            ## Save the results:
+            if self.browser.webdriver.find_element_by_id('form-buttons').find_elements_by_class_name('jfk-button')[
+                0].text == "Save":
+                self.browser.webdriver.find_element_by_id('form-buttons').find_elements_by_class_name('jfk-button')[
+                    0].click()
+            elif self.browser.webdriver.find_element_by_id('form-buttons').find_elements_by_class_name(
+                    'jfk-button')[1].text == "Save":
+                self.browser.webdriver.find_element_by_id('form-buttons').find_elements_by_class_name('jfk-button')[
+                    1].click()
+            ## Press 'ok' on the resulting alert:
+            try:
+                self.browser.webdriver.switch_to_alert().accept()
+            except Exception:
+                raise Exception
         except Exception:
-            pass
+            try:
+                for option in self.browser.webdriver.find_element_by_id('numsel').find_elements_by_tag_name('option'):  ## Source: http://sqa.stackexchange.com/a/1359
+                    clicked = False
+                    if option.text.strip() == str(num_results):
+                        option.click()
+                        clicked = True
+                        self.browser.webdriver.find_elements_by_name('submit2')[-1].click()
+                if clicked == False:
+                    raise Exception
+
+            except Exception:
+                self.browser._log_state()
+                self.disabled_google_instant = False
+                return False
+
+        print("Disabled Google Instant on worker %s"%id(self))
+        self.disabled_google_instant = True
         return True
 
 

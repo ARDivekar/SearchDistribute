@@ -165,13 +165,15 @@ class Distribute:
     def start(self):
         return self.distribute_query(self.query, self.num_results, self.num_workers, self.num_results_per_page, self.cooldown_time, self.save_to_db)
 
+
     def distribute_query(self, query, num_results, num_workers, num_results_per_page, cooldown_time, save_to_db):
         parsed_serps = []  ## an array of parsed SERPs
         print("\nStarting the %s search with query `%s`" % (self.search_engine, self.query))
 
         ## The first worker the stage for the other workers, getting the basic url which is then modified by each worker.
         worker = self._spawn_worker()
-        basic_url = worker.perform_search_from_main_page(query, num_results_per_page)
+        basic_url, basic_serp = worker.perform_search_from_main_page(query, num_results_per_page)
+        print("Found %s results, trying to get %s."%(basic_serp.total_num_results_for_query, num_results))
         self.workers.append(worker)
 
         start_offset_so_far = 0
@@ -188,7 +190,7 @@ class Distribute:
             time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
             print("Results %s-%s (obtained at %s)\n%s\n\n" % (start_offset_so_far - parsed_serps[-1].num_results, start_offset_so_far, time_str, parsed_serps[-1].results))
             self.workers.append(worker)     ## Can be extended to use multithreading or multiprocessing.
-
+            pass
         num_completed = start_offset_so_far
 
         while num_completed < num_results:
@@ -206,7 +208,7 @@ class Distribute:
             now = datetime.datetime.now()
             time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
             print("Results %s-%s (obtained at %s)\n%s\n\n" % (num_completed-parsed_serps[-1].num_results, num_completed, time_str, parsed_serps[-1].results))
-
+            pass
         return parsed_serps
 
 

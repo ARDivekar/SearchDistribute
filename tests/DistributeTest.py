@@ -5,11 +5,11 @@ from SearchDistribute.Distribute import *
 config = {
     "search_engine" : SearchEngines.Google,
     "country" : "IND",
-    "query" : "site:washingtonpost.com husky",
-    "num_workers" : 10,
+    "query" : "site:nytimes.com | site:latimes.com | site:washingtonpost.com shiba inu",
+    "num_workers" : 3,
     "num_results" : 300,
-    "num_results_per_page" : 10,
-    "cooldown_time" : 300,
+    "num_results_per_page" : 100,
+    "cooldown_time" : 600,
     "proxy_browser_config" : {
         "proxy_browser_type" : Enums.ProxyBrowsers.PhantomJS,
         "proxy_args" : {
