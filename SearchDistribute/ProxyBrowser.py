@@ -177,13 +177,14 @@ class BrowserTemplate(object):
 class PhantomJS:
 	proxy_browser_type = Enums.ProxyBrowsers.PhantomJS
 	headless = True
-	proxy_args = {}			## (optional, defaults to None) A hashtable with the following values: proxy_type, hostname, port, username, password.
+	proxy_args = {}			## (optional, defaults to None) A hashtable with the following fields: proxy_type, hostname, port, username, password.
 							##  - proxy_type : a string denoting the type of proxy, e.g. Socks5, HTTP etc. Must be from Enums.ProxyTypes
 							##  - hostname : a string of the name or ip address of the proxy server.
 							##  - port : a string of the port at the proxy server to which the webdriver must connect.
 							##  - username : (optional, defaults to None) a string of the proxy authentication username
 							##  - password : (optional, defaults to None) a string of the proxy authentication password
 	webdriver = None		## The selenium object. This should not be refreshed.
+	detected_proxy_details = {}		## A hashtable with the following details (taken from https://www.whoer.net): ip_address, location, ISP, hostname, OS, Browser, DNS, DNS_country, behind_proxy, behind_tor, anonymizer, blacklisted.
 
 	def __init__(self, proxy_args):
 		'''
@@ -227,6 +228,7 @@ class PhantomJS:
 					phantomjs_socks5_proxy_service_args += ['--proxy-auth=%s:%s'%(username, password)]
 				service_args += phantomjs_socks5_proxy_service_args
 		self.webdriver = webdriver.PhantomJS(service_args = service_args, executable_path=phantomjs_path)
+		self._detect_proxy_details()
 
 	def visit(self, url):
 		self.webdriver.get(url)
@@ -265,6 +267,35 @@ class PhantomJS:
 		with io.open("./search_logs/Local Time %s-%s-%s %s-%s-%s.html" % (
 		now.year, now.month, now.day, now.hour, now.minute, now.second), "w+") as out:
 			out.write("<!--Timeout time: %s seconds-->\n\n<!--URL:\n%s-->\n\n<!--HTML:-->\n%s" % (timeout, self.get_url(), BS(self.get_html()).prettify()))
+
+	def _detect_proxy_details(self):
+		self.visit("https://www.whoer.net")
+		bs = BS(self.get_html())
+		## Fetch the following details: ip_address, location, ISP, hostname, OS, Browser, DNS, DNS_country, behind_proxy, behind_tor, anonymizer, blacklisted.
+		try:
+			self.detected_proxy_details['ip_address'] = bs.find_all(class_="your-ip")[0].text.strip()
+		except Exception:
+			pass
+		try:
+			left_details_col = bs.find_all(class_="ping")[0]
+			self.detected_proxy_details['location'] = 	left_details_col.find_all('dd')[0].find_all('span', class_='cont')[0].text.strip()
+			self.detected_proxy_details['ISP'] = 		left_details_col.find_all('dd')[1].find_all('span', class_='cont')[0].text.strip()
+			self.detected_proxy_details['hostname'] = 	left_details_col.find_all('dd')[2].find_all('span', class_='cont')[0].text.strip()
+			self.detected_proxy_details['OS'] = 		left_details_col.find_all('dd')[3].find_all('span', class_='cont')[0].text.strip()
+			self.detected_proxy_details['Browser'] =	left_details_col.find_all('dd')[4].find_all('span', class_='cont')[0].text.strip()
+		except Exception:
+			pass
+		try:
+			right_details_col = bs.find_all(class_="ping")[1]
+			self.detected_proxy_details['DNS'] = right_details_col.find_all('dd')[0].find_all('span', class_='cont')[2].text.strip()
+			self.detected_proxy_details['DNS_country'] = right_details_col.find_all('dd')[0].find_all('span', class_='cont')[3].text.strip()
+			self.detected_proxy_details['behind_proxy'] = right_details_col.find_all('dd')[1].find_all('span', class_='cont')[0].text.strip()
+			self.detected_proxy_details['behind_tor'] = right_details_col.find_all('dd')[2].find_all('span', class_='cont')[0].text.strip()
+			self.detected_proxy_details['anonymizer'] = right_details_col.find_all('dd')[3].find_all('span', class_='cont')[0].text.strip()
+			self.detected_proxy_details['blacklisted'] = right_details_col.find_all('dd')[4].find_all('span', class_='cont')[0].text.strip().replace("\n"," ")
+		except Exception:
+			pass
+
 
 
 
