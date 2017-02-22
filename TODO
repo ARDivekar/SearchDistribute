@@ -1,0 +1,1 @@
+- Have each worker save results in an SQLite Database (use SQLAlchemy)
