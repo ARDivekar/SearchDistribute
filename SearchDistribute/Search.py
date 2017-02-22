@@ -308,7 +308,7 @@ class GoogleSearch(SearchTemplate):
         if self.browser.wait_for_element_to_load_ajax(timeout=15, element_css_selector=GoogleParser.css_selector_for_valid_page) == False:
             return None
         self.time_of_last_retrieved_query = time.time()
-        parsed_serp = GoogleParser(self.browser.get_html(), url)
+        parsed_serp = GoogleParser(self.browser.get_html(), url, start)
         if save_to_db:
             self.save_serp_to_db(parsed_serp, self.db_config)
         return parsed_serp

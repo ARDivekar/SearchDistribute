@@ -174,7 +174,7 @@ class BrowserTemplate(object):
 [2] http://stackoverflow.com/a/16353584/4900327  and  http://stackoverflow.com/a/26931933/4900327
 '''
 
-class PhantomJS():
+class PhantomJS:
 	proxy_browser_type = Enums.ProxyBrowsers.PhantomJS
 	headless = True
 	proxy_args = {}			## (optional, defaults to None) A hashtable with the following values: proxy_type, hostname, port, username, password.
@@ -230,7 +230,6 @@ class PhantomJS():
 
 	def visit(self, url):
 		self.webdriver.get(url)
-		self.last_loaded_time = datetime.datetime.now()
 
 	def get_html(self):
 		return self.webdriver.page_source
@@ -247,7 +246,7 @@ class PhantomJS():
 
 	def switch_proxy(self):
 		self.webdriver.close()
-		self.webdriver = webdriver.PhantomJS(service_args = self.service_args)
+		self.webdriver = webdriver.PhantomJS(service_args = self.proxy_args)
 
 	## Source: http://stackoverflow.com/questions/24053671/webdriver-wait-for-ajax-request-in-python/24053891#24053891
 	## and http://stackoverflow.com/a/26949021/4900327
@@ -258,7 +257,7 @@ class PhantomJS():
 			return True
 		except Exception:  ## The WebDriverWait timed out.
 			print("Webdriver has timed out.")
-			self._log_state()
+			self._log_state(timeout)
 			return False
 
 	def _log_state(self, timeout):
