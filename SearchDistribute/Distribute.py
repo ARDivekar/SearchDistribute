@@ -173,7 +173,8 @@ class Distribute:
         ## The first worker the stage for the other workers, getting the basic url which is then modified by each worker.
         worker = self._spawn_worker()
         basic_url, basic_serp = worker.perform_search_from_main_page(query, num_results_per_page)
-        print("Found %s results, trying to get %s."%(basic_serp.total_num_results_for_query, num_results))
+        actual_total_num_results_for_query = basic_serp.total_num_results_for_query
+        print("Found %s results, trying to get %s."%(actual_total_num_results_for_query, num_results))
         self.workers.append(worker)
 
         start_offset_so_far = 0
@@ -193,7 +194,7 @@ class Distribute:
             pass
         num_completed = start_offset_so_far
 
-        while num_completed < num_results:
+        while num_completed < actual_total_num_results_for_query:
             index_of_coolest_worker, time_passed_since_last_fetched_from_coolest_worker = self._get_index_of_coolest_worker()
             if time_passed_since_last_fetched_from_coolest_worker < cooldown_time:
                 sleep_for = cooldown_time - time_passed_since_last_fetched_from_coolest_worker ## Sleep for the remaining time.
