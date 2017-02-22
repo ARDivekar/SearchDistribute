@@ -5,7 +5,7 @@ from SearchDistribute.SearchExtractorErrors import MissingSearchParameterExcepti
 from SearchDistribute.SearchExtractorErrors import SERPPageLoadingException
 from SearchDistribute import Enums
 import time
-
+import datetime
 
 class Distribute:
     ''' Each distribute object runs one query string on one search engine, across multiple *Search objects (each of which have identical parameters).
@@ -178,7 +178,7 @@ class Distribute:
         self.workers.append(worker)
 
         start_offset_so_far = 0
-        for i in range(0, num_workers):
+        for i in range(1, num_workers):
             worker = self._spawn_worker()
             parsed_serp = worker.get_SERP_results(basic_url, start_offset_so_far, num_results_per_page, save_to_db)
             if parsed_serp is None:
@@ -187,7 +187,7 @@ class Distribute:
                                                url = worker._update_url_number_of_results_per_page(worker._update_url_start(basic_url, start_offset_so_far), num_results_per_page))
             parsed_serps.append(parsed_serp)
             start_offset_so_far += parsed_serps[-1].num_results
-            print("\n\nStart : %s\n%s" % (start_offset_so_far, parsed_serps[-1].results))
+            print("\n\nResults %s-%s\n%s" % (start_offset_so_far-parsed_serps[-1].num_results, start_offset_so_far, parsed_serps[-1].results))
             self.workers.append(worker)     ## Can be extended to use multithreading or multiprocessing.
 
         num_completed = start_offset_so_far
@@ -195,12 +195,17 @@ class Distribute:
         while num_completed < num_results:
             index_of_coolest_worker, time_passed_since_last_fetched_from_coolest_worker = self._get_index_of_coolest_worker()
             if time_passed_since_last_fetched_from_coolest_worker < cooldown_time:
-                time.sleep(cooldown_time - time_passed_since_last_fetched_from_coolest_worker)  ## Sleep for the remaining time.
+                sleep_for = cooldown_time - time_passed_since_last_fetched_from_coolest_worker ## Sleep for the remaining time.
+                now = datetime.datetime.now()
+                wakeup_datetime = now + datetime.timedelta(seconds=sleep_for) ## Source: http://stackoverflow.com/a/3240493/4900327
+                time_str = "%s-%s-%s %s:%s:%s"%(wakeup_datetime.year, wakeup_datetime.month, wakeup_datetime.day, wakeup_datetime.hour, wakeup_datetime.minute, wakeup_datetime.second)
+                print("All workers need to cooldown, sleeping till: %s" % time_str)
+                time.sleep(sleep_for)
             parsed_serps.append(
                 self.workers[index_of_coolest_worker].get_SERP_results(
                     basic_url, num_completed, num_results_per_page, save_to_db))
             num_completed += parsed_serps[-1].num_results
-            print("\n\nStart : %s\n%s" % (num_completed, parsed_serps[-1].results))
+            print("\n\nResults %s-%s\n%s" % (num_completed-parsed_serps[-1].num_results, num_completed, parsed_serps[-1].results))
 
         return parsed_serps
 

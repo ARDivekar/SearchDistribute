@@ -99,6 +99,8 @@ class GoogleSearch(SearchTemplate):
         ## Optional parameter `db_config`, defaults to None
         self.db_config = config.get("db_config")
 
+        print("Spawned GoogleSearch worker with id : %s" % (id(self)))
+
 
     def get_country_domain(self, country):
         domain = ""

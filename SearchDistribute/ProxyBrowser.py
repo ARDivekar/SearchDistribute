@@ -262,7 +262,7 @@ class PhantomJS:
 
 	def _log_state(self, timeout):
 		now = datetime.datetime.now()
-		with io.open("./search_logs/UTC %s-%s-%s %s-%s-%s.html" % (
+		with io.open("./search_logs/Local Time %s-%s-%s %s-%s-%s.html" % (
 		now.year, now.month, now.day, now.hour, now.minute, now.second), "w+") as out:
 			out.write("<!--Timeout time: %s seconds-->\n\n<!--URL:\n%s-->\n\n<!--HTML:-->\n%s" % (timeout, self.get_url(), BS(self.get_html()).prettify()))
 
