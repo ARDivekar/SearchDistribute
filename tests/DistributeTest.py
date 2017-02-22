@@ -4,10 +4,10 @@ from SearchDistribute.Distribute import *
 
 config = {
     "search_engine" : SearchEngines.Google,
-    "country" : "USA",
-    "query" : "site:latimes.com corgi",
-    "num_workers" : 1,
-    "num_results" : 10,
+    "country" : "IND",
+    "query" : "site:washingtonpost.com husky",
+    "num_workers" : 10,
+    "num_results" : 100,
     "num_results_per_page" : 10,
     "cooldown_time" : 300,
     "proxy_browser_config" : {

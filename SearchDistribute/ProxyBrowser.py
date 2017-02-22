@@ -184,7 +184,7 @@ class PhantomJS:
 							##  - username : (optional, defaults to None) a string of the proxy authentication username
 							##  - password : (optional, defaults to None) a string of the proxy authentication password
 	webdriver = None		## The selenium object. This should not be refreshed.
-	detected_proxy_details = {}		## A hashtable with the following details (taken from https://www.whoer.net): ip_address, location, ISP, hostname, OS, Browser, DNS, DNS_country, behind_proxy, behind_tor, anonymizer, blacklisted.
+	detected_proxy_details = {"proxy_detection_website": "https://www.whoer.net"}		## A hashtable with the following details (taken from https://www.whoer.net): ip_address, location, ISP, hostname, OS, Browser, DNS, DNS_country, behind_proxy, behind_tor, anonymizer, blacklisted.
 
 	def __init__(self, proxy_args):
 		'''
@@ -269,7 +269,7 @@ class PhantomJS:
 			out.write("<!--Timeout time: %s seconds-->\n\n<!--URL:\n%s-->\n\n<!--HTML:-->\n%s" % (timeout, self.get_url(), BS(self.get_html()).prettify()))
 
 	def _detect_proxy_details(self):
-		self.visit("https://www.whoer.net")
+		self.visit(self.detected_proxy_details.get("proxy_detection_website"))
 		bs = BS(self.get_html())
 		## Fetch the following details: ip_address, location, ISP, hostname, OS, Browser, DNS, DNS_country, behind_proxy, behind_tor, anonymizer, blacklisted.
 		try:

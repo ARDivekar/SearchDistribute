@@ -99,7 +99,7 @@ class GoogleSearch(SearchTemplate):
         ## Optional parameter `db_config`, defaults to None
         self.db_config = config.get("db_config")
 
-        print("Spawned %s worker with id : %s. Detected proxy details:\n%s\n"%(self.__class__.__name__, id(self), print(json.dumps(self.browser.detected_proxy_details, sort_keys=True, indent=2))))    ## Source: http://stackoverflow.com/a/3314411/4900327
+        print("Spawned %s worker with id : %s. Detected proxy details from `%s`:\n%s"%(self.__class__.__name__, id(self), self.browser.detected_proxy_details.get("proxy_detection_website"), json.dumps(self.browser.detected_proxy_details, sort_keys=True, indent=2)))    ## Source: http://stackoverflow.com/a/3314411/4900327
 
 
     def get_country_domain(self, country):
