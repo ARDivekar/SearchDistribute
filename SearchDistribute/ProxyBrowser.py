@@ -248,10 +248,11 @@ class PhantomJS():
 		self.webdriver = webdriver.PhantomJS(service_args = self.service_args)
 
 	## Source: http://stackoverflow.com/questions/24053671/webdriver-wait-for-ajax-request-in-python/24053891#24053891
-	def wait_for_element_to_load_ajax(self, timeout, element_id):
+	## and http://stackoverflow.com/a/26949021/4900327
+	def wait_for_element_to_load_ajax(self, timeout, element_css_selector):
 		try:
 			## Wait for the AJAX to load.
-			WebDriverWait(self.browser.webdriver, timeout).until(EC.presence_of_element_located((By.ID, element_id)))
+			WebDriverWait(self.browser.webdriver, timeout).until(EC.presence_of_element_located((By.CSS_SELECTOR, element_css_selector)))
 			return True
 		except Exception:  ## The WebDriverWait timed out.
 			return False

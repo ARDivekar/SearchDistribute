@@ -2,6 +2,7 @@ from SearchDistribute.Search import GoogleSearch
 from SearchDistribute.Enums import SearchEngines
 from SearchDistribute.SearchExtractorErrors import InvalidSearchParameterException
 from SearchDistribute.SearchExtractorErrors import MissingSearchParameterException
+from SearchDistribute.SearchExtractorErrors import SERPPageLoadingException
 from SearchDistribute import Enums
 import time
 
@@ -20,7 +21,7 @@ class Distribute:
     db_config = {}              ## (optional, defaults to None) A hashtable with these fields: db_path, db_table. See Search.py for how they are handled.
     proxy_browser_config = {}   ## A hashtable with these fields: proxy_browser_type, proxy_args. See ProxyBrowser.py for how they are handled.
     cooldown_time = -1          ## The time in seconds, that each worker MUST wait before it can fetch the next SERP. No more SERPs can be fetched before this time expires
-
+    workers = []  ## An array of the *Search objects. Their `time_of_last_retrieved_query` allows us to choose the one which has cooled down the most, to assign to fetch the next SERP.
 
     def __init__(self, config):
         '''For all the parameters in `config`:
@@ -138,7 +139,7 @@ class Distribute:
         return default_config.get(param)
 
 
-    def spawn_worker(self):     ## Can be extended to use multithreading or multiprocessing.
+    def _spawn_worker(self):     ## Can be extended to use multithreading or multiprocessing.
         worker_config = {
             "country" : self.country,
             "proxy_browser_config" : self.proxy_browser_config,
@@ -148,43 +149,55 @@ class Distribute:
         if self.search_engine == SearchEngines.Google:
             return GoogleSearch(worker_config)
 
+
+    def _get_index_of_coolest_worker(self):
+        index_of_coolest_worker = -1
+        time_of_last_retrieved_query_of_coolest_worker = time.time()
+        for i in range(0, len(self.workers)):
+            if self.workers[i].time_of_last_retrieved_query < time_of_last_retrieved_query_of_coolest_worker:
+                index_of_coolest_worker = i
+                time_of_last_retrieved_query_of_coolest_worker = self.workers[i].time_of_last_retrieved_query
+        time_passed_since_last_fetched_from_coolest_worker = time.time() - self.workers[
+            index_of_coolest_worker].time_of_last_retrieved_query
+        return (index_of_coolest_worker, time_passed_since_last_fetched_from_coolest_worker)
+
+
     ## Ready, set, GO!
     def start(self):
         return self.distribute_query(self.query, self.num_results, self.num_workers, self.num_results_per_page, self.cooldown_time, self.save_to_db)
 
     def distribute_query(self, query, num_results, num_workers, num_results_per_page, cooldown_time, save_to_db):
         parsed_serps = []  ## an array of parsed SERPs
-        print("\nStarting the %s search with query %s" % (self.search_engine, self.query))
+        print("\nStarting the %s search with query `%s`" % (self.search_engine, self.query))
 
-        workers = []  ## An array of the *Search objects. Their `time_of_last_retrieved_query` allows us to choose the one which has cooled down the most, to assign to fetch the next SERP.
+
 
         ## The first worker the stage for the other workers, getting the basic url which is then modified by each worker.
-        worker = self.spawn_worker()
+        worker = self._spawn_worker()
         basic_url = worker.perform_search_from_main_page(query, num_results_per_page)
-        workers.append(worker)
+        self.workers.append(worker)
 
         start_offset_so_far = 0
         for i in range(0, num_workers):
-            worker = self.spawn_worker()
-            parsed_serps.append(worker.get_SERP_results(basic_url, start_offset_so_far, num_results_per_page, save_to_db))
+            worker = self._spawn_worker()
+            parsed_serp = worker.get_SERP_results(basic_url, start_offset_so_far, num_results_per_page, save_to_db)
+            if parsed_serp is None:
+                raise SERPPageLoadingException(self.search_engine,
+                                               self.proxy_browser_config.get("proxy_browser_type"),
+                                               url = worker._update_url_number_of_results_per_page(worker._update_url_start(basic_url, start_offset_so_far), num_results_per_page))
+            parsed_serps.append(parsed_serp)
             start_offset_so_far += parsed_serps[-1].num_results
             print("\n\nStart : %s\n%s" % (start_offset_so_far, parsed_serps[-1].results))
-            workers.append(worker)     ## Can be extended to use multithreading or multiprocessing.
+            self.workers.append(worker)     ## Can be extended to use multithreading or multiprocessing.
 
         num_completed = start_offset_so_far
 
         while num_completed < num_results:
-            index_of_coolest_worker = -1
-            time_of_last_retrieved_query_of_coolest_worker = time.time()
-            for i in range(0, len(workers)):
-                if workers[i].time_of_last_retrieved_query < time_of_last_retrieved_query_of_coolest_worker:
-                    index_of_coolest_worker = i
-                    time_of_last_retrieved_query_of_coolest_worker = workers[i].time_of_last_retrieved_query
-            time_passed_since_last_fetched_from_coolest_worker = time.time() - workers[index_of_coolest_worker].time_of_last_retrieved_query
+            index_of_coolest_worker, time_passed_since_last_fetched_from_coolest_worker = self._get_index_of_coolest_worker()
             if time_passed_since_last_fetched_from_coolest_worker < cooldown_time:
-                time.sleep(cooldown_time - time_passed_since_last_fetched_from_coolest_worker)
+                time.sleep(cooldown_time - time_passed_since_last_fetched_from_coolest_worker)  ## Sleep for the remaining time.
             parsed_serps.append(
-                workers[index_of_coolest_worker].get_SERP_results(
+                self.workers[index_of_coolest_worker].get_SERP_results(
                     basic_url, num_completed, num_results_per_page, save_to_db))
             num_completed += parsed_serps[-1].num_results
             print("\n\nStart : %s\n%s" % (num_completed, parsed_serps[-1].results))

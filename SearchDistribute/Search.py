@@ -49,6 +49,7 @@ class GoogleSearch(SearchTemplate):
                             ##  - db_table : The table of the SQLite database in which to save the results.
     time_of_last_retrieved_query = 0    ## The time in seconds (float) since UNIX epoch, when a page was visited.
     possible_num_results_per_page = [10, 20, 30, 40, 50, 100]
+    default_num_results_per_page = 10
     browser = None
 
     def __init__(self, config):
@@ -302,11 +303,9 @@ class GoogleSearch(SearchTemplate):
 
     def get_SERP_results(self, old_url, start, num_results_per_page, save_to_db = True):
         ## Get a search engine results page from url
-        url = old_url
-        url = self.update_url_start(url, start)
-        url = self.update_url_number_of_results_per_page(url, num_results_per_page)
+        url = self._update_url_number_of_results_per_page(self._update_url_start(old_url, start), num_results_per_page)
         self.browser.visit(url)
-        if self.browser.wait_for_element_to_load_ajax(timeout=30, element_id="search") == False:
+        if self.browser.wait_for_element_to_load_ajax(timeout=15, element_css_selector=GoogleParser.css_selector_for_valid_page) == False:
             return None
         self.time_of_last_retrieved_query = time.time()
         parsed_serp = GoogleParser(self.browser.get_html(), url)
@@ -323,7 +322,7 @@ class GoogleSearch(SearchTemplate):
     def disable_google_instant(self):
         ## This allows you to get more than ten results per page.
         self.browser.visit(self.get_country_domain(self.country)+("/preferences"))
-        if self.browser.wait_for_element_to_load_ajax(15, "instant-radio") == False:
+        if self.browser.wait_for_element_to_load_ajax(15, "#instant-radio") == False:
             return False
         ## Click the 'disable' <div>:
         self.browser.webdriver.find_element_by_id('instant-radio').find_elements_by_class_name('jfk-radiobutton')[-1].click()
@@ -349,9 +348,9 @@ class GoogleSearch(SearchTemplate):
         return out
 
 
-    def update_url_start(self, url, new_start):
+    def _update_url_start(self, url, new_start):
         if new_start == 0:
-            url = re.sub(r'\&start=\d{1,}', '', url)
+            url = re.sub('\&start=\d{1,}', '', url)
             return url
         if url.find('&start=') == -1:
             url += "&start=%s" % new_start
@@ -359,14 +358,14 @@ class GoogleSearch(SearchTemplate):
             url = re.sub('&start=\d{1,}', '&start=%s'%new_start, url)
         return url
 
-    def update_url_number_of_results_per_page(self, url, new_num_results_per_page):
-        if new_num_results_per_page == 0:
-            url = re.sub('&num=\d{1,}', '' % new_num_results_per_page, url)
+    def _update_url_number_of_results_per_page(self, url, new_num_results_per_page):
+        if new_num_results_per_page == self.default_num_results_per_page:
+            url = re.sub('&num=\d{1,}', '', url)
             return url
         if url.find('&num=') == -1:
             url += "&num=%s" % new_num_results_per_page
         else:
-            url = re.sub('&start=\d{1,}', '&num=%s'%new_num_results_per_page, url)
+            url = re.sub('&num=\d{1,}', '&num=%s'%new_num_results_per_page, url)
         return url
 
 

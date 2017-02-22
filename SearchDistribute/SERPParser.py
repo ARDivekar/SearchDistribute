@@ -20,6 +20,7 @@ class GoogleParser:
 	links_to_next_pages = []
 	link_to_next_page = ""
 	location = ""
+	css_selector_for_valid_page = "#search"
 
 	def __init__(self, html, current_url, start_offset):
 		self.current_url = current_url ## This must not be moved, as self._parse_navigation_links(...) uses it.

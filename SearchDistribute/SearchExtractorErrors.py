@@ -2,6 +2,14 @@ import sys
 import datetime
 from SearchDistribute import Enums
 
+class SERPPageLoadingException(Exception):
+    def __init__(self, search_engine, proxy_browser_type, url):
+        Exception.__init__(self, "%s is unable to load the %s search url: `%s`."%(proxy_browser_type, search_engine, url))
+        self.search_engine = search_engine
+        self.proxy_browser_type = proxy_browser_type
+        self.url = url
+
+
 class SERPParsingException(Exception):
     def __init__(self, search_engine, parsing_stage):
         Exception.__init__(self, "%s parser is unable to obtain the %s."%(search_engine, parsing_stage))
