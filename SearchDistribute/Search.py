@@ -100,7 +100,7 @@ class GoogleSearch(SearchTemplate):
         ## Optional parameter `db_config`, defaults to None
         self.db_config = config.get("db_config")
 
-        print("Spawned %s worker with id : %s. Detected proxy details from `%s`:\n%s"%(self.__class__.__name__, id(self), self.browser.detected_proxy_details.get("proxy_detection_website"), json.dumps(self.browser.detected_proxy_details, sort_keys=True, indent=2)))    ## Source: http://stackoverflow.com/a/3314411/4900327
+        print("\nSpawned %s worker with id : %s. Detected proxy details from `%s`:\n%s"%(self.__class__.__name__, id(self), self.browser.detected_proxy_details.get("proxy_detection_website"), json.dumps(self.browser.detected_proxy_details, sort_keys=True, indent=2)))    ## Source: http://stackoverflow.com/a/3314411/4900327
 
 
     def get_country_domain(self, country):
@@ -309,6 +309,7 @@ class GoogleSearch(SearchTemplate):
             self.disable_google_instant()
         ## Get a search engine results page from url
         url = self._update_url_number_of_results_per_page(self._update_url_start(old_url, start), num_results_per_page)
+        print("\n\tWorker with id %s trying to get URL:\n%s\n"%(id(self), url))
         self.browser.visit(url)
         if self.browser.wait_for_element_to_load_ajax(timeout=60, element_css_selector=GoogleParser.css_selector_for_valid_page) == False:
             return None
@@ -394,9 +395,3 @@ class GoogleSearch(SearchTemplate):
         else:
             url = re.sub('&num=\d{1,}', '&num=%s'%new_num_results_per_page, url)
         return url
-
-
-
-
-
-

@@ -168,17 +168,22 @@ class Distribute:
 
     def distribute_query(self, query, num_results, num_workers, num_results_per_page, cooldown_time, save_to_db):
         parsed_serps = []  ## an array of parsed SERPs
-        print("\nStarting the %s search with query `%s`" % (self.search_engine, self.query))
+
+        start_datetime = datetime.datetime.now()
+        time_str = "%s-%s-%s %s:%s:%s"%(start_datetime.year, start_datetime.month, start_datetime.day, start_datetime.hour, start_datetime.minute, start_datetime.second)
+
+        print("\nStarting the %s search with query `%s`\nStart time: %s\n" % (self.search_engine, self.query, time_str))
 
         ## The first worker the stage for the other workers, getting the basic url which is then modified by each worker.
         worker = self._spawn_worker()
         basic_url, basic_serp = worker.perform_search_from_main_page(query, num_results_per_page)
         actual_total_num_results_for_query = basic_serp.total_num_results_for_query
-        print("Found %s results, trying to get %s."%(actual_total_num_results_for_query, num_results))
+        print("\nFound %s results, trying to get %s."%(actual_total_num_results_for_query, num_results))
         self.workers.append(worker)
 
         start_offset_so_far = 0
         for i in range(1, num_workers):
+            time.sleep(3)   ## Added because internet was not loading, may remove later.
             worker = self._spawn_worker()
             parsed_serp = worker.get_SERP_results(basic_url, start_offset_so_far, num_results_per_page, save_to_db)
             if parsed_serp is None:
@@ -189,7 +194,8 @@ class Distribute:
             start_offset_so_far += parsed_serps[-1].num_results
             now = datetime.datetime.now()
             time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
-            print("Results %s-%s (obtained at %s)\n%s\n\n" % (start_offset_so_far - parsed_serps[-1].num_results, start_offset_so_far, time_str, parsed_serps[-1].results))
+            print("\nResults %s-%s (obtained at %s)\n%s\n" % (start_offset_so_far - parsed_serps[-1].num_results, start_offset_so_far, time_str, parsed_serps[-1].results))
+            print("\nRate of retrieving results: %s URLs per hour."%( sum([serp.num_results for serp in parsed_serps]) / ((datetime.datetime.now()-start_datetime).days*24 + (datetime.datetime.now()-start_datetime).seconds/3600) ))
             self.workers.append(worker)     ## Can be extended to use multithreading or multiprocessing.
             pass
         num_completed = start_offset_so_far
@@ -208,18 +214,7 @@ class Distribute:
             num_completed += parsed_serps[-1].num_results
             now = datetime.datetime.now()
             time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
-            print("Results %s-%s (obtained at %s)\n%s\n\n" % (num_completed-parsed_serps[-1].num_results, num_completed, time_str, parsed_serps[-1].results))
+            print("\nResults %s-%s (obtained at %s)\n%s\n" % (num_completed-parsed_serps[-1].num_results, num_completed, time_str, parsed_serps[-1].results))
+            print("\nRate of retrieving results: %s URLs per hour."%( sum([serp.num_results for serp in parsed_serps]) / ((datetime.datetime.now()-start_datetime).days*24 + (datetime.datetime.now()-start_datetime).seconds/3600) ))
             pass
         return parsed_serps
-
-
-
-
-
-
-
-
-
-
-
-
