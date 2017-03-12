@@ -18,7 +18,7 @@ phantomjs_path = None
 if platform.system() == "Windows":
 	phantomjs_path = "./PhantomJS/Windows/phantomjs.exe"
 elif platform.system() == "Linux":
-	phantomjs_path = "/mnt/Data/Workspaces/Python/GoogleExtractor/SearchDistribute/PhantomJS/phantomjs-2.1.1-linux-x86_64/bin/phantomjs"
+	phantomjs_path = "/mnt/Data/Workspaces/Python/SearchDistribute/SearchDistribute/PhantomJS/phantomjs-2.1.1-linux-x86_64/bin/phantomjs"
 '''
 
 availableBrowsers = Enum([]) #["SPLINTER", "TWILL0_9", "SPLINTER_PHANTOMJS"]
@@ -406,7 +406,7 @@ class splinterBrowser(BrowserTemplate):
 			return self.browser.html
 		else:
 			return None
-	
+
 
 
 
@@ -482,10 +482,10 @@ class twillBrowser(BrowserTemplate):
 	## Note: the following imports are made in local scope, i.e. they are only visible inside the class twillBrowser.
 
 	_twillErrorText = "\n\n\tERROR: One of the following softwares is not installed:\n\t> 'twill' module version 0.9 [install to Python with 'pip install -Iv http://darcs.idyll.org/~t/projects/twill-0.9.tar.gz'].\n\tPlease note that as of now, only version 0.9 of twill is supported."
-	
+
 	browser = None
 	headless = True
-	
+
 	try:
 		import twill
 		import twill.commands
@@ -509,7 +509,7 @@ class twillBrowser(BrowserTemplate):
 
 
 	def closeBrowser(self, errorPrinting=False):
-		try:		
+		try:
 			self.browser = None
 			self.headless = None
 			if errorPrinting:
@@ -524,7 +524,7 @@ class twillBrowser(BrowserTemplate):
 
 
 	def resetBrowser(self, errorPrinting=False):
-		try:					
+		try:
 			import twill
 			import twill.commands
 			if twill.__version__ != "0.9":
@@ -560,7 +560,7 @@ class twillBrowser(BrowserTemplate):
 			return True
 		else:
 			return False
-	
+
 
 	def go(self, url, secure=False):
 		url = self._ensureHTTPorHTTPS(url, secure)
@@ -598,8 +598,8 @@ class twillBrowser(BrowserTemplate):
 			""" Source: http://pymantra.pythonblogs.com/90_pymantra/archive/407_form_submit_using_twill.html """
 
 			self.go(googleDomain)
-			all_forms = self.browser.get_all_forms()	## returns list of all form objects (corresp. to HTML <form>) on that URL 
-			
+			all_forms = self.browser.get_all_forms()	## returns list of all form objects (corresp. to HTML <form>) on that URL
+
 			## now, you have to choose only that form, which has the POST or GET method
 			for each_frm in all_forms:
 				attr = each_frm.attrs			## all attributes of form
@@ -608,7 +608,7 @@ class twillBrowser(BrowserTemplate):
 					for ct in ctrl:
 						if ct.type == 'text':     	## i did it as per my use, you can put your condition here
 							self._waitBeforeTypingQueryIntoSearchBox(searchQueryString=searchQueryString, errorPrinting=errorPrinting)
-							
+
 							ct._value = searchQueryString 	## The Google query we want to fire.
 							self.browser.clicked(each_frm, ct.attrs['name'])	## clicked() takes two parameter: a form object and button name to be clicked.
 							self.browser.submit()		## Clicks the submit button on that form
@@ -616,7 +616,7 @@ class twillBrowser(BrowserTemplate):
 			return self.getCurrentPageHtml()
 		else:
 			return None
-	
+
 
 
 
