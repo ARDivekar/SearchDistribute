@@ -174,7 +174,7 @@ class Distribute:
 
         print("\nStarting the %s search with query `%s`\nStart time: %s\n" % (self.search_engine, self.query, time_str))
 
-        ## The first worker the stage for the other workers, getting the basic url which is then modified by each worker.
+        ## The first worker sets the stage for the other workers, getting the basic url which is then modified by each worker.
         worker = self._spawn_worker()
         basic_url, basic_serp = worker.perform_search_from_main_page(query, num_results_per_page)
         actual_total_num_results_for_query = basic_serp.total_num_results_for_query
@@ -182,9 +182,11 @@ class Distribute:
         self.workers.append(worker)
 
         start_offset_so_far = 0
+        ## Create all the other workers. On creation, make the worker fetch a SERP.
         for i in range(1, num_workers):
             time.sleep(3)   ## Added because internet was not loading, may remove later.
             worker = self._spawn_worker()
+            ## Try to get a SERP.
             parsed_serp = worker.get_SERP_results(basic_url, start_offset_so_far, num_results_per_page, save_to_db)
             if parsed_serp is None:
                 raise SERPPageLoadingException(self.search_engine,
@@ -192,6 +194,7 @@ class Distribute:
                                                url = worker._update_url_number_of_results_per_page(worker._update_url_start(basic_url, start_offset_so_far), num_results_per_page))
             parsed_serps.append(parsed_serp)
             start_offset_so_far += parsed_serps[-1].num_results
+            ## Print the SERP list and its timestamp.
             now = datetime.datetime.now()
             time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
             print("\nResults %s-%s (obtained at %s)\n%s\n" % (start_offset_so_far - parsed_serps[-1].num_results, start_offset_so_far, time_str, parsed_serps[-1].results))
@@ -201,6 +204,7 @@ class Distribute:
         num_completed = start_offset_so_far
 
         while num_completed < actual_total_num_results_for_query:
+            ## Get the coolest worker. If this one is not cooler than `cooldown_time`, wait for the remaining time.
             index_of_coolest_worker, time_passed_since_last_fetched_from_coolest_worker = self._get_index_of_coolest_worker()
             if time_passed_since_last_fetched_from_coolest_worker < cooldown_time:
                 sleep_for = cooldown_time - time_passed_since_last_fetched_from_coolest_worker ## Sleep for the remaining time.
@@ -208,10 +212,9 @@ class Distribute:
                 time_str = "%s-%s-%s %s:%s:%s"%(wakeup_datetime.year, wakeup_datetime.month, wakeup_datetime.day, wakeup_datetime.hour, wakeup_datetime.minute, wakeup_datetime.second)
                 print("<-----All workers need to cooldown, sleeping till: %s----->" % time_str)
                 time.sleep(sleep_for)
-            parsed_serps.append(
-                self.workers[index_of_coolest_worker].get_SERP_results(
-                    basic_url, num_completed, num_results_per_page, save_to_db))
+            parsed_serps.append(self.workers[index_of_coolest_worker].get_SERP_results(basic_url, num_completed, num_results_per_page, save_to_db))
             num_completed += parsed_serps[-1].num_results
+            ## Print the SERP list and its timestamp.
             now = datetime.datetime.now()
             time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
             print("\nResults %s-%s (obtained at %s)\n%s\n" % (num_completed-parsed_serps[-1].num_results, num_completed, time_str, parsed_serps[-1].results))
