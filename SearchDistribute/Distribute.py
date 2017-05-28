@@ -3,6 +3,7 @@ from SearchDistribute.Enums import SearchEngines
 from SearchDistribute.SearchExtractorErrors import InvalidSearchParameterException
 from SearchDistribute.SearchExtractorErrors import MissingSearchParameterException
 from SearchDistribute.SearchExtractorErrors import SERPPageLoadingException
+from SearchDistribute.SearchExtractorErrors import SERPParsingException
 from SearchDistribute import Enums
 import time
 import datetime
@@ -182,24 +183,34 @@ class Distribute:
         self.workers.append(worker)
 
         start_offset_so_far = 0
+        next_page_num = len(parsed_serps) + 1
         ## Create all the other workers. On creation, make the worker fetch a SERP.
         for i in range(1, num_workers):
             time.sleep(3)   ## Added because internet was not loading, may remove later.
             worker = self._spawn_worker()
             ## Try to get a SERP.
-            parsed_serp = worker.get_SERP_results(basic_url, start_offset_so_far, num_results_per_page, save_to_db)
-            if parsed_serp is None:
-                raise SERPPageLoadingException(self.search_engine,
-                                               self.proxy_browser_config.get("proxy_browser_type"),
-                                               url = worker._update_url_number_of_results_per_page(worker._update_url_start(basic_url, start_offset_so_far), num_results_per_page))
-            parsed_serps.append(parsed_serp)
-            start_offset_so_far += parsed_serps[-1].num_results
-            ## Print the SERP list and its timestamp.
-            now = datetime.datetime.now()
-            time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
-            print("\nResults %s-%s (obtained at %s)\n%s\n" % (start_offset_so_far - parsed_serps[-1].num_results, start_offset_so_far, time_str, parsed_serps[-1].results))
-            print("\nRate of retrieving results: %s URLs per hour."%( sum([serp.num_results for serp in parsed_serps]) / ((datetime.datetime.now()-start_datetime).days*24 + (datetime.datetime.now()-start_datetime).seconds/3600) ))
-            self.workers.append(worker)     ## Can be extended to use multithreading or multiprocessing.
+            try:
+                parsed_serp = worker.get_SERP_results(basic_url, start_offset_so_far, next_page_num, num_results_per_page, save_to_db)
+                if parsed_serp is None:
+                    raise SERPPageLoadingException(self.search_engine,
+                                                   self.proxy_browser_config.get("proxy_browser_type"),
+                                                   url = worker._update_url_number_of_results_per_page(worker._update_url_start(basic_url, start_offset_so_far), num_results_per_page))
+                parsed_serps.append(parsed_serp)
+                start_offset_so_far += parsed_serps[-1].num_results
+
+                ## Print the current SERP list and its timestamp.
+                now = datetime.datetime.now()
+                time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
+                print("\nResults %s-%s, page #%s (obtained at %s)\n%s\n" % (start_offset_so_far - parsed_serps[-1].num_results, start_offset_so_far, next_page_num, time_str, parsed_serps[-1].results))
+                print("\nRate of retrieving results: %s URLs per hour."%( sum([serp.num_results for serp in parsed_serps]) / ((datetime.datetime.now()-start_datetime).days*24 + (datetime.datetime.now()-start_datetime).seconds/3600) ))
+                self.workers.append(worker)     ## Can be extended to use multithreading or multiprocessing.
+
+            ## If we are at the last page and there are no more results, return.
+            except SERPParsingException:
+            #if parsed_serp.link_to_next_page is None or parsed_serp.num_results == 0:
+                print("\nObtained %s results in the last SERP. There are no more result pages." % parsed_serp.num_results)
+                return parsed_serps
+            next_page_num = len(parsed_serps) + 1
             pass
         num_completed = start_offset_so_far
 
@@ -212,12 +223,21 @@ class Distribute:
                 time_str = "%s-%s-%s %s:%s:%s"%(wakeup_datetime.year, wakeup_datetime.month, wakeup_datetime.day, wakeup_datetime.hour, wakeup_datetime.minute, wakeup_datetime.second)
                 print("<-----All workers need to cooldown, sleeping till: %s----->" % time_str)
                 time.sleep(sleep_for)
-            parsed_serps.append(self.workers[index_of_coolest_worker].get_SERP_results(basic_url, num_completed, num_results_per_page, save_to_db))
-            num_completed += parsed_serps[-1].num_results
-            ## Print the SERP list and its timestamp.
-            now = datetime.datetime.now()
-            time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
-            print("\nResults %s-%s (obtained at %s)\n%s\n" % (num_completed-parsed_serps[-1].num_results, num_completed, time_str, parsed_serps[-1].results))
-            print("\nRate of retrieving results: %s URLs per hour."%( sum([serp.num_results for serp in parsed_serps]) / ((datetime.datetime.now()-start_datetime).days*24 + (datetime.datetime.now()-start_datetime).seconds/3600) ))
+            try:
+                parsed_serps.append(self.workers[index_of_coolest_worker].get_SERP_results(basic_url, num_completed, next_page_num, num_results_per_page, save_to_db))
+                num_completed += parsed_serps[-1].num_results
+
+                ## Print the current SERP list and its timestamp.
+                now = datetime.datetime.now()
+                time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
+                print("\nResults %s-%s, page #%s (obtained at %s)\n%s\n" % (start_offset_so_far - parsed_serps[-1].num_results, start_offset_so_far, next_page_num, time_str, parsed_serps[-1].results))
+                print("\nRate of retrieving results: %s URLs per hour."%( sum([serp.num_results for serp in parsed_serps]) / ((datetime.datetime.now()-start_datetime).days*24 + (datetime.datetime.now()-start_datetime).seconds/3600) ))
+
+            ## If we are at the last page and there are no more results, return.
+            except SERPParsingException:
+            #if parsed_serp.link_to_next_page == None or parsed_serp.num_results == 0:
+                print("\nObtained %s results in the last SERP. There are no more result pages."%parsed_serp.num_results)
+                return parsed_serps
+            next_page_num = len(parsed_serps) + 1
             pass
         return parsed_serps

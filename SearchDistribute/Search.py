@@ -301,10 +301,10 @@ class GoogleSearch(SearchTemplate):
         # if self.browser.wait_for_element_to_load_ajax(15, "search") == False:
         #     print("THIS CANNOT GO ON")
         #     return None
-        return (self.browser.get_url(), GoogleParser(self.browser.get_html(), self.browser.get_url(), 0))
+        return (self.browser.get_url(), GoogleParser(self.browser.get_html(), self.browser.get_url(), 0, 1))
 
 
-    def get_SERP_results(self, old_url, start, num_results_per_page, save_to_db = True):
+    def get_SERP_results(self, old_url, start, current_page_num, num_results_per_page, save_to_db = True):
         if num_results_per_page > 10 and self.disabled_google_instant == False:
             self.disable_google_instant()
         ## Get a search engine results page from url
@@ -314,7 +314,7 @@ class GoogleSearch(SearchTemplate):
         if self.browser.wait_for_element_to_load_ajax(timeout=60, element_css_selector=GoogleParser.css_selector_for_valid_page) == False:
             return None
         self.time_of_last_retrieved_query = time.time()     ## Do not move this line, this value is used for error-checking.
-        parsed_serp = GoogleParser(self.browser.get_html(), url, start)
+        parsed_serp = GoogleParser(self.browser.get_html(), url, start, current_page_num)
         if save_to_db:
             self.save_serp_to_db(parsed_serp, self.db_config)
         return parsed_serp
