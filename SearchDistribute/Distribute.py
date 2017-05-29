@@ -154,18 +154,23 @@ class Distribute:
         self.proc.start()
 
     def finish(self):
-        '''A join-and-terminate operation'''
+        '''join, terminate and cleanup browser instances'''
         self.proc.join()
+
+        self.serp_results = []
+        for serp in iter(self.serps_Queue.get, 'STOP'):
+            self.serp_results.append(serp)
+        self.serps_Queue.close()
+        self.serps_Queue.join_thread()
+
         self.proc.terminate()
+
 
 
     def get_results(self):
         '''Gets results from the internal multiprocessing.Queue object'''
         ## Source: https://stackoverflow.com/a/1541117/4900327
-        serp_results = []
-        for serp in iter(self.serps_Queue.get, 'STOP'):
-            serp_results.append(serp)
-        return serp_results
+        return self.serp_results
 
 
 
@@ -246,7 +251,9 @@ class Distribute:
             except SERPParsingException:
                 print("\nObtained %s results in the last SERP. There are no more result pages." % parsed_serp.num_results)
                 serps_Queue.put("STOP") ## Sentinel, as per https://stackoverflow.com/a/1541117/4900327
-                serps_Queue.close()
+                ## Clean up workers
+                for worker in self.workers:
+                    worker.close()
                 return
             next_page_num = len(parsed_serps) + 1
             pass
@@ -276,10 +283,14 @@ class Distribute:
             except SERPParsingException:
                 print("\nObtained %s results in the last SERP. There are no more result pages."%parsed_serp.num_results)
                 serps_Queue.put("STOP")  ## Sentinel, as per https://stackoverflow.com/a/1541117/4900327
-                serps_Queue.close()
+                ## Clean up workers
+                for worker in self.workers:
+                    worker.close()
                 return
             next_page_num = len(parsed_serps) + 1
             pass
         serps_Queue.put("STOP")  ## Sentinel, as per https://stackoverflow.com/a/1541117/4900327
-        serps_Queue.close()
+        ## Clean up workers
+        for worker in self.workers:
+            worker.close()
         return

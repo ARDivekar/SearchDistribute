@@ -9,6 +9,7 @@ import SearchDistribute.Enums
 import datetime
 import io
 from bs4 import BeautifulSoup as BS
+import signal
 
 from SearchDistribute import Enums
 from SearchDistribute.SearchExtractorErrors import *
@@ -244,6 +245,7 @@ class PhantomJS:
 		The quit() functionality is hence not exposed.
 		'''
 		self.webdriver.close()
+		self.webdriver.service.process.send_signal(signal.SIGTERM)  # kill the specific phantomjs child proc, source: https://stackoverflow.com/a/38493285/4900327
 		self.webdriver = None
 
 	def switch_proxy(self):

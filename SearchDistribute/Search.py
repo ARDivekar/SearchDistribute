@@ -375,6 +375,9 @@ class GoogleSearch(SearchTemplate):
             out += "&start=%s" % start
         return out
 
+    def close(self):
+        self.browser.close()
+
 
     def _update_url_start(self, url, new_start):
         if new_start == 0:
