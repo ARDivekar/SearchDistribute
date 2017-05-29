@@ -7,6 +7,7 @@ from SearchDistribute.SearchExtractorErrors import SERPParsingException
 from SearchDistribute import Enums
 import time
 import datetime
+from multiprocessing import Process, Queue
 
 class Distribute:
     ''' Each distribute object runs queries on one search engine, across multiple *Search objects (each of which have identical parameters).
@@ -22,6 +23,7 @@ class Distribute:
     proxy_browser_config = {}   ## A hashtable with these fields: proxy_browser_type, proxy_args. See ProxyBrowser.py for how they are handled.
     cooldown_time = -1          ## The time in seconds, that each worker MUST wait before it can fetch the next SERP. No more SERPs can be fetched before this time expires
     workers = []  ## An array of the *Search objects. Their `time_of_last_retrieved_query` allows us to choose the one which has cooled down the most, to assign to fetch the next SERP.
+    serps_Queue = None
 
     def __init__(self, config):
         '''For all the parameters in `config`:
@@ -139,10 +141,25 @@ class Distribute:
         if type(query) != type("") or len(query) == 0:  ## will only run if the value is present, but in the wrong format.
             raise InvalidSearchParameterException(self.search_engine, "query", query, "must be a non-empty string")
 
-        return self.distribute_query(query, self.num_results, self.num_workers, self.num_results_per_page, self.cooldown_time, self.save_to_db)
+        ## Added multiprocessing, as per https://www.blog.pythonlibrary.org/2016/08/02/python-201-a-multiprocessing-tutorial/
+        self.serps_Queue = Queue()  ## an array of parsed SERPs. This is the main output of the function and a shared variable passed to our process (stackoverflow.com/a/10415215/4900327)
+        self.proc = Process(target = self.distribute_query, args=(query, self.num_results, self.num_workers, self.num_results_per_page, self.cooldown_time, self.save_to_db, self.serps_Queue,))
+        self.proc.start()
+
+    def finish(self):
+        self.proc.join()
+        self.proc.terminate()
 
 
-    def distribute_query(self, query, num_results, num_workers, num_results_per_page, cooldown_time, save_to_db):
+    def get_results(self):
+        ## Source: https://stackoverflow.com/a/1541117/4900327
+        serp_results = []
+        for serp in iter(self.serps_Queue.get, 'STOP'):
+            serp_results.append(serp)
+        return serp_results
+
+
+    def distribute_query(self, query, num_results, num_workers, num_results_per_page, cooldown_time, save_to_db, serps_Queue):
         def _spawn_worker(self):  ## Can be extended to use multithreading or multiprocessing.
             worker_config = {
                 "country": self.country,
@@ -165,19 +182,18 @@ class Distribute:
             return (index_of_coolest_worker, time_passed_since_last_fetched_from_coolest_worker)
 
 
-        def _print_current_serp(self, start_datetime, parsed_serps):
+        def _print_current_serp(self, query, start_datetime, parsed_serps):
             ## Print the current SERP list and its timestamp.
             parsed_serp = parsed_serps[-1]
             now = datetime.datetime.now()
             time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
-            print("\nResults %s-%s, page #%s (obtained at %s)\n%s\n" % (
+            print("\n\nQuery: `%s`"%query)
+            print("Results %s-%s, page #%s (obtained at %s)\n%s\n" % (
             parsed_serp.start_offset, parsed_serp.start_offset + parsed_serp.num_results, parsed_serp.current_page_num, time_str, parsed_serp.results))
             print("\nRate of retrieving results: %.1f URLs per hour." % (
                 sum([serp.num_results for serp in parsed_serps]) / ((datetime.datetime.now() - start_datetime).days * 24 + (datetime.datetime.now() - start_datetime).seconds / 3600)))
             print("\nNumber of unique results so far: %s." % (len(set([res for serp in parsed_serps for res in serp.results]))))  ## Source: https://stackoverflow.com/a/952952/4900327
 
-
-        ## an array of parsed SERPs. This is the main output of the function.
         parsed_serps = []
 
         ## Print start time.
@@ -189,7 +205,7 @@ class Distribute:
         worker = _spawn_worker(self)
         basic_url, basic_serp = worker.perform_search_from_main_page(query, num_results_per_page)
         actual_total_num_results_for_query = basic_serp.total_num_results_for_query
-        print("\nFound %s results, trying to get %s."%(actual_total_num_results_for_query, num_results))
+        print("\nFound %s results for query `%s`, trying to get %s."%(actual_total_num_results_for_query, query, num_results))
         self.workers.append(worker)
 
         num_completed = 0
@@ -210,20 +226,23 @@ class Distribute:
                                                    self.proxy_browser_config.get("proxy_browser_type"),
                                                    url = worker._update_url_number_of_results_per_page(worker._update_url_start(basic_url, num_completed), num_results_per_page))
                 parsed_serps.append(parsed_serp)
-                _print_current_serp(self, start_datetime, parsed_serps)
-                num_completed += parsed_serp.num_results
+                serps_Queue.put(parsed_serp)
+                _print_current_serp(self, query, start_datetime, parsed_serps)
+                num_completed = len([res for serp in parsed_serps for res in serp.results])
 
                 self.workers.append(worker)     ## Can be extended to use multithreading or multiprocessing.
 
             ## If we are at the last page and there are no more results, return.
             except SERPParsingException:
                 print("\nObtained %s results in the last SERP. There are no more result pages." % parsed_serp.num_results)
-                return parsed_serps
+                serps_Queue.put("STOP") ## Sentinel, as per https://stackoverflow.com/a/1541117/4900327
+                serps_Queue.close()
+                return
             next_page_num = len(parsed_serps) + 1
             pass
 
 
-        while num_completed < actual_total_num_results_for_query:
+        while num_completed < num_results:
             ## Get the coolest worker. If this one is not cooler than `cooldown_time`, wait for the remaining time.
             index_of_coolest_worker, time_passed_since_last_fetched_from_coolest_worker = _get_index_of_coolest_worker(self)
             if time_passed_since_last_fetched_from_coolest_worker < cooldown_time:
@@ -239,13 +258,16 @@ class Distribute:
                                                                                      num_results_per_page,
                                                                                      save_to_db)
                 parsed_serps.append(parsed_serp)
-                _print_current_serp(self, start_datetime, parsed_serps)
-                num_completed += parsed_serp.num_results
+                serps_Queue.put(parsed_serp)
+                _print_current_serp(self, query, start_datetime, parsed_serps)
+                num_completed = len([res for serp in parsed_serps for res in serp.results])
 
             ## If we are at the last page and there are no more results, return.
             except SERPParsingException:
                 print("\nObtained %s results in the last SERP. There are no more result pages."%parsed_serp.num_results)
-                return parsed_serps
+                serps_Queue.put("STOP")  ## Sentinel, as per https://stackoverflow.com/a/1541117/4900327
+                return
             next_page_num = len(parsed_serps) + 1
             pass
-        return parsed_serps
+        serps_Queue.put("STOP")  ## Sentinel, as per https://stackoverflow.com/a/1541117/4900327
+        return
