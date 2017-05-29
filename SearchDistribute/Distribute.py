@@ -9,12 +9,11 @@ import time
 import datetime
 
 class Distribute:
-    ''' Each distribute object runs one query string on one search engine, across multiple *Search objects (each of which have identical parameters).
+    ''' Each distribute object runs queries on one search engine, across multiple *Search objects (each of which have identical parameters).
         It essentially runs a 'map' function, distributing the fetching of the results of the query across several workers (*Search objects).
     '''
     search_engine = ""          ## (optional, defaults to SearchEngines.Google) A string of the search engine to use, must be present in SearchDistribute.Enums.SearchEngines
     country = ""                ## (optional, defaults to "USA") The country where we want to search. Handled in Search.py
-    query = ""                  ## The query string
     num_workers = -1            ## (optional, defaults to 1) The number of workers we instantiate and assign to fetch parts of the total result set.
     num_results = -1            ## (optional, defaults to 10) The total number of results we want for the query.
     num_results_per_page =- 1   ## (optional, defaults to 10) The number of results per SERP
@@ -37,7 +36,6 @@ class Distribute:
         {
             "search_engine" : SearchEngines.Google,
             "country" : "USA",
-            "query" : "site:nytimes.com corgi",
             "num_workers" : 1,
             "num_results" : 10,
             "num_results_per_page" : 10,
@@ -81,13 +79,6 @@ class Distribute:
 
         ## Optional parameter `search_engine`, handled in Search.py
         self.country = config.get("country")
-
-        ## Necessary parameter `query`
-        self.query = get_default_if_not_found_in_config("query")
-        if self.query == None:      ## will only run if the value is not present
-            raise MissingSearchParameterException(self.search_engine, "query")
-        if type(self.query) != type("") or len(self.query) == 0:    ## will only run if the value is present, but in the wrong format.
-            raise InvalidSearchParameterException(self.search_engine, "query", self.query, "must be a non-empty string")
 
         ## Optional parameter `num_workers`
         self.num_workers = get_default_if_not_found_in_config("num_workers")
@@ -141,8 +132,14 @@ class Distribute:
 
 
     ## Ready, set, GO!
-    def start(self):
-        return self.distribute_query(self.query, self.num_results, self.num_workers, self.num_results_per_page, self.cooldown_time, self.save_to_db)
+    def start(self, query):
+        ## Necessary parameter `query`
+        if query == None:  ## will only run if the value is not present
+            raise MissingSearchParameterException(self.search_engine, "query")
+        if type(query) != type("") or len(query) == 0:  ## will only run if the value is present, but in the wrong format.
+            raise InvalidSearchParameterException(self.search_engine, "query", query, "must be a non-empty string")
+
+        return self.distribute_query(query, self.num_results, self.num_workers, self.num_results_per_page, self.cooldown_time, self.save_to_db)
 
 
     def distribute_query(self, query, num_results, num_workers, num_results_per_page, cooldown_time, save_to_db):
@@ -174,15 +171,10 @@ class Distribute:
             now = datetime.datetime.now()
             time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
             print("\nResults %s-%s, page #%s (obtained at %s)\n%s\n" % (
-            parsed_serp.start_offset, parsed_serp.start_offset + parsed_serp.num_results, parsed_serp.current_page_num,
-            time_str, parsed_serp.results))
-            print("\nRate of retrieving results: %s URLs per hour." % (
-                sum([serp.num_results for serp in parsed_serps]) / (
-                (datetime.datetime.now() - start_datetime).days * 24 + (
-                datetime.datetime.now() - start_datetime).seconds / 3600))
-                  )
-            print("\nNumber of unique results so far: %s." % (len(set([res for serp in parsed_serps for res in
-                                                                       serp.results]))))  ## Source: https://stackoverflow.com/a/952952/4900327
+            parsed_serp.start_offset, parsed_serp.start_offset + parsed_serp.num_results, parsed_serp.current_page_num, time_str, parsed_serp.results))
+            print("\nRate of retrieving results: %.1f URLs per hour." % (
+                sum([serp.num_results for serp in parsed_serps]) / ((datetime.datetime.now() - start_datetime).days * 24 + (datetime.datetime.now() - start_datetime).seconds / 3600)))
+            print("\nNumber of unique results so far: %s." % (len(set([res for serp in parsed_serps for res in serp.results]))))  ## Source: https://stackoverflow.com/a/952952/4900327
 
 
         ## an array of parsed SERPs. This is the main output of the function.
@@ -191,7 +183,7 @@ class Distribute:
         ## Print start time.
         start_datetime = datetime.datetime.now()
         time_str = "%s-%s-%s %s:%s:%s"%(start_datetime.year, start_datetime.month, start_datetime.day, start_datetime.hour, start_datetime.minute, start_datetime.second)
-        print("\nStarting the %s search with query `%s`\nStart time: %s\n" % (self.search_engine, self.query, time_str))
+        print("\nStarting the %s search with query `%s`\nStart time: %s\n" % (self.search_engine, query, time_str))
 
         ## The first worker sets the stage for the other workers, getting the basic url which is then modified by each worker.
         worker = _spawn_worker(self)

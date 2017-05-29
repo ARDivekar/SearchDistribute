@@ -5,7 +5,6 @@ from SearchDistribute.Distribute import *
 config = {
     "search_engine" : SearchEngines.Google,
     "country" : "IND",
-    "query" : "starlight",
     "num_workers" : 3,
     "num_results" : 1000,
     "num_results_per_page" : 100,
@@ -28,4 +27,4 @@ config = {
 }
 
 d = Distribute(config)
-parsed_serps = d.start()
+parsed_serps = d.start("selenium")
