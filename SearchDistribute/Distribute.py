@@ -140,47 +140,51 @@ class Distribute:
         return default_config.get(param)
 
 
-    def _spawn_worker(self):     ## Can be extended to use multithreading or multiprocessing.
-        worker_config = {
-            "country" : self.country,
-            "proxy_browser_config" : self.proxy_browser_config,
-            "db_config" : self.db_config
-        }
-
-        if self.search_engine == SearchEngines.Google:
-            return GoogleSearch(worker_config)
-
-
-    def _get_index_of_coolest_worker(self):
-        index_of_coolest_worker = -1
-        time_of_last_retrieved_query_of_coolest_worker = time.time()
-        for i in range(0, len(self.workers)):
-            if self.workers[i].time_of_last_retrieved_query < time_of_last_retrieved_query_of_coolest_worker:
-                index_of_coolest_worker = i
-                time_of_last_retrieved_query_of_coolest_worker = self.workers[i].time_of_last_retrieved_query
-        time_passed_since_last_fetched_from_coolest_worker = time.time() - self.workers[index_of_coolest_worker].time_of_last_retrieved_query
-        return (index_of_coolest_worker, time_passed_since_last_fetched_from_coolest_worker)
-
-
-    def _print_current_serp(self, start_datetime, parsed_serps):
-        ## Print the current SERP list and its timestamp.
-        parsed_serp = parsed_serps[-1]
-        now = datetime.datetime.now()
-        time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
-        print("\nResults %s-%s, page #%s (obtained at %s)\n%s\n" % (parsed_serp.start_offset, parsed_serp.start_offset + parsed_serp.num_results, parsed_serp.current_page_num, time_str, parsed_serp.results))
-        print("\nRate of retrieving results: %s URLs per hour."%(
-            sum([serp.num_results for serp in parsed_serps]) / ((datetime.datetime.now() - start_datetime).days * 24 + (datetime.datetime.now() - start_datetime).seconds / 3600))
-              )
-        print("\nNumber of unique results so far: %s." % (len(set( [res for serp in parsed_serps for res in serp.results] )))) ## Source: https://stackoverflow.com/a/952952/4900327
-
-
-
     ## Ready, set, GO!
     def start(self):
         return self.distribute_query(self.query, self.num_results, self.num_workers, self.num_results_per_page, self.cooldown_time, self.save_to_db)
 
 
     def distribute_query(self, query, num_results, num_workers, num_results_per_page, cooldown_time, save_to_db):
+        def _spawn_worker(self):  ## Can be extended to use multithreading or multiprocessing.
+            worker_config = {
+                "country": self.country,
+                "proxy_browser_config": self.proxy_browser_config,
+                "db_config": self.db_config
+            }
+
+            if self.search_engine == SearchEngines.Google:
+                return GoogleSearch(worker_config)
+
+        def _get_index_of_coolest_worker(self):
+            index_of_coolest_worker = -1
+            time_of_last_retrieved_query_of_coolest_worker = time.time()
+            for i in range(0, len(self.workers)):
+                if self.workers[i].time_of_last_retrieved_query < time_of_last_retrieved_query_of_coolest_worker:
+                    index_of_coolest_worker = i
+                    time_of_last_retrieved_query_of_coolest_worker = self.workers[i].time_of_last_retrieved_query
+            time_passed_since_last_fetched_from_coolest_worker = time.time() - self.workers[
+                index_of_coolest_worker].time_of_last_retrieved_query
+            return (index_of_coolest_worker, time_passed_since_last_fetched_from_coolest_worker)
+
+
+        def _print_current_serp(self, start_datetime, parsed_serps):
+            ## Print the current SERP list and its timestamp.
+            parsed_serp = parsed_serps[-1]
+            now = datetime.datetime.now()
+            time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
+            print("\nResults %s-%s, page #%s (obtained at %s)\n%s\n" % (
+            parsed_serp.start_offset, parsed_serp.start_offset + parsed_serp.num_results, parsed_serp.current_page_num,
+            time_str, parsed_serp.results))
+            print("\nRate of retrieving results: %s URLs per hour." % (
+                sum([serp.num_results for serp in parsed_serps]) / (
+                (datetime.datetime.now() - start_datetime).days * 24 + (
+                datetime.datetime.now() - start_datetime).seconds / 3600))
+                  )
+            print("\nNumber of unique results so far: %s." % (len(set([res for serp in parsed_serps for res in
+                                                                       serp.results]))))  ## Source: https://stackoverflow.com/a/952952/4900327
+
+
         ## an array of parsed SERPs. This is the main output of the function.
         parsed_serps = []
 
@@ -190,7 +194,7 @@ class Distribute:
         print("\nStarting the %s search with query `%s`\nStart time: %s\n" % (self.search_engine, self.query, time_str))
 
         ## The first worker sets the stage for the other workers, getting the basic url which is then modified by each worker.
-        worker = self._spawn_worker()
+        worker = _spawn_worker(self)
         basic_url, basic_serp = worker.perform_search_from_main_page(query, num_results_per_page)
         actual_total_num_results_for_query = basic_serp.total_num_results_for_query
         print("\nFound %s results, trying to get %s."%(actual_total_num_results_for_query, num_results))
@@ -201,7 +205,7 @@ class Distribute:
         ## Create all the other workers. On creation, make the worker fetch a SERP.
         for i in range(1, num_workers):
             time.sleep(3)   ## Added because internet was not loading, may remove later.
-            worker = self._spawn_worker()
+            worker = _spawn_worker(self)
             ## Try to get a SERP.
             try:
                 parsed_serp = worker.get_SERP_results(basic_url,
@@ -214,7 +218,7 @@ class Distribute:
                                                    self.proxy_browser_config.get("proxy_browser_type"),
                                                    url = worker._update_url_number_of_results_per_page(worker._update_url_start(basic_url, num_completed), num_results_per_page))
                 parsed_serps.append(parsed_serp)
-                self._print_current_serp(start_datetime, parsed_serps)
+                _print_current_serp(self, start_datetime, parsed_serps)
                 num_completed += parsed_serp.num_results
 
                 self.workers.append(worker)     ## Can be extended to use multithreading or multiprocessing.
@@ -229,7 +233,7 @@ class Distribute:
 
         while num_completed < actual_total_num_results_for_query:
             ## Get the coolest worker. If this one is not cooler than `cooldown_time`, wait for the remaining time.
-            index_of_coolest_worker, time_passed_since_last_fetched_from_coolest_worker = self._get_index_of_coolest_worker()
+            index_of_coolest_worker, time_passed_since_last_fetched_from_coolest_worker = _get_index_of_coolest_worker(self)
             if time_passed_since_last_fetched_from_coolest_worker < cooldown_time:
                 sleep_for = cooldown_time - time_passed_since_last_fetched_from_coolest_worker ## Sleep for the remaining time.
                 wakeup_datetime = datetime.datetime.now() + datetime.timedelta(seconds=sleep_for) ## Source: http://stackoverflow.com/a/3240493/4900327
@@ -243,7 +247,7 @@ class Distribute:
                                                                                      num_results_per_page,
                                                                                      save_to_db)
                 parsed_serps.append(parsed_serp)
-                self._print_current_serp(start_datetime, parsed_serps)
+                _print_current_serp(self, start_datetime, parsed_serps)
                 num_completed += parsed_serp.num_results
 
             ## If we are at the last page and there are no more results, return.
