@@ -8,6 +8,13 @@ from SearchDistribute import Enums
 import time
 import datetime
 from multiprocessing import Process, Queue
+## Some sources for multiprocessing:
+##      https://www.blog.pythonlibrary.org/2016/08/02/python-201-a-multiprocessing-tutorial/
+##      http://eli.thegreenplace.net/2012/01/04/shared-counter-with-pythons-multiprocessing
+##      https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Queue
+##      https://stackoverflow.com/a/10415215/4900327
+##      https://stackoverflow.com/a/7399423/4900327
+##      https://stackoverflow.com/a/1541117/4900327
 
 class Distribute:
     ''' Each distribute object runs queries on one search engine, across multiple *Search objects (each of which have identical parameters).
@@ -147,16 +154,19 @@ class Distribute:
         self.proc.start()
 
     def finish(self):
+        '''A join-and-terminate operation'''
         self.proc.join()
         self.proc.terminate()
 
 
     def get_results(self):
+        '''Gets results from the internal multiprocessing.Queue object'''
         ## Source: https://stackoverflow.com/a/1541117/4900327
         serp_results = []
         for serp in iter(self.serps_Queue.get, 'STOP'):
             serp_results.append(serp)
         return serp_results
+
 
 
     def distribute_query(self, query, num_results, num_workers, num_results_per_page, cooldown_time, save_to_db, serps_Queue):
@@ -266,8 +276,10 @@ class Distribute:
             except SERPParsingException:
                 print("\nObtained %s results in the last SERP. There are no more result pages."%parsed_serp.num_results)
                 serps_Queue.put("STOP")  ## Sentinel, as per https://stackoverflow.com/a/1541117/4900327
+                serps_Queue.close()
                 return
             next_page_num = len(parsed_serps) + 1
             pass
         serps_Queue.put("STOP")  ## Sentinel, as per https://stackoverflow.com/a/1541117/4900327
+        serps_Queue.close()
         return
