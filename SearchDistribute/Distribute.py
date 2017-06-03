@@ -154,18 +154,20 @@ class Distribute:
         self.proc.start()
 
 
-    def finish(self):
+    def finish(self, no_wait = False):
         '''join, terminate and cleanup browser instances'''
         print("Starting cleanup process")
-        self.proc.join()    ## Wait for the job to fetch all the results. This happens when self.start() returns.
+        if no_wait == False:
+            self.proc.join()    ## Wait for the job to fetch all the results. This happens when self.start() returns.
 
         ## Clean up workers
         for worker in self.workers:
             worker.close()
 
         self.serp_results = []
-        for serp in iter(self.serps_Queue.get, 'STOP'):
-            self.serp_results.append(serp)
+        if no_wait == False:
+            for serp in iter(self.serps_Queue.get, 'STOP'):
+                self.serp_results.append(serp)
         self.serps_Queue.close()
         self.serps_Queue.join_thread()
 
