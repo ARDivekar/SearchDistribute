@@ -150,12 +150,18 @@ class Distribute:
 
         ## Added multiprocessing, as per https://www.blog.pythonlibrary.org/2016/08/02/python-201-a-multiprocessing-tutorial/
         self.serps_Queue = Queue()  ## an array of parsed SERPs. This is the main output of the function and a shared variable passed to our process (stackoverflow.com/a/10415215/4900327)
-        self.proc = Process(target = self.distribute_query, args=(query, self.num_results, self.num_workers, self.num_results_per_page, self.cooldown_time, self.save_to_db, self.serps_Queue,))
+        self.proc = Process(target = self.distribute_query, args=(query, self.serps_Queue, self.num_results, self.num_workers, self.num_results_per_page, self.cooldown_time, self.save_to_db,))
         self.proc.start()
+
 
     def finish(self):
         '''join, terminate and cleanup browser instances'''
-        self.proc.join()
+        print("Starting cleanup process")
+        self.proc.join()    ## Wait for the job to fetch all the results. This happens when self.start() returns.
+
+        ## Clean up workers
+        for worker in self.workers:
+            worker.close()
 
         self.serp_results = []
         for serp in iter(self.serps_Queue.get, 'STOP'):
@@ -164,6 +170,7 @@ class Distribute:
         self.serps_Queue.join_thread()
 
         self.proc.terminate()
+        print("Done with cleanup process")
 
 
 
@@ -174,7 +181,7 @@ class Distribute:
 
 
 
-    def distribute_query(self, query, num_results, num_workers, num_results_per_page, cooldown_time, save_to_db, serps_Queue):
+    def distribute_query(self, query, serps_Queue, num_results, num_workers, num_results_per_page, cooldown_time, save_to_db):
         def _spawn_worker(self):  ## Can be extended to use multithreading or multiprocessing.
             worker_config = {
                 "country": self.country,
@@ -203,8 +210,10 @@ class Distribute:
             now = datetime.datetime.now()
             time_str = "%s-%s-%s %s:%s:%s" % (now.year, now.month, now.day, now.hour, now.minute, now.second)
             print("\n\nQuery: `%s`"%query)
-            print("Results %s-%s, page #%s (obtained at %s)\n%s\n" % (
-            parsed_serp.start_offset, parsed_serp.start_offset + parsed_serp.num_results, parsed_serp.current_page_num, time_str, parsed_serp.results))
+            print("Results %s-%s, page #%s (obtained at %s)\n" % (
+            parsed_serp.start_offset, parsed_serp.start_offset + parsed_serp.num_results, parsed_serp.current_page_num, time_str))
+            for url in parsed_serp.results:
+                print("\t%s"%url)
             print("\nRate of retrieving results: %.1f URLs per hour." % (
                 sum([serp.num_results for serp in parsed_serps]) / ((datetime.datetime.now() - start_datetime).days * 24 + (datetime.datetime.now() - start_datetime).seconds / 3600)))
             print("\nNumber of unique results so far: %s." % (len(set([res for serp in parsed_serps for res in serp.results]))))  ## Source: https://stackoverflow.com/a/952952/4900327
@@ -251,9 +260,7 @@ class Distribute:
             except SERPParsingException:
                 print("\nObtained %s results in the last SERP. There are no more result pages." % parsed_serp.num_results)
                 serps_Queue.put("STOP") ## Sentinel, as per https://stackoverflow.com/a/1541117/4900327
-                ## Clean up workers
-                for worker in self.workers:
-                    worker.close()
+                print("Done fetching results")
                 return
             next_page_num = len(parsed_serps) + 1
             pass
@@ -283,14 +290,10 @@ class Distribute:
             except SERPParsingException:
                 print("\nObtained %s results in the last SERP. There are no more result pages."%parsed_serp.num_results)
                 serps_Queue.put("STOP")  ## Sentinel, as per https://stackoverflow.com/a/1541117/4900327
-                ## Clean up workers
-                for worker in self.workers:
-                    worker.close()
                 return
+                print("Done fetching results")
             next_page_num = len(parsed_serps) + 1
             pass
         serps_Queue.put("STOP")  ## Sentinel, as per https://stackoverflow.com/a/1541117/4900327
-        ## Clean up workers
-        for worker in self.workers:
-            worker.close()
+        print("Done fetching results")
         return
