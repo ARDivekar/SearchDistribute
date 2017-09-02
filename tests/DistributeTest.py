@@ -26,17 +26,20 @@ config = {
     }
 }
 
+
 d1 = Distribute(config)
-d2 = Distribute(config)
-d3 = Distribute(config)
-print("START ALL")
-d1.start("einstien")
-d2.start("tesla")
-d3.start("curie")
-d1.finish()
-print("\n\nAFTER FINISHING 1st: %s result pages"%len(d1.get_results()))
-d2.finish()
-print("\n\nAFTER FINISHING 2nd: %s result pages"%len(d2.get_results()))
-d3.finish()
-print("\n\nAFTER FINISHING 3rd: %s result pages"%len(d3.get_results()))
-print("\nDONE WITH ALL")
+
+# d1 = Distribute(config)
+# d2 = Distribute(config)
+# d3 = Distribute(config)
+# print("START ALL")
+# d1.start("einstien")
+# d2.start("tesla")
+# d3.start("curie")
+# d1.finish()
+# print("\n\nAFTER FINISHING 1st: %s result pages"%len(d1.get_results()))
+# d2.finish()
+# print("\n\nAFTER FINISHING 2nd: %s result pages"%len(d2.get_results()))
+# d3.finish()
+# print("\n\nAFTER FINISHING 3rd: %s result pages"%len(d3.get_results()))
+# print("\nDONE WITH ALL")

@@ -29,6 +29,8 @@ class Distribute:
     db_config = {}              ## (optional, defaults to None) A hashtable with these fields: db_path, db_table. See Search.py for how they are handled.
     proxy_browser_config = {}   ## A hashtable with these fields: proxy_browser_type, proxy_args. See ProxyBrowser.py for how they are handled.
     cooldown_time = -1          ## The time in seconds, that each worker MUST wait before it can fetch the next SERP. No more SERPs can be fetched before this time expires
+    destroy_workers = None      ## (optional, defaults to True) Whether to destroy the workers when calling self.finish()
+
     workers = []  ## An array of the *Search objects. Their `time_of_last_retrieved_query` allows us to choose the one which has cooled down the most, to assign to fetch the next SERP.
     serps_Queue = None
 
@@ -75,6 +77,7 @@ class Distribute:
          - num_results_per_page
          - cooldown_time
          - save_to_db
+         - destroy_workers
 
         PARAMETERS CHECKED OTHER FILES (Search.py, ProxyBrowser.py):
         '''
@@ -114,6 +117,10 @@ class Distribute:
         if type(self.save_to_db) != type(False):
             raise InvalidSearchParameterException(self.search_engine, "save_to_db", self.save_to_db, "must be either True or false")
 
+        self.destroy_workers = get_default_if_not_found_in_config("destroy_workers")
+        if type(self.destroy_workers) != type(False):
+            raise InvalidSearchParameterException(self.search_engine, "destroy_workers", self.destroy_workers, "must be either True or false")
+
         if self.save_to_db == False:
             self.db_config = None
         else:
@@ -135,13 +142,14 @@ class Distribute:
             "num_results_per_page" : 10,
             "save_to_db" : False,
             "proxy_browser_config" : {"proxy_browser_type" : Enums.ProxyBrowsers.PhantomJS},
-            "cooldown_time" : 300
+            "cooldown_time" : 300,
+            "destroy_workers" : True
         }
         return default_config.get(param)
 
 
     ## Ready, set, GO!
-    def start(self, query):
+    def start(self, query, force_destroy_workers = False):
         ## Necessary parameter `query`
         if query == None:  ## will only run if the value is not present
             raise MissingSearchParameterException(self.search_engine, "query")
@@ -150,7 +158,7 @@ class Distribute:
 
         ## Added multiprocessing, as per https://www.blog.pythonlibrary.org/2016/08/02/python-201-a-multiprocessing-tutorial/
         self.serps_Queue = Queue()  ## an array of parsed SERPs. This is the main output of the function and a shared variable passed to our process (stackoverflow.com/a/10415215/4900327)
-        self.proc = Process(target = self.distribute_query, args=(query, self.serps_Queue, self.num_results, self.num_workers, self.num_results_per_page, self.cooldown_time, self.save_to_db,))
+        self.proc = Process(target = self.distribute_query, args=(query, self.serps_Queue, self.num_results, self.num_workers, self.num_results_per_page, self.cooldown_time, self.save_to_db, self.destroy_workers or  force_destroy_workers))
         self.proc.start()
 
 
@@ -161,8 +169,9 @@ class Distribute:
             self.proc.join()    ## Wait for the job to fetch all the results. This happens when self.start() returns.
 
         ## Clean up workers
-        for worker in self.workers:
-            worker.close()
+        if self.destroy_workers:
+            for worker in self.workers:
+                worker.close()
 
         self.serp_results = []
         if no_wait == False:
@@ -183,7 +192,7 @@ class Distribute:
 
 
 
-    def distribute_query(self, query, serps_Queue, num_results, num_workers, num_results_per_page, cooldown_time, save_to_db):
+    def distribute_query(self, query, serps_Queue, num_results, num_workers, num_results_per_page, cooldown_time, save_to_db, destroy_workers):
         def _spawn_worker(self):  ## Can be extended to use multithreading or multiprocessing.
             worker_config = {
                 "country": self.country,
